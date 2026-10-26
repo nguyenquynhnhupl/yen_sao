@@ -90,23 +90,54 @@ export default function HomePage({ navigate }: HomePageProps) {
 
   const renderSection = (section: HomepageSection) => {
     switch (section.section_key) {
+      
       case 'hero':
         return (
-          <section key={section.id} className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 text-white">
-            <div className="absolute inset-0 opacity-20">
-              <img src={section.image_url || 'https://images.pexels.com/photos/16337380/pexels-photo-16337380.jpeg?auto=compress&cs=tinysrgb&h=650&w=940'} alt="" className="w-full h-full object-cover" />
+          <section
+            key={section.id}
+            className="relative overflow-hidden bg-secondary-900 text-white"
+          >
+            <div className="absolute inset-0">
+              <img
+                src={section.image_url || 'https://images.pexels.com/photos/16337380/pexels-photo-16337380.jpeg?auto=compress&cs=tinysrgb&h=650&w=940'}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-transparent" />
+
             <div className="container-max relative px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
               <div className="max-w-2xl space-y-6 animate-fade-in-up">
-                {section.subtitle && <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-1.5 text-xs font-medium ring-1 ring-white/20"><Sparkles className="w-3.5 h-3.5 text-accent-300" />{section.subtitle}</div>}
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">{section.title}</h1>
-                {section.description && <p className="text-lg text-cream-200 leading-relaxed max-w-lg">{section.description}</p>}
-                {section.button_text && <button onClick={() => navigate(sectionButtonTarget(section.button_url))} className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]">{section.button_text}<ArrowRight className="w-4 h-4" /></button>}
+                {section.subtitle && (
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-1.5 text-xs font-medium ring-1 ring-white/20">
+                    <Sparkles className="w-3.5 h-3.5 text-accent-300" />
+                    {section.subtitle}
+                  </div>
+                )}
+
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                  {section.title}
+                </h1>
+
+                {section.description && (
+                  <p className="text-lg text-cream-200 leading-relaxed max-w-lg">
+                    {section.description}
+                  </p>
+                )}
+
+                {section.button_text && (
+                  <button
+                    onClick={() => navigate(sectionButtonTarget(section.button_url))}
+                    className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]"
+                  >
+                    {section.button_text}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           </section>
         );
+
       case 'trust_benefits': {
         const benefits = splitDescription(section.description);
         const icons = [ShieldCheck, Award, Truck, Heart];

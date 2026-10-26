@@ -34,6 +34,7 @@ function mapProduct(row: any): Product {
   };
 }
 
+
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ export function useCategories() {
       .from('categories')
       .select('*')
       .eq('is_active', true)
-      .order('created_at', { ascending: true })
+      .order('sort_order', { ascending: true })
       .then(({ data, error }) => {
         if (!cancelled) {
           if (error) console.error('Failed to load categories:', error.message);
@@ -61,6 +62,7 @@ export function useCategories() {
 
   return { categories, loading };
 }
+
 
 export function useProducts(options?: {
   categorySlug?: string;
