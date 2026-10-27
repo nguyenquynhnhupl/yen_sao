@@ -45,14 +45,14 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #fdf9f1;
+  background: #F8F5ED;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d9952b;
+  background: #C5A46D;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c4791f;
+  background: #a9874e;
 }
 
 /* Text balance for headings */
