@@ -51,21 +51,6 @@ export default function HomePage({ navigate }: HomePageProps) {
   const { products: allProducts, loading: productsLoading } = useProducts({ limit: 100 });
   const { categories } = useCategories();
   const [sections, setSections] = useState<HomepageSection[]>(defaultSections);
-  const [productSearch, setProductSearch] = useState('');
-  const [productCategory, setProductCategory] = useState('');
-  const [productSort, setProductSort] = useState<'default' | 'price-asc' | 'price-desc'>('default');
-
-  const homeProducts = useMemo(() => {
-    const search = productSearch.trim().toLocaleLowerCase('vi');
-    const filtered = allProducts.filter((product) => {
-      const matchesSearch = !search || product.name.toLocaleLowerCase('vi').includes(search);
-      const matchesCategory = !productCategory || product.category_id === productCategory;
-      return matchesSearch && matchesCategory;
-    });
-    if (productSort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-    if (productSort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-    return filtered;
-  }, [allProducts, productSearch, productCategory, productSort]);
 
   useEffect(() => {
     let cancelled = false;
@@ -191,24 +176,11 @@ export default function HomePage({ navigate }: HomePageProps) {
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
       <section className="bg-[#F8F5ED] px-4 py-12 sm:px-6 lg:px-8">
         <div className="container-max">
-          <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary-600">Khám phá bộ sưu tập</p><h2 className="font-serif text-3xl font-bold text-secondary-900 sm:text-4xl">Sản phẩm yến sào</h2><p className="mt-2 text-sm text-secondary-600">Chọn danh mục hoặc lọc sản phẩm để tìm loại yến phù hợp.</p></div>
-            <button onClick={() => navigate({ name: 'products' })} className="inline-flex items-center gap-2 self-start text-sm font-semibold text-primary-700 hover:text-primary-900 md:self-auto">Xem tất cả sản phẩm <ArrowRight className="h-4 w-4" /></button>
+          <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary-600">Khám phá bộ sưu tập</p><h2 className="font-serif text-3xl font-bold text-secondary-900 sm:text-4xl">Sản phẩm yến sào</h2><p className="mt-2 text-sm text-secondary-600">Khám phá các dòng yến sào được tuyển chọn.</p></div>
+            <button onClick={() => navigate({ name: 'products' })} className="inline-flex items-center gap-2 self-start text-sm font-semibold text-primary-700 hover:text-primary-900">Xem tất cả sản phẩm <ArrowRight className="h-4 w-4" /></button>
           </div>
-          <div className="mb-6 rounded-2xl border border-[#EAE4D7] bg-white p-4 shadow-sm sm:p-5">
-            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_220px]">
-              <input value={productSearch} onChange={(event) => setProductSearch(event.target.value)} placeholder="Tìm tên sản phẩm yến sào..." className="w-full rounded-xl border border-[#DDD5C4] bg-white px-4 py-3 text-sm text-secondary-900 outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-100" aria-label="Tìm sản phẩm" />
-              <select value={productCategory} onChange={(event) => setProductCategory(event.target.value)} className="rounded-xl border border-[#DDD5C4] bg-white px-4 py-3 text-sm text-secondary-800 outline-none focus:border-primary-500" aria-label="Lọc theo danh mục"><option value="">Tất cả danh mục</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select>
-              <select value={productSort} onChange={(event) => setProductSort(event.target.value as typeof productSort)} className="rounded-xl border border-[#DDD5C4] bg-white px-4 py-3 text-sm text-secondary-800 outline-none focus:border-primary-500" aria-label="Sắp xếp sản phẩm"><option value="default">Sắp xếp: Mặc định</option><option value="price-asc">Giá: Thấp đến cao</option><option value="price-desc">Giá: Cao đến thấp</option></select>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button onClick={() => setProductCategory("")} className={"rounded-full px-4 py-2 text-sm font-medium transition " + (!productCategory ? "bg-primary-800 text-white" : "bg-[#F4F0E6] text-secondary-700 hover:bg-primary-50")}>Tất cả</button>
-              {categories.map((category) => <button key={category.id} onClick={() => setProductCategory(category.id)} className={"rounded-full px-4 py-2 text-sm font-medium transition " + (productCategory === category.id ? "bg-primary-800 text-white" : "bg-[#F4F0E6] text-secondary-700 hover:bg-primary-50")}>{category.name}</button>)}
-              {(productSearch || productCategory || productSort !== "default") && <button onClick={() => { setProductSearch(""); setProductCategory(""); setProductSort("default"); }} className="rounded-full px-4 py-2 text-sm font-medium text-primary-700 underline underline-offset-2">Xóa bộ lọc</button>}
-            </div>
-          </div>
-          <div className="mb-4 flex items-center justify-between"><p className="text-sm text-secondary-600">{productsLoading ? "Đang tải sản phẩm..." : homeProducts.length + " sản phẩm"}</p></div>
-          {productsLoading ? <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[0, 1, 2, 3].map((item) => <div key={item} className="card p-4"><div className="aspect-[4/3] animate-pulse rounded-xl bg-cream-200" /><div className="mt-3 h-4 animate-pulse rounded bg-cream-200" /></div>)}</div> : homeProducts.length ? <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{homeProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div> : <div className="rounded-2xl border border-dashed border-[#CFC4AD] bg-white px-4 py-12 text-center"><p className="font-medium text-secondary-800">Không tìm thấy sản phẩm phù hợp.</p><button onClick={() => { setProductSearch(""); setProductCategory(""); setProductSort("default"); }} className="btn-primary mt-4">Xóa bộ lọc</button></div>}
+          {productsLoading ? <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[0, 1, 2, 3].map((item) => <div key={item} className="card p-4"><div className="aspect-[4/3] animate-pulse rounded-xl bg-cream-200" /></div>)}</div> : <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{allProducts.slice(0, 8).map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div>}
         </div>
       </section>
       {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
