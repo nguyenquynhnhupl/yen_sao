@@ -15,8 +15,8 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
 
-  const featuredCategories = categories.slice(0, 4);
-  const moreCategories = categories.slice(4);
+  const featuredCategories = categories.slice(0, 3);
+  const moreCategories = categories.slice(3);
   const navLinks: { label: string; page: Page }[] = [
     { label: 'Trang Chủ', page: { name: 'home' } },
     ...featuredCategories.map((cat) => ({ label: cat.name, page: { name: 'products' as const, categorySlug: cat.slug } })),
