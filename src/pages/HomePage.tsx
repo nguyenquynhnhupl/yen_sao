@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ComponentType } from 'react';
 import { ArrowRight, ShieldCheck, Award, Truck, Sparkles, Heart, Star } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useProducts, useCategories } from '@/lib/hooks';
 import type { Page } from '@/lib/types';
@@ -153,8 +154,18 @@ export default function HomePage({ navigate }: HomePageProps) {
       }
       case 'gift_banner':
         return <section key={section.id} className="relative overflow-hidden bg-primary-900 text-white"><div className="container-max px-4 py-16 sm:px-6 lg:px-8 lg:py-24"><div className="grid lg:grid-cols-2 gap-8 items-center"><div className="space-y-5">{section.subtitle && <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium ring-1 ring-white/20"><Star className="w-3.5 h-3.5 text-accent-300 fill-accent-300" />{section.subtitle}</div>}<h2 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">{section.title}</h2>{section.description && <p className="text-cream-200 leading-relaxed">{section.description}</p>}{section.button_text && <button onClick={() => navigate(sectionButtonTarget(section.button_url))} className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]">{section.button_text}<ArrowRight className="w-4 h-4" /></button>}</div>{section.image_url && <div className="relative"><img src={section.image_url} alt={section.title} className="rounded-2xl shadow-2xl ring-4 ring-white/10" /></div>}</div></div></section>;
-      case 'benefits_stats':
-        return <section key={section.id} className="bg-gradient-to-br from-primary-50 to-cream-200 section-padding"><div className="container-max"><div className="grid lg:grid-cols-2 gap-10 items-center">{section.image_url && <div><img src={section.image_url} alt={section.title} className="rounded-2xl shadow-xl" /></div>}<div className="space-y-5"><p className="text-sm text-primary-600 font-medium uppercase tracking-widest">{section.subtitle || 'Công Dụng'}</p><h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900 leading-tight">{section.title}</h2>{section.description && <p className="text-secondary-600 leading-relaxed">{section.description}</p>}</div></div></div></section>;
+      case 'benefits_stats': {
+        let benefitItems: Array<{ id?: string; icon?: string; title?: string; description?: string }> = [];
+        try {
+          const parsed = JSON.parse(section.description || '');
+          if (Array.isArray(parsed)) benefitItems = parsed;
+        } catch { /* Backward-compatible with the old plain-text description. */ }
+        const iconFor = (name?: string) => {
+          const candidate = name ? (LucideIcons as unknown as Record<string, ComponentType<{ className?: string }>>)[name] : undefined;
+          return candidate || Sparkles;
+        };
+        return <section key={section.id} className="bg-gradient-to-br from-primary-50 to-cream-200 section-padding"><div className="container-max"><div className={section.image_url ? 'grid lg:grid-cols-2 gap-10 items-center' : 'max-w-5xl mx-auto'}>{section.image_url && <div><img src={section.image_url} alt={section.title} className="rounded-2xl shadow-xl w-full object-cover" /></div>}<div className="space-y-5"><p className="text-sm text-primary-600 font-medium uppercase tracking-widest">{section.subtitle || 'Công Dụng'}</p><h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900 leading-tight">{section.title}</h2>{benefitItems.length > 0 ? <div className="grid sm:grid-cols-2 gap-4 pt-2">{benefitItems.map((item, index) => { const Icon = iconFor(item.icon); return <article key={item.id || index} className="rounded-2xl bg-white/80 border border-cream-200 p-5 shadow-sm"><div className="flex items-center gap-3 mb-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700"><Icon className="h-5 w-5" /></span><h3 className="font-semibold text-secondary-900">{item.title}</h3></div>{item.description && <p className="text-sm leading-relaxed text-secondary-600">{item.description}</p>}</article>; })}</div> : section.description && <p className="text-secondary-600 leading-relaxed">{section.description}</p>}</div></div></div></section>;
+      }
       default:
         return null;
     }
