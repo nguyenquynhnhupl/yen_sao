@@ -13,15 +13,18 @@ export default function ProductsPage({ navigate, categorySlug }: ProductsPagePro
   const { categories } = useCategories();
   const { products, loading } = useProducts({ categorySlug });
   const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc'>('default');
+  const [search, setSearch] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const activeCategory = categories.find((c) => c.slug === categorySlug);
 
   const sortedProducts = useMemo(() => {
-    const sorted = [...products];
-    if (sortBy === 'price-asc') sorted.sort((a, b) => a.price - b.price);
-    if (sortBy === 'price-desc') sorted.sort((a, b) => b.price - a.price);
-    return sorted;
-  }, [products, sortBy]);
+    const query = search.trim().toLocaleLowerCase('vi');
+    const filtered = products.filter((product) => (!query || product.name.toLocaleLowerCase('vi').includes(query)) && (!maxPrice || product.price <= Number(maxPrice)));
+    if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+    return filtered;
+  }, [products, sortBy, search, maxPrice]);
 
   return (
     <div className="animate-fade-in">
@@ -57,52 +60,23 @@ export default function ProductsPage({ navigate, categorySlug }: ProductsPagePro
           )}
         </div>
 
-        {/* Category filter chips */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          <button
-            onClick={() => navigate({ name: 'products' })}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-              !categorySlug
-                ? 'bg-primary-600 text-white shadow-md'
-                : 'bg-white text-secondary-700 ring-1 ring-cream-200 hover:ring-primary-300'
-            }`}
-          >
-            Tất Cả
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => navigate({ name: 'products', categorySlug: cat.slug })}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                categorySlug === cat.slug
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white text-secondary-700 ring-1 ring-cream-200 hover:ring-primary-300'
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-
-        {/* Sort + count */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm text-secondary-500">
-            {loading ? 'Đang tải...' : `${sortedProducts.length} sản phẩm`}
-          </p>
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-secondary-400" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="rounded-lg border border-cream-300 bg-white px-3 py-2 text-sm text-secondary-700 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500"
-            >
-              <option value="default">Sắp xếp: Mặc định</option>
-              <option value="price-asc">Giá: Thấp đến cao</option>
-              <option value="price-desc">Giá: Cao đến thấp</option>
-            </select>
-          </div>
-        </div>
-
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <aside className="h-fit rounded-2xl border border-cream-200 bg-white p-5 shadow-sm">
+            <div className="mb-5 flex items-center gap-2"><SlidersHorizontal className="h-5 w-5 text-primary-700" /><h2 className="font-serif text-lg font-bold text-secondary-900">Bộ lọc sản phẩm</h2></div>
+            <label className="mb-2 block text-sm font-semibold text-secondary-800">Tìm sản phẩm</label>
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nhập tên sản phẩm..." className="mb-5 w-full rounded-lg border border-cream-300 px-3 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
+            <div className="mb-5"><h3 className="mb-3 text-sm font-semibold text-secondary-800">Danh mục</h3><div className="space-y-2">
+              <button onClick={() => navigate({ name: 'products' })} className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${!categorySlug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>Tất cả sản phẩm</button>
+              {categories.map((cat) => <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${categorySlug === cat.slug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>{cat.name}</button>)}
+            </div></div>
+            <div className="mb-5"><label className="mb-2 block text-sm font-semibold text-secondary-800">Khoảng giá tối đa (VNĐ)</label><input type="number" min="0" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Ví dụ: 2000000" className="w-full rounded-lg border border-cream-300 px-3 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" /></div>
+            <button onClick={() => { setSearch(''); setMaxPrice(''); setSortBy('default'); navigate({ name: 'products' }); }} className="w-full rounded-lg border border-primary-700 px-4 py-2.5 text-sm font-semibold text-primary-700 transition hover:bg-primary-50">Xóa bộ lọc</button>
+          </aside>
+          <div>
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-secondary-500">{loading ? 'Đang tải...' : `${sortedProducts.length} sản phẩm`}</p>
+              <div className="flex items-center gap-2"><span className="text-sm text-secondary-500">Sắp xếp:</span><select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)} className="rounded-lg border border-cream-300 bg-white px-3 py-2 text-sm text-secondary-700 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500"><option value="default">Mặc định</option><option value="price-asc">Giá thấp đến cao</option><option value="price-desc">Giá cao đến thấp</option></select></div>
+            </div>
         {/* Products grid */}
         {loading ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
