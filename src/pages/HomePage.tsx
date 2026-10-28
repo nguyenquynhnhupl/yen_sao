@@ -148,35 +148,25 @@ export default function HomePage({ navigate }: HomePageProps) {
         const benefits = splitDescription(section.description);
         const icons = [ShieldCheck, Award, Truck, Heart];
         return (
-          <section key={section.id} className="relative overflow-hidden border-y border-[#E5D8BE] bg-[linear-gradient(180deg,#FBF8F1_0%,#F4EEE2_100%)]">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute -left-24 -top-28 h-64 w-64 rounded-full border border-[#B99A65]/15" />
-              <div className="absolute -right-20 -bottom-32 h-72 w-72 rounded-full border border-[#B99A65]/15" />
-            </div>
-            <div className="container-max relative px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-              <div className="mb-7 text-center">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#9A7846]">Cam kết từ tâm</p>
-                {section.subtitle && <h2 className="font-serif text-2xl font-semibold tracking-wide text-[#183D30] sm:text-3xl">{section.subtitle}</h2>}
-                <div className="mx-auto mt-4 flex items-center justify-center gap-2" aria-hidden="true">
-                  <span className="h-px w-10 bg-[#C5A46A]/70" />
-                  <Sparkles className="h-3.5 w-3.5 text-[#B08D52]" />
-                  <span className="h-px w-10 bg-[#C5A46A]/70" />
-                </div>
+          <section key={section.id} className="border-y border-[#E8DFCF] bg-[#FBF8F1]">
+            <div className="container-max px-4 py-5 sm:px-6 lg:px-8">
+              <div className="mb-4 text-center">
+                {section.subtitle && <h2 className="font-serif text-lg font-semibold text-[#183D30] sm:text-xl">{section.subtitle}</h2>}
+                <span aria-hidden="true" className="mx-auto mt-2 block h-px w-12 bg-[#C5A46A]" />
               </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 {benefits.map((benefit, i) => {
                   const [title, desc] = benefit.split('—').map((s) => s.trim());
                   const Icon = icons[i % icons.length];
                   return (
-                    <article key={benefit} className="group relative flex min-h-[132px] items-center gap-4 overflow-hidden rounded-2xl border border-[#E4D6BC] bg-white/80 p-5 shadow-[0_5px_18px_rgba(61,48,27,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C4A56D] hover:bg-white hover:shadow-[0_12px_28px_rgba(61,48,27,0.09)] sm:p-5">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#D8C29A] bg-[linear-gradient(145deg,#F8F0DF,#EDE0C4)] text-[#285442] transition-colors duration-300 group-hover:bg-[#214B3A] group-hover:text-[#F8E8C5]">
-                        <Icon className="h-5 w-5" strokeWidth={1.7} />
+                    <article key={benefit} className="group flex items-center gap-3 rounded-xl border border-[#E8DFCF] bg-white/80 px-3 py-3 transition-colors hover:border-[#C5A46A] hover:bg-white sm:px-4">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F2E9D7] text-[#285442] group-hover:bg-[#285442] group-hover:text-[#F8E8C5]">
+                        <Icon className="h-4 w-4" strokeWidth={1.7} />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-serif text-base font-semibold leading-snug text-[#1C3C30]">{title}</h3>
-                        <p className="mt-1.5 text-sm leading-relaxed text-[#746B5B]">{desc || ''}</p>
+                        <h3 className="text-xs font-semibold leading-snug text-[#1C3C30] sm:text-sm">{title}</h3>
+                        <p className="mt-1 text-[11px] leading-snug text-[#746B5B] sm:text-xs">{desc || ''}</p>
                       </div>
-                      <span aria-hidden="true" className="absolute bottom-0 left-5 right-5 h-px origin-left scale-x-0 bg-gradient-to-r from-[#B08D52]/70 to-transparent transition-transform duration-300 group-hover:scale-x-100" />
                     </article>
                   );
                 })}
