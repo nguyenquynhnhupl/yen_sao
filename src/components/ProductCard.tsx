@@ -31,13 +31,13 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)]"
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
-      <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#f8f5ed] p-3 sm:p-4">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f8f5ed]">
         {product.image_url ? (
           <img
             src={product.image_url}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
+            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-[#9b8a72]">Chưa có hình ảnh</div>
