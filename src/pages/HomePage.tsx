@@ -105,25 +105,27 @@ export default function HomePage({ navigate }: HomePageProps) {
               <img
                 src={section.image_url || 'https://images.pexels.com/photos/16337380/pexels-photo-16337380.jpeg?auto=compress&cs=tinysrgb&h=650&w=940'}
                 alt=""
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover object-center"
               />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#071D17]/85 via-[#071D17]/55 to-[#071D17]/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071D17]/35 via-transparent to-black/10" />
             </div>
 
-            <div className="container-max relative px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+            <div className="container-max relative px-4 py-24 sm:px-6 lg:px-8 lg:py-36">
               <div className="max-w-2xl space-y-6 animate-fade-in-up">
                 {section.subtitle && (
-                  <div className="inline-flex items-center gap-2 rounded-full bg-[#D79854] px-4 py-1.5 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-[#E5C58F]/70 bg-[#102D23]/75 px-4 py-2 text-xs font-semibold tracking-wide text-[#F4D9A6] shadow-[0_4px_18px_rgba(0,0,0,0.18)] backdrop-blur-md">
                     <Sparkles className="w-3.5 h-3.5 text-accent-300" />
                     {section.subtitle}
                   </div>
                 )}
 
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[#594834]">
+                <h1 className="font-serif text-4xl font-semibold leading-[1.12] tracking-tight text-[#FFF8E9] drop-shadow-[0_3px_18px_rgba(0,0,0,0.38)] sm:text-5xl lg:text-7xl">
                   {section.title}
                 </h1>
 
                 {section.description && (
-                  <p className="text-lg text-[#FFFFFF] leading-relaxed max-w-lg">
+                  <p className="max-w-lg text-base leading-relaxed text-[#F4F0E6] drop-shadow-sm sm:text-lg">
                     {section.description}
                   </p>
                 )}
@@ -131,10 +133,10 @@ export default function HomePage({ navigate }: HomePageProps) {
                 {section.button_text && (
                   <button
                     onClick={() => navigate(sectionButtonTarget(section.button_url))}
-                    className="inline-flex items-center gap-2 rounded-lg bg-[#D4AA76] px-7 py-3.5 text-sm font-bold text-[#1A1A1A] hover:bg-[#E2BC8D] transition-all hover:shadow-xl active:scale-[0.98]"
+                    className="group inline-flex items-center gap-3 rounded-xl border border-[#F0D7A6]/70 bg-[linear-gradient(135deg,#E8C98D_0%,#C29B63_55%,#A8794A_100%)] px-7 py-4 text-sm font-bold tracking-wide text-[#1A1108] shadow-[0_8px_24px_rgba(194,155,99,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(194,155,99,0.42)] active:translate-y-0
                   >
                     {section.button_text}
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 )}
               </div>
@@ -186,7 +188,7 @@ export default function HomePage({ navigate }: HomePageProps) {
 
                   <div className={section.image_url ? 'order-2 space-y-5 lg:order-1' : 'space-y-5'}>
                     {section.subtitle && (
-                      <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AA76] bg-[#14231C]/70 px-4 py-2 text-sm font-medium text-[#E5C58F] shadow-sm backdrop-blur-md">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-[#F0D7A6] bg-[#244637]/90 px-4 py-2 text-sm font-semibold text-[#FFE8B8] shadow-[0_4px_18px_rgba(0,0,0,0.2)] backdrop-blur-md">
                         <Star className="h-4 w-4 fill-[#E5C58F] text-[#E5C58F]" />
                         {section.subtitle}
                       </div>
@@ -195,8 +197,8 @@ export default function HomePage({ navigate }: HomePageProps) {
                     <h2 className="font-serif text-[28px] font-bold leading-tight sm:text-4xl lg:text-[44px]">
                       {section.title.includes('Sang Trọng') ? (
                         <>
-                          <span className="text-white">Set Quà Yến Sào </span>
-                          <span className="bg-gradient-to-r from-[#E5C58F] to-[#B88E58] bg-clip-text text-transparent">Sang Trọng &amp; Ý Nghĩa</span>
+                          <span className="text-[#FFF8E9]">Set Quà Yến Sào</span>
+                          <span className="block bg-gradient-to-r from-[#F2D7A0] via-[#E5C58F] to-[#D4AA76] bg-clip-text text-transparent">Sang Trọng &amp; Ý Nghĩa</span>
                         </>
                       ) : section.title}
                     </h2>
@@ -210,7 +212,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                     {section.button_text && (
                       <button
                         onClick={() => navigate(sectionButtonTarget(section.button_url))}
-                        className="group inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#C29B63_0%,#8C6543_100%)] px-7 py-3.5 text-sm font-bold text-[#1A1108] shadow-[0_4px_14px_rgba(194,155,99,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_26px_rgba(194,155,99,0.42)] active:translate-y-0"
+                        className="group inline-flex items-center gap-2 rounded-xl border border-[#F6DDAA] bg-[linear-gradient(135deg,#F2D7A0_0%,#D6AE70_48%,#BD8D53_100%)] px-7 py-3.5 text-sm font-extrabold text-[#1A1108] shadow-[0_6px_20px_rgba(242,215,160,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_10px_30px_rgba(242,215,160,0.48)] active:translate-y-0"
                       >
                         {section.button_text}
                         <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
