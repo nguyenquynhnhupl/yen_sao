@@ -83,10 +83,13 @@ export default function HomePage({ navigate }: HomePageProps) {
   const visibleSections = sections.filter((section) => section.is_active);
   const productsFor = (sectionKey: string, fallbackLimit: number) => {
     const section = sectionByKey[sectionKey];
-    const chosen = section?.item_ids?.length
-      ? allProducts.filter((product) => section.item_ids.includes(product.id))
-      : allProducts;
-    return chosen.slice(0, fallbackLimit);
+    // Only show products explicitly selected in Admin > Homepage.
+    // An empty selection must not fall back to every Master Data product.
+    const chosenIds = section?.item_ids ?? [];
+    if (chosenIds.length === 0) return [];
+    return allProducts
+      .filter((product) => chosenIds.includes(product.id))
+      .slice(0, fallbackLimit);
   };
 
   const renderSection = (section: HomepageSection) => {
@@ -145,7 +148,7 @@ export default function HomePage({ navigate }: HomePageProps) {
         return <section key={section.id} className="bg-white border-b border-cream-200"><div className="container-max px-4 py-6 sm:px-6 lg:px-8">{section.title && <h2 className="sr-only">{section.title}</h2>}{section.subtitle && <p className="text-center text-sm text-secondary-500 mb-4">{section.subtitle}</p>}<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{benefits.map((benefit, i) => { const [title, desc] = benefit.split('—').map((s) => s.trim()); const Icon = icons[i % icons.length]; return <div key={benefit} className="flex items-center gap-3"><div className="flex items-center justify-center w-11 h-11 rounded-full bg-primary-50 text-primary-600 flex-shrink-0"><Icon className="w-5 h-5" /></div><div><h3 className="text-sm font-semibold text-secondary-900">{title}</h3><p className="text-xs text-secondary-500">{desc || ''}</p></div></div>; })}</div></div></section>;
       }
       case 'categories':
-        return <section key={section.id} className="section-padding"><div className="container-max"><div className="text-center mb-10">{section.subtitle && <p className="text-sm text-primary-600 font-medium uppercase tracking-widest mb-2">{section.subtitle}</p>}<h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900">{section.title}</h2>{section.description && <p className="mt-3 text-secondary-600">{section.description}</p>}</div><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">{(section.item_ids.length ? categories.filter((cat) => section.item_ids.includes(cat.id)) : categories).map((cat) => <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-100 to-cream-200 p-6 text-center ring-1 ring-cream-200 hover:ring-primary-300 transition-all hover:shadow-lg"><div className="absolute inset-0 bg-gradient-to-t from-primary-600/0 to-primary-600/0 group-hover:from-primary-600/10 transition-all" /><div className="relative"><div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-primary-600 group-hover:scale-110 transition-all"><Sparkles className="w-5 h-5 text-primary-600 group-hover:text-white transition-colors" /></div><h3 className="font-serif text-sm font-semibold text-secondary-900 group-hover:text-primary-700 transition-colors leading-snug">{cat.name}</h3></div></button>)}</div></div></section>;
+        return <section key={section.id} className="section-padding"><div className="container-max"><div className="text-center mb-10">{section.subtitle && <p className="text-sm text-primary-600 font-medium uppercase tracking-widest mb-2">{section.subtitle}</p>}<h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900">{section.title}</h2>{section.description && <p className="mt-3 text-secondary-600">{section.description}</p>}</div><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">{categories.filter((cat) => section.item_ids.includes(cat.id)).map((cat) => <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-100 to-cream-200 p-6 text-center ring-1 ring-cream-200 hover:ring-primary-300 transition-all hover:shadow-lg"><div className="absolute inset-0 bg-gradient-to-t from-primary-600/0 to-primary-600/0 group-hover:from-primary-600/10 transition-all" /><div className="relative"><div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-primary-600 group-hover:scale-110 transition-all"><Sparkles className="w-5 h-5 text-primary-600 group-hover:text-white transition-colors" /></div><h3 className="font-serif text-sm font-semibold text-secondary-900 group-hover:text-primary-700 transition-colors leading-snug">{cat.name}</h3></div></button>)}</div></div></section>;
       case 'featured_products':
       case 'best_sellers': {
         const list = productsFor(section.section_key, section.section_key === 'featured_products' ? 8 : 4);
