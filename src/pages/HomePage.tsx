@@ -118,7 +118,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                   </div>
                 )}
 
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[#FFFFFF]">
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[#594834]">
                   {section.title}
                 </h1>
 
