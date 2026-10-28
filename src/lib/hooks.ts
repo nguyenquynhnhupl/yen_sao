@@ -9,6 +9,7 @@ function mapCategory(row: any): Category {
     slug: row.slug,
     description: row.description ?? null,
     display_order: row.display_order ?? 0,
+    image_url: row.image_url ?? null,
   };
 }
 
