@@ -210,10 +210,10 @@ export default function HomePage({ navigate }: HomePageProps) {
                     {section.button_text && (
                       <button
                         onClick={() => navigate(sectionButtonTarget(section.button_url))}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#C29B63_0%,#8C6543_100%)] px-7 py-3.5 text-sm font-bold text-[#1A1108] shadow-[0_4px_14px_rgba(194,155,99,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_26px_rgba(194,155,99,0.42)] active:translate-y-0"
+                        className="group inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#C29B63_0%,#8C6543_100%)] px-7 py-3.5 text-sm font-bold text-[#1A1108] shadow-[0_4px_14px_rgba(194,155,99,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_26px_rgba(194,155,99,0.42)] active:translate-y-0"
                       >
                         {section.button_text}
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
                       </button>
                     )}
                   </div>
