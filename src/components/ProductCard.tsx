@@ -8,13 +8,23 @@ interface ProductCardProps {
   navigate: (page: Page) => void;
 }
 
+// Mock display values only; deterministic per product and stable after refresh.
+function getDemoSoldCount(product: Product): number {
+  const key = String(product.id || product.slug || product.name || 'yen-sao');
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  }
+  return 89 + (hash % 168);
+}
+
 export default function ProductCard({ product, navigate }: ProductCardProps) {
   const { addToCart } = useCart();
   const discount = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
     : 0;
-  const soldCount = product.sold_count ?? 0;
-  const salesProgress = Math.min(100, Math.max(8, soldCount > 0 ? soldCount : 0));
+  const soldCount = getDemoSoldCount(product);
+  const salesProgress = Math.min(100, Math.max(8, Math.round((soldCount / 300) * 100)));
 
   return (
     <article
@@ -81,17 +91,15 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
             </button>
           </div>
 
-          {soldCount > 0 && (
-            <div className="mt-3">
-              <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]">
-                <span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span>
-                <span className="font-bold text-[#6e5131]">{soldCount.toLocaleString('vi-VN')} sản phẩm</span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${salesProgress}%` }} />
-              </div>
+          <div className="mt-3">
+            <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]">
+              <span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span>
+              <span className="font-bold text-[#6e5131]">{soldCount.toLocaleString('vi-VN')} sản phẩm</span>
             </div>
-          )}
+            <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]">
+              <div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${salesProgress}%` }} />
+            </div>
+          </div>
           {product.stock <= 0 && <p className="mt-2 text-xs font-semibold text-[#b33b32]">Tạm hết hàng</p>}
         </div>
       </div>
