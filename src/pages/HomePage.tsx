@@ -159,8 +159,8 @@ export default function HomePage({ navigate }: HomePageProps) {
         return <section key={section.id} className="relative overflow-hidden bg-primary-900 text-white"><div className="container-max px-4 py-16 sm:px-6 lg:px-8 lg:py-24"><div className="grid lg:grid-cols-2 gap-8 items-center"><div className="space-y-5">{section.subtitle && <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium ring-1 ring-white/20"><Star className="w-3.5 h-3.5 text-accent-300 fill-accent-300" />{section.subtitle}</div>}<h2 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
           {section.section_key === 'gift_banner' && section.title.includes('&') ? (
             <>
-              <span className="text-[#FFFFFF]">{section.title.split('&')[0].trim()} </span>
-              <span className="text-[#E8C98A]">&amp; {section.title.split('&').slice(1).join('&').trim()}</span>
+              <span className="text-[#C62828]">{section.title.split('&')[0].split('Sang Trọng')[0].trim()} </span>
+              <span className="text-[#E8C98A]">Sang Trọng &amp; {section.title.split('&').slice(1).join('&').trim()}</span>
             </>
           ) : section.title}
         </h2>{section.description && <p className="text-cream-200 leading-relaxed">{section.description}</p>}{section.button_text && <button onClick={() => navigate(sectionButtonTarget(section.button_url))} className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]">{section.button_text}<ArrowRight className="w-4 h-4" /></button>}</div>{section.image_url && <div className="relative"><img src={section.image_url} alt={section.title} className="rounded-2xl shadow-2xl ring-4 ring-white/10" /></div>}</div></div></section>;
