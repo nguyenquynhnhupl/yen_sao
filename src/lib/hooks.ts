@@ -27,13 +27,13 @@ function mapProduct(row: any): Product {
     category_id: row.category_id ?? null,
     image_url: row.image_url ?? null,
     stock: Number(row.stock ?? 0),
+    sold_count: row.sold_count == null ? undefined : Number(row.sold_count),
     // These flags are not part of the current Admin CMS schema.
     is_featured: row.is_featured ?? false,
     is_bestseller: row.is_bestseller ?? false,
     display_order: row.display_order ?? 0,
   };
 }
-
 
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -62,7 +62,6 @@ export function useCategories() {
 
   return { categories, loading };
 }
-
 
 export function useProducts(options?: {
   categorySlug?: string;
