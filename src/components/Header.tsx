@@ -171,7 +171,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                     onClick={() => handleNav(link.page)}
                     className={`block w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                       isActive(link.page)
-                        ? 'text-primary-700 bg-cream-200'
+                        ? 'text-white bg-white/15 ring-1 ring-white/25'
                         : 'text-white/90 hover:bg-white/10'
                     }`}
                   >
