@@ -108,7 +108,6 @@ export default function HomePage({ navigate }: HomePageProps) {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0F3D2E]/95 via-[#8C6543]/75 to-[#A27953]/55" />
 
             <div className="container-max relative px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
               <div className="max-w-2xl space-y-6 animate-fade-in-up">
