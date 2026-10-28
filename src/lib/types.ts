@@ -4,6 +4,7 @@ export interface Category {
   slug: string;
   description: string | null;
   display_order: number;
+  image_url?: string | null;
 }
 
 export interface Product {
