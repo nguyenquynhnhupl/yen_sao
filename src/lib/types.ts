@@ -18,6 +18,7 @@ export interface Product {
   category_id: string | null;
   image_url: string | null;
   stock: number;
+  sold_count?: number;
   is_featured: boolean;
   is_bestseller: boolean;
   display_order: number;
