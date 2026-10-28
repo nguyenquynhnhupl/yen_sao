@@ -156,14 +156,72 @@ export default function HomePage({ navigate }: HomePageProps) {
         return <section key={section.id} className={section.section_key === 'featured_products' ? 'bg-[#EDE5D6] section-padding' : 'bg-white section-padding'}><div className="container-max"><div className={section.section_key === 'featured_products' ? 'flex items-end justify-between mb-8' : 'text-center mb-10'}><div>{section.subtitle && <p className="text-sm text-primary-600 font-medium uppercase tracking-widest mb-2">{section.subtitle}</p>}<h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900">{section.title}</h2>{section.description && <p className="mt-3 text-secondary-600">{section.description}</p>}</div>{section.button_text && <button onClick={() => navigate(sectionButtonTarget(section.button_url))} className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">{section.button_text}<ArrowRight className="w-4 h-4" /></button>}</div>{loading ? <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[...Array(4)].map((_, i) => <div key={i} className="card p-4 space-y-3"><div className="aspect-[4/3] rounded-xl bg-cream-200 animate-pulse" /><div className="h-4 bg-cream-200 rounded animate-pulse" /></div>)}</div> : <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{list.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div>}</div></section>;
       }
       case 'gift_banner':
-        return <section key={section.id} className="relative overflow-hidden bg-primary-900 text-white"><div className="container-max px-4 py-16 sm:px-6 lg:px-8 lg:py-24"><div className="grid lg:grid-cols-2 gap-8 items-center"><div className="space-y-5">{section.subtitle && <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium ring-1 ring-white/20"><Star className="w-3.5 h-3.5 text-accent-300 fill-accent-300" />{section.subtitle}</div>}<h2 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
-          {section.section_key === 'gift_banner' && section.title.includes('&') ? (
-            <>
-              <span className="text-[#C62828]">{section.title.split('&')[0].split('Sang Trọng')[0].trim()} </span>
-              <span className="text-[#E8C98A]">Sang Trọng &amp; {section.title.split('&').slice(1).join('&').trim()}</span>
-            </>
-          ) : section.title}
-        </h2>{section.description && <p className="text-cream-200 leading-relaxed">{section.description}</p>}{section.button_text && <button onClick={() => navigate(sectionButtonTarget(section.button_url))} className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]">{section.button_text}<ArrowRight className="w-4 h-4" /></button>}</div>{section.image_url && <div className="relative"><img src={section.image_url} alt={section.title} className="rounded-2xl shadow-2xl ring-4 ring-white/10" /></div>}</div></div></section>;
+        return (
+          <section key={section.id} className="relative overflow-hidden bg-[linear-gradient(135deg,#0A3125_0%,#06241B_100%)] text-white">
+            {/* Subtle luxury background decoration */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+              <div className="absolute -right-20 -top-24 h-80 w-80 rounded-full border border-[#D4AA76]/15" />
+              <div className="absolute -right-10 -top-14 h-60 w-60 rounded-full border border-[#D4AA76]/10" />
+              <Sparkles className="absolute left-[5%] top-10 h-7 w-7 text-[#D4AA76]/20" />
+              <Star className="absolute right-[8%] bottom-10 h-6 w-6 text-[#D4AA76]/20" />
+            </div>
+
+            <div className="container-max relative px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+              <div className="relative overflow-hidden rounded-[24px] border border-[#D4AA76]/30 bg-white/[0.02] p-4 sm:p-6 lg:p-10">
+                <div className="grid items-center gap-8 lg:grid-cols-[45fr_55fr] lg:gap-10">
+                  {section.image_url && (
+                    <div className="relative order-1 lg:order-2">
+                      <div className="absolute -inset-3 rounded-[24px] border border-[#D4AA76]/20" aria-hidden="true" />
+                      <div className="relative overflow-hidden rounded-[20px] border border-[#D4AA76]/50 bg-[#06241B] shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                        <img
+                          src={section.image_url}
+                          alt={section.title}
+                          className="aspect-[4/3] w-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      <Star className="absolute -right-3 -top-3 h-8 w-8 fill-[#D4AA76] text-[#D4AA76] drop-shadow-lg" aria-hidden="true" />
+                    </div>
+                  )}
+
+                  <div className={section.image_url ? 'order-2 space-y-5 lg:order-1' : 'space-y-5'}>
+                    {section.subtitle && (
+                      <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AA76]/70 bg-[#D4AA76]/10 px-4 py-2 text-sm font-medium text-[#E5C58F]">
+                        <Star className="h-4 w-4 fill-[#E5C58F] text-[#E5C58F]" />
+                        {section.subtitle}
+                      </div>
+                    )}
+
+                    <h2 className="font-serif text-[28px] font-bold leading-tight sm:text-4xl lg:text-[44px]">
+                      {section.title.includes('Sang Trọng') ? (
+                        <>
+                          <span className="text-white">Set Quà Yến Sào </span>
+                          <span className="bg-gradient-to-r from-[#E5C58F] to-[#B88E58] bg-clip-text text-transparent">Sang Trọng &amp; Ý Nghĩa</span>
+                        </>
+                      ) : section.title}
+                    </h2>
+
+                    {section.description && (
+                      <p className="max-w-xl text-base leading-relaxed text-[#D1D5DB]">
+                        {section.description}
+                      </p>
+                    )}
+
+                    {section.button_text && (
+                      <button
+                        onClick={() => navigate(sectionButtonTarget(section.button_url))}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#D4AA76_0%,#B88E58_100%)] px-7 py-3.5 text-sm font-semibold text-[#1A1A1A] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(212,170,118,0.4)] active:translate-y-0"
+                      >
+                        {section.button_text}
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
       case 'benefits_stats': {
         let benefitItems: Array<{ id?: string; icon?: string; title?: string; description?: string }> = [];
         try {
