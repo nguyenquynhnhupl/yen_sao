@@ -108,11 +108,12 @@ export default function HomePage({ navigate }: HomePageProps) {
                 className="w-full h-full object-cover"
               />
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0F3D2E]/95 via-[#8C6543]/75 to-[#A27953]/55" />
 
             <div className="container-max relative px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
               <div className="max-w-2xl space-y-6 animate-fade-in-up">
                 {section.subtitle && (
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-1.5 text-xs font-medium ring-1 ring-white/20">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#D79854] px-4 py-1.5 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20">
                     <Sparkles className="w-3.5 h-3.5 text-accent-300" />
                     {section.subtitle}
                   </div>
@@ -131,7 +132,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                 {section.button_text && (
                   <button
                     onClick={() => navigate(sectionButtonTarget(section.button_url))}
-                    className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-7 py-3.5 text-sm font-semibold text-primary-950 hover:bg-accent-400 transition-all hover:shadow-xl active:scale-[0.98]"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#D4AA76] px-7 py-3.5 text-sm font-bold text-[#1A1A1A] hover:bg-[#E2BC8D] transition-all hover:shadow-xl active:scale-[0.98]"
                   >
                     {section.button_text}
                     <ArrowRight className="w-4 h-4" />
@@ -145,7 +146,7 @@ export default function HomePage({ navigate }: HomePageProps) {
       case 'trust_benefits': {
         const benefits = splitDescription(section.description);
         const icons = [ShieldCheck, Award, Truck, Heart];
-        return <section key={section.id} className="bg-white border-b border-cream-200"><div className="container-max px-4 py-6 sm:px-6 lg:px-8">{section.title && <h2 className="sr-only">{section.title}</h2>}{section.subtitle && <p className="text-center text-sm text-secondary-500 mb-4">{section.subtitle}</p>}<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{benefits.map((benefit, i) => { const [title, desc] = benefit.split('—').map((s) => s.trim()); const Icon = icons[i % icons.length]; return <div key={benefit} className="flex items-center gap-3"><div className="flex items-center justify-center w-11 h-11 rounded-full bg-primary-50 text-primary-600 flex-shrink-0"><Icon className="w-5 h-5" /></div><div><h3 className="text-sm font-semibold text-secondary-900">{title}</h3><p className="text-xs text-secondary-500">{desc || ''}</p></div></div>; })}</div></div></section>;
+        return <section key={section.id} className="bg-white border-b border-[#EAEAEA]"><div className="container-max px-4 py-6 sm:px-6 lg:px-8">{section.title && <h2 className="sr-only">{section.title}</h2>}{section.subtitle && <p className="text-center text-sm text-secondary-500 mb-4">{section.subtitle}</p>}<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{benefits.map((benefit, i) => { const [title, desc] = benefit.split('—').map((s) => s.trim()); const Icon = icons[i % icons.length]; return <div key={benefit} className="flex items-center gap-3"><div className="flex items-center justify-center w-11 h-11 rounded-full bg-[#EAEAEA] text-[#333333] flex-shrink-0"><Icon className="w-5 h-5" /></div><div><h3 className="text-sm font-semibold text-[#333333]">{title}</h3><p className="text-xs text-[#666666]">{desc || ''}</p></div></div>; })}</div></div></section>;
       }
       case 'categories':
         return <section key={section.id} className="section-padding bg-[#F8F5ED]"><div className="container-max"><div className="text-center mb-10">{section.subtitle && <p className="text-sm text-primary-600 font-medium uppercase tracking-widest mb-2">{section.subtitle}</p>}<h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900">{section.title}</h2>{section.description && <p className="mt-3 text-secondary-600">{section.description}</p>}</div><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">{categories.filter((cat) => section.item_ids.includes(cat.id)).map((cat) => <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-100 to-cream-200 p-6 text-center ring-1 ring-cream-200 hover:ring-primary-300 transition-all hover:shadow-lg"><div className="absolute inset-0 bg-gradient-to-t from-primary-600/0 to-primary-600/0 group-hover:from-primary-600/10 transition-all" /><div className="relative"><div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-primary-600 group-hover:scale-110 transition-all"><Sparkles className="w-5 h-5 text-primary-600 group-hover:text-white transition-colors" /></div><h3 className="font-serif text-sm font-semibold text-secondary-900 group-hover:text-primary-700 transition-colors leading-snug">{cat.name}</h3></div></button>)}</div></div></section>;
