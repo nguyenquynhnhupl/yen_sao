@@ -177,15 +177,6 @@ export default function HomePage({ navigate }: HomePageProps) {
   return (
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
-      <section className="bg-[#F8F5ED] px-4 py-12 sm:px-6 lg:px-8">
-        <div className="container-max">
-          <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary-600">Khám phá bộ sưu tập</p><h2 className="font-serif text-3xl font-bold text-secondary-900 sm:text-4xl">Sản phẩm yến sào</h2><p className="mt-2 text-sm text-secondary-600">Khám phá các dòng yến sào được tuyển chọn.</p></div>
-            <button onClick={() => navigate({ name: 'products' })} className="inline-flex items-center gap-2 self-start text-sm font-semibold text-primary-700 hover:text-primary-900">Xem tất cả sản phẩm <ArrowRight className="h-4 w-4" /></button>
-          </div>
-          {productsLoading ? <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[0, 1, 2, 3].map((item) => <div key={item} className="card p-4"><div className="aspect-[4/3] animate-pulse rounded-xl bg-cream-200" /></div>)}</div> : <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{allProducts.slice(0, 8).map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div>}
-        </div>
-      </section>
       {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
     </div>
   );
