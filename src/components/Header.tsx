@@ -41,13 +41,13 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
   return (
     <>
       {/* Top bar */}
-      <div className="bg-primary-900 text-cream-100 text-xs">
+      <div className="bg-[#0A3125] text-white text-xs">
         <div className="container-max flex items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
           <p className="hidden sm:block">
             Miễn phí giao hàng cho đơn hàng trên 2.000.000đ
           </p>
           <div className="flex items-center gap-4">
-            <a href="tel:1900xxxx" className="hover:text-accent-300 transition-colors">
+            <a href="tel:1900xxxx" className="text-white hover:text-[#D4AA76] transition-colors">
               Hotline: 1900 xxxx
             </a>
             <span className="hidden sm:inline">|</span>
@@ -57,7 +57,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
       </div>
 
       {/* Main header */}
-      <header className="sticky top-0 z-40 bg-cream-50/95 backdrop-blur-md border-b border-cream-200 shadow-sm">
+      <header className="sticky top-0 z-40 bg-[#0A3125]/95 text-white backdrop-blur-md border-b border-white/10 shadow-sm">
         <div className="container-max px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -69,10 +69,10 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                 <span className="font-serif text-xl font-bold">Y</span>
               </div>
               <div className="text-left">
-                <h1 className="font-serif text-xl font-bold text-primary-800 leading-none">
+                <h1 className="font-serif text-xl font-bold text-white leading-none">
                   Yến Sào
                 </h1>
-                <p className="text-[10px] text-secondary-500 tracking-widest uppercase mt-0.5">
+                <p className="text-[10px] text-white/70 tracking-widest uppercase mt-0.5">
                   Khánh Hòa
                 </p>
               </div>
@@ -91,8 +91,8 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                     onClick={() => handleNav(link.page)}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-1 ${
                       isActive(link.page)
-                        ? 'text-primary-700 bg-cream-200'
-                        : 'text-secondary-700 hover:text-primary-600 hover:bg-cream-100'
+                        ? 'text-white bg-white/15'
+                        : 'text-white/90 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     {link.label}
@@ -131,7 +131,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleNav({ name: 'products' })}
-                className="hidden md:flex p-2.5 rounded-lg text-secondary-600 hover:bg-cream-200 hover:text-primary-600 transition-colors"
+                className="hidden md:flex p-2.5 rounded-lg text-white hover:bg-white/10 hover:text-[#D4AA76] transition-colors"
                 aria-label="Tìm kiếm"
               >
                 <Search className="w-5 h-5" />
@@ -139,12 +139,12 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
 
               <button
                 onClick={openCart}
-                className="relative p-2.5 rounded-lg text-secondary-600 hover:bg-cream-200 hover:text-primary-600 transition-colors"
+                className="relative p-2.5 rounded-lg text-white hover:bg-white/10 hover:text-[#D4AA76] transition-colors"
                 aria-label="Giỏ hàng"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-accent-500 rounded-full ring-2 ring-cream-50 animate-scale-in">
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-[#D79854] rounded-full ring-2 ring-[#0A3125] animate-scale-in">
                     {totalItems}
                   </span>
                 )}
@@ -152,7 +152,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
 
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2.5 rounded-lg text-secondary-600 hover:bg-cream-200 transition-colors"
+                className="lg:hidden p-2.5 rounded-lg text-white hover:bg-white/10 transition-colors"
                 aria-label="Menu"
               >
                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -163,7 +163,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="lg:hidden border-t border-cream-200 bg-cream-50 animate-fade-in">
+          <div className="lg:hidden border-t border-white/15 bg-[#0A3125] text-white animate-fade-in">
             <nav className="container-max px-4 py-4 space-y-1">
               {navLinks.map((link) => (
                 <div key={link.label}>
@@ -172,7 +172,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                     className={`block w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                       isActive(link.page)
                         ? 'text-primary-700 bg-cream-200'
-                        : 'text-secondary-700 hover:bg-cream-100'
+                        : 'text-white/90 hover:bg-white/10'
                     }`}
                   >
                     {link.label}
@@ -181,7 +181,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                     <div className="ml-4 mt-1 space-y-1">
                       <button
                         onClick={() => handleNav({ name: 'products' })}
-                        className="block w-full text-left px-4 py-2 text-sm text-secondary-600 hover:bg-cream-100 rounded-lg"
+                        className="block w-full text-left px-4 py-2 text-sm text-white/80 hover:bg-white/10 rounded-lg"
                       >
                         Tất Cả Sản Phẩm
                       </button>
