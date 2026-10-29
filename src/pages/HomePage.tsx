@@ -47,6 +47,39 @@ function sectionButtonTarget(url: string | null | undefined): Page {
   return { name: 'products' };
 }
 
+function FlashSaleSection({ products, navigate }: { products: import('@/lib/types').Product[]; navigate: (page: Page) => void }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+  const activeProducts = products.filter((product) => {
+    if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at) return false;
+    const start = new Date(product.flash_sale_start_at).getTime();
+    const end = new Date(product.flash_sale_end_at).getTime();
+    return product.is_published !== false && start <= now && now < end;
+  });
+  if (!activeProducts.length) return null;
+  const endAt = Math.min(...activeProducts.map((product) => new Date(product.flash_sale_end_at!).getTime()));
+  const remaining = Math.max(0, endAt - now);
+  const days = Math.floor(remaining / 86400000);
+  const hours = Math.floor((remaining % 86400000) / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
+  const time = [days > 0 ? String(days).padStart(2, '0') : null, String(hours).padStart(2, '0'), String(minutes).padStart(2, '0'), String(seconds).padStart(2, '0')].filter(Boolean).join(':');
+  return (
+    <section className="section-padding bg-[#fff8f0]">
+      <div className="container-max">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div><p className="mb-2 inline-flex items-center rounded-full bg-[#a82e24] px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">Ưu đãi có thời hạn</p><h2 className="font-serif text-3xl font-bold text-[#183D30] sm:text-4xl">Flash Sale</h2><p className="mt-2 text-secondary-600">Nhanh tay chọn sản phẩm trước khi chương trình kết thúc.</p></div>
+          <div className="rounded-xl bg-[#183D30] px-4 py-3 text-center text-white"><p className="text-xs uppercase tracking-wider text-[#f4d9a6]">Kết thúc sau</p><p className="font-mono text-xl font-bold tabular-nums">{time}</p></div>
+        </div>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{activeProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div>
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage({ navigate }: HomePageProps) {
   const { products: allProducts, loading: productsLoading } = useProducts({ limit: 100 });
   const { categories } = useCategories();
@@ -307,7 +340,7 @@ export default function HomePage({ navigate }: HomePageProps) {
   return (
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
-      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
+      {visibleSections.filter((section) => section.section_key === 'hero').length === 0 ? null : null}\n      <FlashSaleSection products={allProducts} navigate={navigate} />\n      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
     </div>
   );
 }
