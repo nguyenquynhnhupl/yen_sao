@@ -130,23 +130,17 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               {product.name}
             </h1>
 
-            {/* Quick info from CMS — shown as a table in the booking detail area */}
+            {/* Compact quick info cards */}
             {product.quick_info && product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).length > 0 && (
-              <section className="overflow-hidden rounded-xl border border-[#e9dfd0] bg-white shadow-sm">
-                <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-4 py-3">
-                  <h2 className="font-serif text-lg font-bold text-secondary-900">Thông tin nhanh</h2>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm">
-                    <tbody>
-                      {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
-                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-[#fcfaf6]'}>
-                          <th scope="row" className="w-[38%] border-b border-r border-[#eee4d6] px-4 py-3 text-left align-top font-semibold text-[#9a7950]">{item.label}</th>
-                          <td className="whitespace-pre-line border-b border-[#eee4d6] px-4 py-3 leading-relaxed text-secondary-700">{item.value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <section className="space-y-2">
+                <h2 className="font-serif text-lg font-bold text-secondary-900">Thông tin nhanh</h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
+                    <div key={index} className="min-w-0 rounded-lg border border-[#eee4d6] bg-[#fcfaf6] px-3 py-2.5">
+                      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[#9a7950]">{item.label}</p>
+                      <p className="whitespace-pre-line break-words text-sm leading-snug text-secondary-700">{item.value}</p>
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
