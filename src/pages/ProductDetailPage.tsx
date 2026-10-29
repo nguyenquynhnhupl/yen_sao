@@ -9,6 +9,9 @@ import {
   Award,
   Check,
   ArrowLeft,
+  Star,
+  Gift,
+  X,
 } from 'lucide-react';
 import { useProduct, useProducts } from '@/lib/hooks';
 import { useCart } from '@/context/CartContext';
@@ -27,6 +30,8 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'usage' | 'reviews'>('description');
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   const { products: related } = useProducts({ limit: 4 });
 
@@ -111,17 +116,17 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           {/* Product image gallery */}
           <div className="relative mx-auto w-full max-w-[500px]">
             <div className="relative overflow-hidden rounded-2xl border border-[#eee4d6] bg-white p-3 shadow-[0_12px_36px_rgba(74,52,25,0.07)] sm:p-4">
-              <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-[#fbf8f2]">
+              <button type="button" onClick={() => activeImage && setZoomOpen(true)} aria-label="Phóng to ảnh sản phẩm" className="group flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-[#fbf8f2] cursor-zoom-in">
                 {activeImage ? (
                   <img
                     src={activeImage}
                     alt={product.name}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <div className="text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
                 )}
-              </div>
+              </button>
               {discount > 0 && (
                 <span className="absolute left-6 top-6 rounded-full bg-[#8b3d2e] px-3.5 py-2 text-xs font-bold tracking-wide text-white shadow-md">
                   -{discount}%
@@ -160,15 +165,16 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             </h1>
 
 
-            {product.weight && (
-              <p className="text-sm font-medium tracking-wide text-[#8c806e]">
-                Khối lượng: {product.weight}
-              </p>
-            )}
+            <div className="flex flex-wrap items-center gap-2 text-sm text-[#85745e]">
+              <span className="flex items-center gap-0.5 text-[#c2933d]">{[1,2,3,4,5].map(n => <Star key={n} className="h-4 w-4" fill="currentColor" />)}</span>
+              <span className="text-xs">Đánh giá khách hàng</span>
+              {typeof product.sold_count === 'number' && <><span className="text-[#d8cbb8]">|</span><span className="text-xs">Đã bán: {product.sold_count}</span></>}
+              {product.weight && <><span className="text-[#d8cbb8]">|</span><span className="text-xs">Khối lượng: {product.weight}</span></>}
+            </div>
 
             {/* Price */}
             <div className="flex flex-wrap items-end gap-x-3 gap-y-1 border-y border-[#eee4d6] py-4">
-              <p className="font-serif text-3xl font-bold tracking-tight text-[#805c2d] sm:text-4xl">
+              <p className="font-serif text-3xl font-bold tracking-tight text-[#315c46] sm:text-4xl">
                 {formatVND(product.price)}
               </p>
               {product.compare_price && (
@@ -216,6 +222,8 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               </div>
             </div>
 
+            <div className="flex items-start gap-3 rounded-xl border border-[#eadcc4] bg-[#fffaf1] p-3.5 text-sm text-[#765b35]"><Gift className="mt-0.5 h-5 w-5 shrink-0 text-[#b48a45]" /><div><p className="font-semibold">Ưu đãi dành riêng cho bạn</p><p className="mt-0.5 text-xs leading-relaxed">Liên hệ cửa hàng để biết quà tặng và chương trình áp dụng cho sản phẩm này.</p></div></div>
+
             {/* Actions */}
             <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
               <button
@@ -260,37 +268,18 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           </div>
         </div>
 
-        {/* Thông tin nhanh */}
-        {product.quick_info && product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).length > 0 && (
-          <section className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-[#eee4d6] bg-white shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-4 sm:px-7">
-              <h2 className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-[#94764c]">Thông tin nhanh</h2>
-              <span className="h-px flex-1 bg-[#e8dcc9]" />
-            </div>
-            <dl className="grid gap-x-8 px-5 sm:grid-cols-2 sm:px-7">
-              {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
-                <div key={index} className="grid grid-cols-[minmax(100px,0.42fr)_minmax(0,1fr)] gap-4 border-b border-[#f0e8dc] py-4">
-                  <dt className="text-sm font-semibold text-[#987a51]">{item.label}</dt>
-                  <dd className="whitespace-pre-line break-words text-sm leading-relaxed text-[#514638]">{item.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-        )}
-
-        {/* Detailed content from CMS — text and uploaded images */}
-        {product.detail_content && product.detail_content.length > 0 && (
-          <section className="mt-10 overflow-hidden rounded-[1.75rem] border border-[#e9dfd0] bg-white shadow-[0_14px_45px_rgba(74,52,25,0.05)]">
-            <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-5 sm:px-8"><p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#a1814e]">Tìm hiểu thêm</p><h2 className="font-serif text-2xl font-bold text-[#332719]">Mô tả sản phẩm chi tiết</h2><p className="mt-1 text-sm text-secondary-500">Thông tin chi tiết về sản phẩm</p></div>
-            <div className="space-y-5 px-5 py-6 sm:px-8 sm:py-8">
-              {product.detail_content.map((block, index) => block.type === 'image' ? (
-                <img key={index} src={block.content} alt={product.name} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain" />
-              ) : (
-                <p key={index} className="whitespace-pre-line leading-7 text-secondary-700">{block.content}</p>
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Product information tabs */}
+        <section className="mt-12 overflow-hidden rounded-[1.75rem] border border-[#e9dfd0] bg-white shadow-[0_14px_45px_rgba(74,52,25,0.05)]">
+          <div className="flex gap-1 overflow-x-auto border-b border-[#eee4d6] bg-[#fbf7ef] px-3 sm:px-6">
+            {([{id:'description',label:'Mô tả chi tiết'},{id:'specs',label:'Thông số kỹ thuật'},{id:'usage',label:'Hướng dẫn sử dụng'},{id:'reviews',label:'Đánh giá'}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} className={`shrink-0 border-b-2 px-4 py-4 text-sm font-semibold transition sm:px-5 ${activeTab===tab.id?'border-[#a1814e] text-[#795b30]':'border-transparent text-[#92836d] hover:text-[#795b30]'}`}>{tab.label}</button>)}
+          </div>
+          <div className="min-h-[220px] px-5 py-6 sm:px-8 sm:py-8">
+            {activeTab === 'description' && <div className="mx-auto max-w-4xl space-y-5"><h2 className="font-serif text-2xl font-bold text-[#332719]">Mô tả sản phẩm chi tiết</h2>{product.description && <p className="whitespace-pre-line leading-8 text-[#5f5548]">{product.description}</p>}{product.short_description && <p className="whitespace-pre-line leading-8 text-[#5f5548]">{product.short_description}</p>}{product.detail_content?.map((block,index)=>block.type==='image'?<img key={index} src={block.content} alt={product.name} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain"/>:<p key={index} className="whitespace-pre-line leading-8 text-[#5f5548]">{block.content}</p>)}{!product.description&&!product.short_description&&!product.detail_content?.length&&<p className="text-sm text-[#8b7b65]">Thông tin mô tả đang được cập nhật.</p>}</div>}
+            {activeTab === 'specs' && <div className="mx-auto max-w-4xl"><h2 className="mb-5 font-serif text-2xl font-bold text-[#332719]">Thông số kỹ thuật</h2><dl className="grid gap-x-10 sm:grid-cols-2">{[...(product.quick_info??[]),...(product.weight?[{label:'Khối lượng',value:product.weight}]:[]),{label:'Tên sản phẩm',value:product.name},{label:'Tình trạng',value:product.stock>0?'Còn hàng':'Tạm hết hàng'}].filter((item,index,all)=>item.label?.trim()&&item.value?.trim()&&all.findIndex(other=>other.label===item.label)===index).map((item,index)=><div key={index} className="grid grid-cols-[minmax(110px,0.7fr)_minmax(0,1fr)] gap-4 border-b border-[#f0e8dc] py-4"><dt className="text-sm font-semibold text-[#987a51]">{item.label}</dt><dd className="whitespace-pre-line break-words text-sm leading-relaxed text-[#514638]">{item.value}</dd></div>)}</dl></div>}
+            {activeTab === 'usage' && <div className="mx-auto max-w-4xl"><h2 className="mb-5 font-serif text-2xl font-bold text-[#332719]">Hướng dẫn sử dụng</h2><div className="grid gap-4 sm:grid-cols-3">{[{step:'01',title:'Ngâm yến',text:'Ngâm yến trong nước sạch khoảng 30–45 phút hoặc đến khi sợi yến mềm.'},{step:'02',title:'Làm sạch',text:'Kiểm tra và loại bỏ lông hoặc tạp chất còn sót lại nếu có.'},{step:'03',title:'Chưng cách thủy',text:'Chưng khoảng 20–25 phút; có thể thêm đường phèn, táo đỏ tùy khẩu vị.'}].map(item=><div key={item.step} className="rounded-2xl border border-[#eee4d6] bg-[#fdfaf5] p-5"><span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#efe4d1] font-serif text-sm font-bold text-[#8b6b3f]">{item.step}</span><h3 className="mb-2 font-semibold text-[#493a28]">{item.title}</h3><p className="text-sm leading-6 text-[#766957]">{item.text}</p></div>)}</div><p className="mt-4 text-xs leading-5 text-[#8b7b65]">Thời gian ngâm và chưng có thể thay đổi tùy loại yến và hướng dẫn trên bao bì.</p></div>}
+            {activeTab === 'reviews' && <div className="mx-auto max-w-4xl"><h2 className="mb-3 font-serif text-2xl font-bold text-[#332719]">Đánh giá khách hàng</h2><p className="text-sm leading-7 text-[#766957]">Chưa có đánh giá được hiển thị cho sản phẩm này.</p></div>}
+          </div>
+        </section>
 
         {/* Related products */}
         {related.length > 0 && (
@@ -309,6 +298,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           </div>
         )}
       </div>
+      {zoomOpen && activeImage && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4" role="dialog" aria-modal="true" aria-label="Ảnh sản phẩm phóng to" onClick={() => setZoomOpen(false)}><button type="button" onClick={() => setZoomOpen(false)} aria-label="Đóng ảnh" className="absolute right-5 top-5 rounded-full bg-white/15 p-3 text-white hover:bg-white/25"><X className="h-6 w-6" /></button><img src={activeImage} alt={product.name} className="max-h-[90vh] max-w-[92vw] object-contain" onClick={(event) => event.stopPropagation()} /></div>}
     </div>
   );
 }
