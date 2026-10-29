@@ -20,6 +20,8 @@ function mapProduct(row: any): Product {
     slug: row.slug,
     description: row.description ?? null,
     short_description: row.short_description ?? row.description ?? null,
+    quick_info: Array.isArray(row.quick_info) ? row.quick_info : [],
+    detail_content: Array.isArray(row.detail_content) ? row.detail_content : [],
     price: Number(row.price ?? 0),
     compare_price: row.compare_at_price == null
       ? (row.compare_price == null ? null : Number(row.compare_price))
