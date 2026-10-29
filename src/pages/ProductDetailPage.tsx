@@ -104,14 +104,6 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
       </div>
 
       <div className="container-max px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-        <button
-          onClick={() => navigate({ name: 'products' })}
-          className="inline-flex items-center gap-2 rounded-full border border-[#e9dfd0] bg-white px-4 py-2 text-sm text-[#715b42] shadow-sm transition hover:border-[#b99a68] hover:text-[#8b6b3f] mb-5"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Quay lại
-        </button>
-
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
           {/* Product image gallery */}
           <div className="relative mx-auto w-full max-w-[500px]">
