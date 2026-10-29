@@ -114,7 +114,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                   <img
                     src={activeImage}
                     alt={product.name}
-                    className="block h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                    className="block h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                   />
                 ) : (
                   <div className="text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
