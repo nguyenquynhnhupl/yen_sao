@@ -192,19 +192,19 @@ export default function HomePage({ navigate }: HomePageProps) {
                     onClick={() => navigate({ name: 'products', categorySlug: cat.slug })}
                     className="group flex min-w-0 flex-col items-center text-center"
                   >
-                    <div className="flex h-24 w-full max-w-[132px] items-center justify-center sm:h-28">
+                    <div className="flex h-36 w-full max-w-[180px] items-center justify-center sm:h-40 md:h-44">
                       {cat.image_url ? (
                         <img
                           src={cat.image_url}
                           alt={cat.name}
                           loading="lazy"
-                          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                          className="h-full w-full object-contain drop-shadow-[0_5px_8px_rgba(45,35,20,0.10)] transition-transform duration-300 group-hover:scale-110"
                         />
                       ) : (
                         <Sparkles className="h-9 w-9 text-[#B08D52]" strokeWidth={1.25} />
                       )}
                     </div>
-                    <h3 className="mt-2 max-w-[150px] text-sm font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
+                    <h3 className="mt-3 max-w-[170px] text-sm font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
                       {cat.name}
                     </h3>
                   </button>
