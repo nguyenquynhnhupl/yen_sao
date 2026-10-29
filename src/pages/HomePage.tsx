@@ -185,7 +185,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                 <h2 className="font-serif text-2xl font-semibold text-[#183D30] sm:text-3xl">{section.title}</h2>
                 {section.description && <p className="mt-2 text-sm text-[#746B5B]">{section.description}</p>}
               </div>
-              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-4 sm:gap-x-8">
+              <div className="mx-auto grid max-w-5xl grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-5 md:gap-x-6">
                 {visibleCategories.map((cat) => (
                   <button
                     key={cat.id}
