@@ -59,7 +59,7 @@ function FlashSaleSection({ products, navigate }: { products: import('@/lib/type
     const end = new Date(product.flash_sale_end_at).getTime();
     return product.is_published !== false && start <= now && now < end;
   });
-  if (!activeProducts.length) return null;
+  
   const endAt = Math.min(...activeProducts.map((product) => new Date(product.flash_sale_end_at!).getTime()));
   const remaining = Math.max(0, endAt - now);
   const days = Math.floor(remaining / 86400000);
@@ -74,7 +74,7 @@ function FlashSaleSection({ products, navigate }: { products: import('@/lib/type
           <div><p className="mb-2 inline-flex items-center rounded-full bg-[#a82e24] px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">Ưu đãi có thời hạn</p><h2 className="font-serif text-3xl font-bold text-[#183D30] sm:text-4xl">Flash Sale</h2><p className="mt-2 text-secondary-600">Nhanh tay chọn sản phẩm trước khi chương trình kết thúc.</p></div>
           <div className="rounded-xl bg-[#183D30] px-4 py-3 text-center text-white"><p className="text-xs uppercase tracking-wider text-[#f4d9a6]">Kết thúc sau</p><p className="font-mono text-xl font-bold tabular-nums">{time}</p></div>
         </div>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{activeProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}</div>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{activeProducts.length > 0 ? activeProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />) : <div className="col-span-full rounded-2xl border border-[#eadbc7] bg-white/80 px-6 py-10 text-center"><p className="font-semibold text-[#183D30]">Chương trình Flash Sale sắp diễn ra</p><p className="mt-2 text-sm text-secondary-600">Sản phẩm ưu đãi sẽ hiển thị tại đây khi đến thời gian bắt đầu.</p></div>}</div>
       </div>
     </section>
   );
@@ -340,7 +340,8 @@ export default function HomePage({ navigate }: HomePageProps) {
   return (
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
-      {visibleSections.filter((section) => section.section_key === 'hero').length === 0 ? null : null}\n      <FlashSaleSection products={allProducts} navigate={navigate} />\n      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
+      {visibleSections.filter((section) => section.section_key === 'hero').length === 0 ? null : null}
+      <FlashSaleSection products={allProducts} navigate={navigate} />\n      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
     </div>
   );
 }
