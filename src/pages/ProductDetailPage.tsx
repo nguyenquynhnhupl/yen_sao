@@ -130,8 +130,25 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               {product.name}
             </h1>
 
-            {product.short_description && (
-              <p className="text-secondary-600 leading-relaxed">{product.short_description}</p>
+            {/* Quick info from CMS — shown as a table in the booking detail area */}
+            {product.quick_info && product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).length > 0 && (
+              <section className="overflow-hidden rounded-xl border border-[#e9dfd0] bg-white shadow-sm">
+                <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-4 py-3">
+                  <h2 className="font-serif text-lg font-bold text-secondary-900">Thông tin nhanh</h2>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-sm">
+                    <tbody>
+                      {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-[#fcfaf6]'}>
+                          <th scope="row" className="w-[38%] border-b border-r border-[#eee4d6] px-4 py-3 text-left align-top font-semibold text-[#9a7950]">{item.label}</th>
+                          <td className="whitespace-pre-line border-b border-[#eee4d6] px-4 py-3 leading-relaxed text-secondary-700">{item.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
             )}
 
             {product.weight && (
@@ -233,21 +250,6 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             </div>
           </div>
         </div>
-
-        {/* Quick info from CMS — shown on product detail / booking page */}
-        {product.quick_info && product.quick_info.length > 0 && (
-          <section className="mt-12 overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-sm">
-            <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-4 sm:px-7"><h2 className="font-serif text-2xl font-bold text-secondary-900">Thông tin nhanh</h2><p className="mt-1 text-sm text-secondary-500">Thông số và đặc điểm sản phẩm</p></div>
-            <dl className="grid gap-x-8 px-5 py-3 sm:grid-cols-2 sm:px-7">
-              {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
-                <div key={index} className="grid grid-cols-[minmax(100px,0.7fr)_minmax(0,1.3fr)] gap-3 border-b border-cream-200 py-4 last:border-b-0">
-                  <dt className="text-xs font-bold uppercase tracking-wider text-[#9a7950]">{item.label}</dt>
-                  <dd className="whitespace-pre-line text-sm leading-relaxed text-secondary-700">{item.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-        )}
 
         {/* Detailed content from CMS — text and uploaded images */}
         {product.detail_content && product.detail_content.length > 0 && (
