@@ -204,7 +204,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                         <Sparkles className="h-9 w-9 text-[#B08D52]" strokeWidth={1.25} />
                       )}
                     </div>
-                    <h3 className="mt-1 max-w-[180px] text-base font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
+                    <h3 className="mt-0 max-w-[180px] text-base font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
                       {cat.name}
                     </h3>
                   </button>
