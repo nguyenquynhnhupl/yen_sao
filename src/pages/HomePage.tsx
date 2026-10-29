@@ -175,8 +175,45 @@ export default function HomePage({ navigate }: HomePageProps) {
           </section>
         );
       }
-      case 'categories':
-        return <section key={section.id} className="section-padding bg-[#F8F5ED]"><div className="container-max"><div className="text-center mb-10">{section.subtitle && <p className="text-sm text-primary-600 font-medium uppercase tracking-widest mb-2">{section.subtitle}</p>}<h2 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900">{section.title}</h2>{section.description && <p className="mt-3 text-secondary-600">{section.description}</p>}</div><div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">{categories.filter((cat) => section.item_ids.includes(cat.id)).map((cat) => <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className="group overflow-hidden rounded-2xl border border-[#E8DFCF] bg-white text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C5A46A] hover:shadow-lg"><div className="relative aspect-[4/3] overflow-hidden bg-[#F3EBDD]">{cat.image_url ? <img src={cat.image_url} alt={cat.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : <div className="flex h-full w-full items-center justify-center"><Sparkles className="h-7 w-7 text-[#B08D52]" /></div>}<div className="absolute inset-0 bg-gradient-to-t from-[#102D23]/25 to-transparent opacity-70" /></div><div className="px-3 py-3 text-center sm:px-4"><h3 className="font-serif text-sm font-semibold leading-snug text-[#1C3C30] transition-colors group-hover:text-[#9A7846]">{cat.name}</h3></div></button>)}</div></div></section>;
+      case 'categories': {
+        const visibleCategories = categories.filter((cat) => section.item_ids.includes(cat.id));
+        return (
+          <section key={section.id} className="bg-white py-8 sm:py-10">
+            <div className="container-max px-4">
+              <div className="mb-6 text-center">
+                {section.subtitle && <p className="mb-1 text-xs font-medium uppercase tracking-[0.18em] text-[#9A7846]">{section.subtitle}</p>}
+                <h2 className="font-serif text-2xl font-semibold text-[#183D30] sm:text-3xl">{section.title}</h2>
+                {section.description && <p className="mt-2 text-sm text-[#746B5B]">{section.description}</p>}
+              </div>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-4 sm:gap-x-8">
+                {visibleCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => navigate({ name: 'products', categorySlug: cat.slug })}
+                    className="group flex min-w-0 flex-col items-center text-center"
+                  >
+                    <div className="flex h-24 w-full max-w-[132px] items-center justify-center sm:h-28">
+                      {cat.image_url ? (
+                        <img
+                          src={cat.image_url}
+                          alt={cat.name}
+                          loading="lazy"
+                          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <Sparkles className="h-9 w-9 text-[#B08D52]" strokeWidth={1.25} />
+                      )}
+                    </div>
+                    <h3 className="mt-2 max-w-[150px] text-sm font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
+                      {cat.name}
+                    </h3>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
       case 'featured_products':
       case 'best_sellers': {
         const list = productsFor(section.section_key, section.section_key === 'featured_products' ? 8 : 4);
