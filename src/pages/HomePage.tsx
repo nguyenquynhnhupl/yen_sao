@@ -178,21 +178,21 @@ export default function HomePage({ navigate }: HomePageProps) {
       case 'categories': {
         const visibleCategories = categories.filter((cat) => section.item_ids.includes(cat.id));
         return (
-          <section key={section.id} className="bg-white py-8 sm:py-10">
+          <section key={section.id} className="bg-white py-5 sm:py-6">
             <div className="container-max px-4">
-              <div className="mb-6 text-center">
+              <div className="mb-3 text-center">
                 {section.subtitle && <p className="mb-1 text-xs font-medium uppercase tracking-[0.18em] text-[#9A7846]">{section.subtitle}</p>}
                 <h2 className="font-serif text-2xl font-semibold text-[#183D30] sm:text-3xl">{section.title}</h2>
-                {section.description && <p className="mt-2 text-sm text-[#746B5B]">{section.description}</p>}
+                {section.description && <p className="mt-1 text-sm text-[#746B5B]">{section.description}</p>}
               </div>
-              <div className="mx-auto grid max-w-5xl grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-5 md:gap-x-6">
+              <div className="mx-auto grid max-w-5xl grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-5 md:gap-x-6">
                 {visibleCategories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => navigate({ name: 'products', categorySlug: cat.slug })}
                     className="group flex min-w-0 flex-col items-center text-center"
                   >
-                    <div className="flex h-36 w-full max-w-[180px] items-center justify-center sm:h-40 md:h-44">
+                    <div className="flex h-28 w-full max-w-[180px] items-center justify-center sm:h-32 md:h-36">
                       {cat.image_url ? (
                         <img
                           src={cat.image_url}
@@ -204,7 +204,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                         <Sparkles className="h-9 w-9 text-[#B08D52]" strokeWidth={1.25} />
                       )}
                     </div>
-                    <h3 className="mt-3 max-w-[170px] text-sm font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
+                    <h3 className="mt-1.5 max-w-[170px] text-sm font-medium leading-snug text-[#181818] transition-colors group-hover:text-[#9A7846]">
                       {cat.name}
                     </h3>
                   </button>
