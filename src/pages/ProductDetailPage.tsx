@@ -287,12 +287,12 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             <h2 className="font-serif text-2xl font-bold text-secondary-900 mb-6">
               Sản Phẩm Liên Quan
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
               {related
                 .filter((p) => p.id !== product.id)
                 .slice(0, 4)
                 .map((p) => (
-                  <ProductCard key={p.id} product={p} navigate={navigate} />
+                  <div key={p.id} className="w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-[calc(25%-12px)]"><ProductCard product={p} navigate={navigate} /></div>
                 ))}
             </div>
           </div>
