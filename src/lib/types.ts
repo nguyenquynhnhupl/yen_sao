@@ -13,6 +13,8 @@ export interface Product {
   slug: string;
   description: string | null;
   short_description: string | null;
+  quick_info?: { label: string; value: string }[];
+  detail_content?: { type: 'text' | 'image'; content: string }[];
   price: number;
   compare_price: number | null;
   weight: string | null;
