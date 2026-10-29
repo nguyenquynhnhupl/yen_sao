@@ -109,12 +109,12 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           {/* Product image gallery */}
           <div className="relative mx-auto w-full max-w-[560px]">
             <div className="relative overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white p-2 sm:p-3">
-              <button type="button" onClick={() => activeImage && setZoomOpen(true)} aria-label="Phóng to ảnh sản phẩm" className="group flex aspect-square w-full items-center justify-center overflow-hidden cursor-zoom-in">
+              <button type="button" onClick={() => activeImage && setZoomOpen(true)} aria-label="Phóng to ảnh sản phẩm" className="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl cursor-zoom-in">
                 {activeImage ? (
                   <img
                     src={activeImage}
                     alt={product.name}
-                    className="block h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    className="absolute inset-0 block h-full w-full rounded-xl object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                   />
                 ) : (
                   <div className="text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
