@@ -198,7 +198,7 @@ export default function HomePage({ navigate }: HomePageProps) {
                           src={cat.image_url}
                           alt={cat.name}
                           loading="lazy"
-                          className="h-full w-full object-contain drop-shadow-[0_5px_8px_rgba(45,35,20,0.10)] transition-transform duration-300 group-hover:scale-110"
+                          className="h-full w-full scale-125 object-contain drop-shadow-[0_5px_8px_rgba(45,35,20,0.10)] transition-transform duration-300 group-hover:scale-[1.35]"
                         />
                       ) : (
                         <Sparkles className="h-9 w-9 text-[#B08D52]" strokeWidth={1.25} />
