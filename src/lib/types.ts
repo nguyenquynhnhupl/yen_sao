@@ -23,6 +23,10 @@ export interface Product {
   is_featured: boolean;
   is_bestseller: boolean;
   display_order: number;
+  is_published?: boolean;
+  is_flash_sale?: boolean;
+  flash_sale_start_at?: string | null;
+  flash_sale_end_at?: string | null;
 }
 
 export interface CartItem {
