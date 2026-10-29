@@ -108,8 +108,8 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
           {/* Product image gallery */}
           <div className="relative mx-auto w-full max-w-[560px]">
-            <div className="relative overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white p-2 shadow-sm sm:p-3">
-              <button type="button" onClick={() => activeImage && setZoomOpen(true)} aria-label="Phóng to ảnh sản phẩm" className="group flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-[#faf7f1] p-2 cursor-zoom-in sm:p-3">
+            <div className="relative overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white p-2 sm:p-3">
+              <button type="button" onClick={() => activeImage && setZoomOpen(true)} aria-label="Phóng to ảnh sản phẩm" className="group flex aspect-square w-full items-center justify-center overflow-hidden cursor-zoom-in">
                 {activeImage ? (
                   <img
                     src={activeImage}
