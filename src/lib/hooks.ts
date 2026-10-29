@@ -33,6 +33,10 @@ function mapProduct(row: any): Product {
     is_featured: row.is_featured ?? false,
     is_bestseller: row.is_bestseller ?? false,
     display_order: row.display_order ?? 0,
+    is_published: row.is_published ?? false,
+    is_flash_sale: row.is_flash_sale ?? false,
+    flash_sale_start_at: row.flash_sale_start_at ?? null,
+    flash_sale_end_at: row.flash_sale_end_at ?? null,
   };
 }
 
