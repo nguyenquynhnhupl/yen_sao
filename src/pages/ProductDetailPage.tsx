@@ -159,23 +159,6 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               {product.name}
             </h1>
 
-            {/* Compact luxury product facts */}
-            {product.quick_info && product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).length > 0 && (
-              <section className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <h2 className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-[#94764c]">Thông tin sản phẩm</h2>
-                  <span className="h-px flex-1 bg-[#eee4d6]" />
-                </div>
-                <dl className="divide-y divide-[#f0e8dc] rounded-xl border border-[#eee4d6] bg-[#fdfbf7] px-4">
-                  {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
-                    <div key={index} className="grid grid-cols-[minmax(88px,0.36fr)_minmax(0,1fr)] gap-3 py-3">
-                      <dt className="text-xs font-semibold text-[#987a51] sm:text-sm">{item.label}</dt>
-                      <dd className="whitespace-pre-line break-words text-sm leading-relaxed text-[#514638]">{item.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            )}
 
             {product.weight && (
               <p className="text-sm font-medium tracking-wide text-[#8c806e]">
@@ -276,6 +259,24 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             </div>
           </div>
         </div>
+
+        {/* Thông tin nhanh */}
+        {product.quick_info && product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).length > 0 && (
+          <section className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-[#eee4d6] bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-4 sm:px-7">
+              <h2 className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-[#94764c]">Thông tin nhanh</h2>
+              <span className="h-px flex-1 bg-[#e8dcc9]" />
+            </div>
+            <dl className="grid gap-x-8 px-5 sm:grid-cols-2 sm:px-7">
+              {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
+                <div key={index} className="grid grid-cols-[minmax(100px,0.42fr)_minmax(0,1fr)] gap-4 border-b border-[#f0e8dc] py-4">
+                  <dt className="text-sm font-semibold text-[#987a51]">{item.label}</dt>
+                  <dd className="whitespace-pre-line break-words text-sm leading-relaxed text-[#514638]">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
 
         {/* Detailed content from CMS — text and uploaded images */}
         {product.detail_content && product.detail_content.length > 0 && (
