@@ -234,28 +234,14 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           </div>
         </div>
 
-        {/* Description */}
-        {product.description && (
-          <div className="mt-12 max-w-3xl">
-            <h2 className="font-serif text-2xl font-bold text-secondary-900 mb-4">
-              Mô Tả Chi Tiết
-            </h2>
-            <div className="prose prose-sm max-w-none">
-              <p className="text-secondary-700 leading-relaxed whitespace-pre-line">
-                {product.description}
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Quick info from CMS — shown on product detail / booking page */}
         {product.quick_info && product.quick_info.length > 0 && (
-          <section className="mt-10 rounded-2xl border border-[#e9dfd0] bg-white p-5 shadow-sm sm:p-7">
-            <h2 className="mb-5 font-serif text-2xl font-bold text-secondary-900">Thông tin nhanh</h2>
-            <dl className="grid gap-4 sm:grid-cols-2">
+          <section className="mt-12 overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-sm">
+            <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-4 sm:px-7"><h2 className="font-serif text-2xl font-bold text-secondary-900">Thông tin nhanh</h2><p className="mt-1 text-sm text-secondary-500">Thông số và đặc điểm sản phẩm</p></div>
+            <dl className="grid gap-x-8 px-5 py-3 sm:grid-cols-2 sm:px-7">
               {product.quick_info.filter((item) => item.label?.trim() && item.value?.trim()).map((item, index) => (
-                <div key={index} className="border-b border-cream-200 pb-3">
-                  <dt className="mb-1 text-xs font-bold uppercase tracking-wider text-[#9a7950]">{item.label}</dt>
+                <div key={index} className="grid grid-cols-[minmax(100px,0.7fr)_minmax(0,1.3fr)] gap-3 border-b border-cream-200 py-4 last:border-b-0">
+                  <dt className="text-xs font-bold uppercase tracking-wider text-[#9a7950]">{item.label}</dt>
                   <dd className="whitespace-pre-line text-sm leading-relaxed text-secondary-700">{item.value}</dd>
                 </div>
               ))}
@@ -265,9 +251,9 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
 
         {/* Detailed content from CMS — text and uploaded images */}
         {product.detail_content && product.detail_content.length > 0 && (
-          <section className="mt-8 rounded-2xl border border-[#e9dfd0] bg-white p-5 shadow-sm sm:p-7">
-            <h2 className="mb-5 font-serif text-2xl font-bold text-secondary-900">Mô tả sản phẩm chi tiết</h2>
-            <div className="space-y-5">
+          <section className="mt-8 overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-sm">
+            <div className="border-b border-[#eee4d6] bg-[#fbf7ef] px-5 py-4 sm:px-7"><h2 className="font-serif text-2xl font-bold text-secondary-900">Mô tả sản phẩm chi tiết</h2><p className="mt-1 text-sm text-secondary-500">Thông tin chi tiết về sản phẩm</p></div>
+            <div className="space-y-5 px-5 py-6 sm:px-7">
               {product.detail_content.map((block, index) => block.type === 'image' ? (
                 <img key={index} src={block.content} alt={product.name} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain" />
               ) : (
