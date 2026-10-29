@@ -26,6 +26,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const { products: related } = useProducts({ limit: 4 });
 
@@ -56,6 +57,12 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
       </div>
     );
   }
+
+  const galleryImages = Array.from(new Set([
+    product.image_url,
+    ...(product.detail_content ?? []).filter((block) => block.type === 'image').map((block) => block.content),
+  ].filter((url): url is string => Boolean(url?.trim()))));
+  const activeImage = selectedImage && galleryImages.includes(selectedImage) ? selectedImage : (galleryImages[0] ?? '');
 
   const discount = product.compare_price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
@@ -101,20 +108,42 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
         </button>
 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
-          {/* Image */}
-          <div className="relative">
-            <div className="relative rounded-2xl overflow-hidden bg-cream-100 ring-1 ring-cream-200 shadow-sm">
-              <img
-                src={product.image_url || ''}
-                alt={product.name}
-                className="aspect-square w-full rounded-[1.3rem] object-cover"
-              />
+          {/* Product image gallery */}
+          <div className="relative mx-auto w-full max-w-[500px]">
+            <div className="relative overflow-hidden rounded-2xl border border-[#eee4d6] bg-white p-3 shadow-[0_12px_36px_rgba(74,52,25,0.07)] sm:p-4">
+              <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-[#fbf8f2]">
+                {activeImage ? (
+                  <img
+                    src={activeImage}
+                    alt={product.name}
+                    className="h-full w-full object-contain"
+                  />
+                ) : (
+                  <div className="text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
+                )}
+              </div>
               {discount > 0 && (
-                <span className="absolute left-5 top-5 rounded-full bg-[#8b3d2e] px-4 py-2 text-xs font-bold tracking-wide text-white shadow-md">
+                <span className="absolute left-6 top-6 rounded-full bg-[#8b3d2e] px-3.5 py-2 text-xs font-bold tracking-wide text-white shadow-md">
                   -{discount}%
                 </span>
               )}
             </div>
+            {galleryImages.length > 1 && (
+              <div className="mt-3 flex gap-3 overflow-x-auto pb-1" aria-label="Ảnh sản phẩm">
+                {galleryImages.map((image, index) => (
+                  <button
+                    key={image}
+                    type="button"
+                    onClick={() => setSelectedImage(image)}
+                    aria-label={`Xem ảnh sản phẩm ${index + 1}`}
+                    aria-pressed={activeImage === image}
+                    className={`h-[76px] w-[76px] shrink-0 overflow-hidden rounded-xl border-2 bg-white p-1 transition sm:h-[84px] sm:w-[84px] ${activeImage === image ? 'border-[#a1814e] shadow-sm' : 'border-[#eee4d6] hover:border-[#cbb58f]'}`}
+                  >
+                    <img src={image} alt={`${product.name} - ảnh ${index + 1}`} loading="lazy" className="h-full w-full rounded-lg object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Info */}
