@@ -32,6 +32,7 @@ export interface Product {
   flash_sale_end_at?: string | null;
   flash_sale_daily_start_time?: string | null;
   flash_sale_daily_end_time?: string | null;
+  flash_sale_daily_time_slots?: string[] | null;
   flash_sale_price?: number | null;
   flash_sale_compare_price?: number | null;
 }
