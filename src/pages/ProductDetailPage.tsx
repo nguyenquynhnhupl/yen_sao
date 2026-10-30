@@ -24,6 +24,26 @@ interface ProductDetailPageProps {
   navigate: (page: Page) => void;
 }
 
+const ALLOWED_DESCRIPTION_TAGS = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H3','H4','BLOCKQUOTE'])
+function sanitizeDescriptionHtml(input: string) {
+  if (typeof window === 'undefined') return input
+  const parsed = new DOMParser().parseFromString(input, 'text/html')
+  const output = document.createElement('div')
+  const copySafe = (source: Node, target: Node) => {
+    source.childNodes.forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) { target.appendChild(document.createTextNode(child.textContent || '')); return }
+      if (child.nodeType !== Node.ELEMENT_NODE) return
+      const element = child as Element
+      if (ALLOWED_DESCRIPTION_TAGS.has(element.tagName)) {
+        const clean = document.createElement(element.tagName.toLowerCase())
+        target.appendChild(clean); copySafe(element, clean)
+      } else copySafe(element, target)
+    })
+  }
+  copySafe(parsed.body, output)
+  return output.innerHTML
+}
+
 export default function ProductDetailPage({ slug, navigate }: ProductDetailPageProps) {
   const { product, loading } = useProduct(slug);
   const { addToCart } = useCart();
@@ -273,7 +293,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             {([{id:'description',label:'Mô tả chi tiết'},{id:'specs',label:'Thông số kỹ thuật'},{id:'usage',label:'Hướng dẫn sử dụng'},{id:'reviews',label:'Đánh giá'}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} aria-current={activeTab===tab.id?'page':undefined} className={`shrink-0 rounded-t-xl border border-b-0 px-4 py-3 text-sm font-semibold transition sm:px-6 ${activeTab===tab.id?'border-[#e8ddca] bg-[#f8f3e9] text-[#795b30]':'border-transparent bg-transparent text-[#92836d] hover:bg-[#fbf7ef] hover:text-[#795b30]'}`}>{tab.label}</button>)}
           </nav>
           <section className="mt-5 min-h-[220px] px-0 py-6 sm:py-8">
-            {activeTab === 'description' && <div className="w-full space-y-5">{product.detail_content?.length ? product.detail_content.map((block,index)=>block.type==='image'?<img key={index} src={block.content} alt={`${product.name} - nội dung ${index + 1}`} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain"/>:<p key={index} className="whitespace-pre-line leading-8 text-[#5f5548]">{block.content}</p>) : product.description ? <p className="whitespace-pre-line leading-8 text-[#5f5548]">{product.description}</p> : product.short_description ? <p className="whitespace-pre-line leading-8 text-[#5f5548]">{product.short_description}</p> : <p className="text-sm text-[#8b7b65]">Thông tin mô tả đang được cập nhật.</p>}</div>}
+            {activeTab === 'description' && <div className="w-full space-y-5 text-[#5f5548] [&_p]:my-3 [&_h3]:my-4 [&_h3]:text-lg [&_h3]:font-bold [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_strong]:font-bold [&_blockquote]:border-l-4 [&_blockquote]:border-[#c9ad7b] [&_blockquote]:pl-4 [&_blockquote]:italic">{product.detail_content?.length ? product.detail_content.map((block,index)=>block.type==='image'?<img key={index} src={block.content} alt={`${product.name} - nội dung ${index + 1}`} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain"/>:<div key={index} className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(block.content)}}/>) : product.description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.description)}}/> : product.short_description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.short_description)}}/> : <p className="text-sm text-[#8b7b65]">Thông tin mô tả đang được cập nhật.</p>}</div>}
             {activeTab === 'specs' && <div className="w-full overflow-hidden rounded-xl border border-[#e8ddca] bg-transparent"><table className="w-full table-fixed border-collapse text-left"><tbody>{[...(product.quick_info??[]),...(product.weight?[{label:'Khối lượng',value:product.weight}]:[]),{label:'Tên sản phẩm',value:product.name},{label:'Tình trạng',value:product.stock>0?'Còn hàng':'Tạm hết hàng'}].filter((item,index,all)=>item.label?.trim()&&item.value?.trim()&&all.findIndex(other=>other.label===item.label)===index).map((item,index)=><tr key={index} className="border-b border-[#eee5d8] last:border-b-0"><th scope="row" className="w-[34%] border-r border-[#eee5d8] bg-[#f8f3e9] px-2.5 py-2.5 text-xs font-semibold leading-snug text-[#856640] sm:px-4 sm:py-3 sm:text-sm">{item.label}</th><td className="whitespace-pre-line break-words [overflow-wrap:anywhere] px-2.5 py-2.5 text-xs leading-snug text-[#514638] sm:px-4 sm:py-3 sm:text-sm">{item.value}</td></tr>)}</tbody></table></div>}
             {activeTab === 'usage' && <div className="w-full"><div className="grid gap-4 sm:grid-cols-3">{[{step:'01',title:'Ngâm yến',text:'Ngâm yến trong nước sạch khoảng 30–45 phút hoặc đến khi sợi yến mềm.'},{step:'02',title:'Làm sạch',text:'Kiểm tra và loại bỏ lông hoặc tạp chất còn sót lại nếu có.'},{step:'03',title:'Chưng cách thủy',text:'Chưng khoảng 20–25 phút; có thể thêm đường phèn, táo đỏ tùy khẩu vị.'}].map(item=><div key={item.step} className="rounded-2xl border border-[#eee4d6] bg-[#fdfaf5] p-5"><span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#efe4d1] font-serif text-sm font-bold text-[#8b6b3f]">{item.step}</span><h3 className="mb-2 font-semibold text-[#493a28]">{item.title}</h3><p className="text-sm leading-6 text-[#766957]">{item.text}</p></div>)}</div><p className="mt-4 text-xs leading-5 text-[#8b7b65]">Thời gian ngâm và chưng có thể thay đổi tùy loại yến và hướng dẫn trên bao bì.</p></div>}
             {activeTab === 'reviews' && <div className="w-full"><p className="text-sm leading-7 text-[#766957]">Chưa có đánh giá được hiển thị cho sản phẩm này.</p></div>}
