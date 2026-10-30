@@ -22,6 +22,13 @@ function mapProduct(row: any): Product {
     short_description: row.short_description ?? row.description ?? null,
     quick_info: Array.isArray(row.quick_info) ? row.quick_info : [],
     detail_content: Array.isArray(row.detail_content) ? row.detail_content : [],
+    gallery_images: Array.isArray(row.gallery_images)
+      ? row.gallery_images.filter((url: unknown): url is string => typeof url === 'string' && Boolean(url.trim()))
+      : Array.isArray(row.images)
+        ? row.images.filter((url: unknown): url is string => typeof url === 'string' && Boolean(url.trim()))
+        : Array.isArray(row.image_urls)
+          ? row.image_urls.filter((url: unknown): url is string => typeof url === 'string' && Boolean(url.trim()))
+          : [],
     price: Number(row.price ?? 0),
     compare_price: row.compare_at_price == null
       ? (row.compare_price == null ? null : Number(row.compare_price))
