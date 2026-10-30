@@ -190,12 +190,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
           </div>
 
           <div className="bg-[#FBF8F1] p-3 sm:p-4">
-            {effectiveSelectedSlot !== 'all' && getSlotStatus(effectiveSelectedSlot) === 'Đã hết' ? (
-              <div className="px-4 py-12 text-center">
-                <p className="text-sm font-semibold text-[#817968]">Khung giờ này đã kết thúc</p>
-                <p className="mt-1 text-xs text-[#A09887]">Vui lòng chọn khung giờ khác để xem ưu đãi.</p>
-              </div>
-            ) : activeVisibleProducts.length > 0 ? (
+            {activeVisibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
                 {activeVisibleProducts.map((product) => {
                   const state = effectiveSelectedSlot === 'all'
