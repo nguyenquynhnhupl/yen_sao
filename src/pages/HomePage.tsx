@@ -66,7 +66,7 @@ function vietnamDayStart(timestamp: number) {
 
 function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
-  const [selectedSlot, setSelectedSlot] = useState('all');
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
@@ -145,7 +145,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   // On first entry, prioritize a slot currently running; otherwise select the next upcoming slot.
   const defaultSlot = slots.find((slot) => getSlotStatus(slot.key) === 'Đang sale')
     ?? slots.find((slot) => getSlotStatus(slot.key) === 'Sắp sale');
-  const effectiveSelectedSlot = selectedSlot;
+  const effectiveSelectedSlot = selectedSlot ?? defaultSlot?.key ?? 'all';
   const slotProducts = effectiveSelectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === effectiveSelectedSlot));
   const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
   const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
