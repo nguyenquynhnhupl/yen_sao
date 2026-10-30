@@ -1,6 +1,5 @@
-import { Menu, Search, ShoppingCart, X, ChevronDown } from 'lucide-react';
+import { Menu, Search, ShoppingCart, X } from 'lucide-react';
 import { useState } from 'react';
-import { useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useCategories } from '@/lib/hooks';
 import type { Page } from '@/lib/types';
@@ -14,11 +13,9 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
   const { totalItems, openCart } = useCart();
   const { categories } = useCategories();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [categoryOpen, setCategoryOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
 
   const featuredCategories = categories.slice(0, 3);
-  const moreCategories = categories.slice(3);
   const navLinks: { label: string; page: Page }[] = [
     { label: 'Trang Chủ', page: { name: 'home' } },
     ...featuredCategories.map((cat) => ({ label: cat.name, page: { name: 'products' as const, categorySlug: cat.slug } })),
@@ -37,7 +34,6 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
   const handleNav = (p: Page) => {
     navigate(p);
     setMobileOpen(false);
-    setCategoryOpen(false);
   };
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -124,6 +120,22 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
               </button>
             </div>
           </div>
+          {/* Desktop navigation stays inside the header, below the search row */}
+          <nav className="hidden lg:flex items-center justify-center gap-1 border-t border-white/15 py-2">
+            {navLinks.map((link) => (
+              <button
+                key={link.label}
+                onClick={() => handleNav(link.page)}
+                className={`rounded-full px-4 py-2 text-[12px] font-medium uppercase tracking-[0.08em] transition-colors ${
+                  isActive(link.page)
+                    ? 'bg-white/15 text-white'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
         </div>
 
         {/* Mobile menu */}
