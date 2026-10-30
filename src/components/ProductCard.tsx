@@ -7,6 +7,7 @@ interface ProductCardProps {
   product: Product;
   navigate: (page: Page) => void;
   flashSaleCountdown?: string;
+  variant?: 'default' | 'flash-sale';
 }
 
 // Mock display values only; deterministic per product and stable after refresh.
@@ -19,7 +20,8 @@ function getDemoSoldCount(product: Product): number {
   return 89 + (hash % 168);
 }
 
-export default function ProductCard({ product, navigate, flashSaleCountdown }: ProductCardProps) {
+export default function ProductCard({ product, navigate, flashSaleCountdown, variant = 'default' }: ProductCardProps) {
+  const isFlashSale = variant === 'flash-sale';
   const { addToCart } = useCart();
   const discount = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
@@ -29,7 +31,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown }: P
 
   return (
     <article
-      className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)]"
+      className={`group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)] ${isFlashSale ? 'min-w-0' : ''}`}
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f8f5ed]">
@@ -81,11 +83,12 @@ export default function ProductCard({ product, navigate, flashSaleCountdown }: P
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4 sm:p-5 lg:p-5">
+      <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-4 sm:p-5 lg:p-5' : 'p-4 sm:p-5'}`}>
         {product.weight && <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#a18a68]">{product.weight}</p>}
-        <h3 className="mb-2 line-clamp-2 min-h-[2.8rem] font-sans text-base font-semibold leading-6 text-[#30271f] transition-colors group-hover:text-[#8a6738] sm:text-[17px]">
+        <h3 className={`mb-2 line-clamp-2 min-h-[2.8rem] font-sans font-semibold leading-6 text-[#30271f] transition-colors group-hover:text-[#8a6738] ${isFlashSale ? 'text-base sm:text-[17px]' : 'text-[15px] sm:text-base'}`}>
           {product.name}
         </h3>
+        {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 text-xs leading-5 text-[#827568]">{product.short_description}</p>}
 
         <div className="mt-auto border-t border-[#f0e9df] pt-3">
           <div className="flex min-h-[54px] items-center justify-between gap-2">
