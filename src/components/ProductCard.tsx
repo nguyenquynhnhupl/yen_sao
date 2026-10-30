@@ -67,7 +67,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
       <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-4 sm:p-5'}`}>
         {product.weight && <p className={`mb-0.5 text-[9px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#9A7846]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
-        <h3 className={`mb-2 line-clamp-2 min-h-[2.5rem] font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2rem] text-[12px] leading-4 text-[#243D30] sm:text-[13px] group-hover:text-[#9A7846]' : 'text-[15px] font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
+        <h3 className={`mb-2 font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2rem] truncate whitespace-nowrap text-[12px] leading-4 text-[#243D30] sm:text-[13px] group-hover:text-[#9A7846]' : 'text-[15px] font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
         {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description}</p>}
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
