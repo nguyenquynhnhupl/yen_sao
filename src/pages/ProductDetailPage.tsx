@@ -106,42 +106,33 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
 
       <div className="container-max px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
-          {/* Product image gallery */}
+          {/* Product image gallery — clean, frameless */}
           <div className="relative mx-auto w-full max-w-[560px]">
             <div className="relative">
               <button
                 type="button"
                 onClick={() => activeImage && setZoomOpen(true)}
                 aria-label="Phóng to ảnh sản phẩm"
-                className="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#f3eee5] shadow-sm ring-1 ring-[#e9dfd0] cursor-zoom-in"
+                className="group relative block w-full cursor-zoom-in text-left"
               >
                 {activeImage ? (
-                  <>
-                    <img
-                      src={activeImage}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25 blur-2xl"
-                    />
-                    <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-[#d8c7a9]/20" />
-                    <img
-                      src={activeImage}
-                      alt={product.name}
-                      className="relative z-10 h-full w-full object-contain p-3 transition-transform duration-300 group-hover:scale-[1.03] sm:p-4"
-                    />
-                  </>
+                  <img
+                    src={activeImage}
+                    alt={product.name}
+                    className="mx-auto block max-h-[560px] w-full object-contain transition-transform duration-300 group-hover:scale-[1.015]"
+                  />
                 ) : (
-                  <div className="text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
+                  <div className="py-24 text-center text-sm text-[#9b8b75]">Chưa có hình ảnh sản phẩm</div>
                 )}
               </button>
               {discount > 0 && (
-                <span className="absolute left-4 top-4 z-20 rounded-full bg-[#8b3d2e] px-3.5 py-2 text-xs font-bold tracking-wide text-white shadow-md">
+                <span className="absolute left-3 top-3 z-20 rounded-full bg-[#8b3d2e] px-3.5 py-2 text-xs font-bold tracking-wide text-white shadow-md">
                   -{discount}%
                 </span>
               )}
             </div>
             {galleryImages.length > 1 && (
-              <div className="mt-3 grid grid-cols-5 gap-2" aria-label="Ảnh sản phẩm">
+              <div className="mt-4 grid grid-cols-5 gap-2" aria-label="Ảnh sản phẩm">
                 {galleryImages.map((image, index) => (
                   <button
                     key={image}
@@ -149,7 +140,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                     onClick={() => setSelectedImage(image)}
                     aria-label={`Xem ảnh sản phẩm ${index + 1}`}
                     aria-pressed={activeImage === image}
-                    className={`aspect-square w-full min-w-0 overflow-hidden rounded-xl border-2 transition ${activeImage === image ? 'border-[#a1814e] shadow-sm' : 'border-[#e9dfd0] hover:border-[#cbb58f]'}`}
+                    className={`aspect-square w-full min-w-0 overflow-hidden rounded-lg transition ${activeImage === image ? 'ring-2 ring-inset ring-[#a1814e]' : 'opacity-75 hover:opacity-100'}`}
                   >
                     <img src={image} alt={`${product.name} - ảnh ${index + 1}`} loading="lazy" className="h-full w-full object-cover" />
                   </button>
