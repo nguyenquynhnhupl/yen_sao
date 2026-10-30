@@ -169,7 +169,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
                 <div key={link.label}>
                   <button
                     onClick={() => handleNav(link.page)}
-                    className={`block w-full text-left px-4 py-3 rounded-lg text-[13px] font-medium uppercase tracking-[0.035em] transition-colors ${
+                    className={`block w-full text-left px-4 py-3 rounded-lg text-[14px] font-medium uppercase tracking-[0.035em] transition-colors ${
                       isActive(link.page)
                         ? 'text-white bg-white/15 ring-1 ring-white/25'
                          : 'text-white/90 hover:bg-white/10'
