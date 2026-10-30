@@ -34,7 +34,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, var
       className={`group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)] ${isFlashSale ? 'min-w-0' : ''}`}
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f8f5ed]">
+      <div className={`relative w-full overflow-hidden bg-[#f8f5ed] ${isFlashSale ? 'aspect-[5/4]' : 'aspect-[4/3]'}`}>
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -46,7 +46,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, var
           <div className="flex h-full w-full items-center justify-center text-sm text-[#9b8a72]">Chưa có hình ảnh</div>
         )}
 
-        <div className="absolute left-3 top-3 flex max-w-[75%] flex-col items-start gap-2">
+        <div className={`absolute left-3 top-3 flex flex-col items-start gap-2 ${isFlashSale ? 'max-w-[62%] gap-1.5' : 'max-w-[75%]'}`}>
           {discount > 0 && (
             <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#a82e24] to-[#d94a36] px-2.5 py-1.5 text-xs font-extrabold tracking-wide text-white shadow-lg ring-1 ring-white/30">
               <Flame className="h-3.5 w-3.5" /> GIẢM {discount}%
@@ -63,7 +63,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, var
         </div>
 
         {discount > 0 && (
-          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#9e3028] shadow-sm">
+          <span className={`absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 font-bold text-[#9e3028] shadow-sm ${isFlashSale ? 'max-w-[42%] text-[9px] sm:text-[10px]' : 'text-[11px]'}`}>
             Tiết kiệm {formatVND(product.compare_price! - product.price)}
           </span>
         )}
