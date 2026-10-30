@@ -138,7 +138,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
 
           <div className="bg-[#FBF8F1] p-3 sm:p-4">
             {visibleProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
                 {visibleProducts.map((product) => {
                   const expired = new Date(product.flash_sale_end_at!).getTime() <= now;
                   const upcoming = new Date(product.flash_sale_start_at!).getTime() > now;
