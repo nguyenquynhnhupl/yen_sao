@@ -122,10 +122,39 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     return [hours, minutes, seconds].map((part) => String(part).padStart(2, '0')).join(':');
   };
 
+  // Determine a slot from the exact schedule saved by Admin, not the legacy first-slot field.
+  const getProductSlots = (product: import('@/lib/types').Product) =>
+    Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length
+      ? product.flash_sale_daily_time_slots
+      : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0, 5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0, 5)}`];
+
+  const getSlotState = (product: import('@/lib/types').Product, time: string) => {
+    const slot = getProductSlots(product).find((item) => item.split('-')[0]?.slice(0, 5) === time);
+    if (!slot) return null;
+    const [startText, endText] = slot.split('-');
+    const [startHour, startMinute] = (startText ?? '00:00').split(':').map(Number);
+    const [endHour, endMinute] = (endText ?? '00:00').split(':').map(Number);
+    const start = startHour * 60 + startMinute;
+    const end = endHour * 60 + endMinute;
+    const vnNow = getVietnamDateParts(now);
+    const currentMinutes = vnNow.hour * 60 + vnNow.minute;
+    const todayStart = vietnamDayStart(now);
+    if (currentMinutes >= start && currentMinutes < end) {
+      return { status: 'Đang sale', expired: false, upcoming: false, target: todayStart + end * 60 * 1000 };
+    }
+    if (currentMinutes < start) {
+      return { status: 'Sắp sale', expired: false, upcoming: true, target: todayStart + start * 60 * 1000 };
+    }
+    return { status: 'Đã hết', expired: true, upcoming: false, target: now };
+  };
+
   const getSlotStatus = (time: string) => {
-    const items = flashProducts.filter((product) => (product.flash_sale_daily_start_time ?? '12:00').slice(0,5) === time);
-    return items.some((product) => { const state = getDailyStatus(product); return !state.upcoming && !state.expired; })
-      ? 'Đang sale' : items.some((product) => getDailyStatus(product).upcoming) ? 'Sắp sale' : 'Đã hết';
+    const states = flashProducts
+      .map((product) => getSlotState(product, time))
+      .filter((state): state is NonNullable<typeof state> => state !== null);
+    if (states.some((state) => state.status === 'Đang sale')) return 'Đang sale';
+    if (states.some((state) => state.status === 'Sắp sale')) return 'Sắp sale';
+    return 'Đã hết';
   };
 
   const categoryIcons = ['🪺', '🌿', '✨', '🎁', '🤎', '🕊️'];
@@ -170,7 +199,9 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
             {activeVisibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
                 {activeVisibleProducts.map((product) => {
-                  const state = getDailyStatus(product);
+                  const state = selectedSlot === 'all'
+                    ? getDailyStatus(product)
+                    : getSlotState(product, selectedSlot) ?? getDailyStatus(product);
                   return (
                     <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
                   );
