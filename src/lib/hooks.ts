@@ -96,7 +96,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       const bFlash = b.is_flash_deal ? 1 : 0;
       return bFlash - aFlash;
     });
-    const flash = candidates.find((p) => new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
+    const flash = candidates.find((p) => p.is_flash_deal && new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
     const flashStart = flash?.start_at ?? null;
     const flashEnd = flash?.end_at ?? null;
     const dayStart = new Date(now);
@@ -137,6 +137,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       flash_sale_end_at: flashEnd,
       flash_sale_daily_start_time: flash?.daily_start_time ?? null,
       flash_sale_daily_end_time: flash?.daily_end_time ?? null,
+      flash_sale_price: flash ? Math.max(0, Math.round(product.price - (flash.promotion_type === 'percent' ? product.price * Number(flash.promotion_value) / 100 : Number(flash.promotion_value)))) : null,
+      flash_sale_compare_price: flash ? product.price : null,
     };
   });
 }
