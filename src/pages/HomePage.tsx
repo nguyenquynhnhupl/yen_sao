@@ -140,6 +140,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
                     <ProductCard
                       product={product}
                       navigate={navigate}
+                      variant="flash-sale"
                       flashSaleCountdown={getCountdown(product.flash_sale_end_at!)}
                     />
                   </div>
