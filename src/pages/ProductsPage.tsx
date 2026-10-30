@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { SlidersHorizontal, ChevronRight } from 'lucide-react';
 import { useProducts, useCategories } from '@/lib/hooks';
 import type { Page } from '@/lib/types';
@@ -7,13 +7,15 @@ import ProductCard from '@/components/ProductCard';
 interface ProductsPageProps {
   navigate: (page: Page) => void;
   categorySlug?: string;
+  searchQuery?: string;
 }
 
-export default function ProductsPage({ navigate, categorySlug }: ProductsPageProps) {
+export default function ProductsPage({ navigate, categorySlug, searchQuery }: ProductsPageProps) {
   const { categories } = useCategories();
   const { products, loading } = useProducts({ categorySlug });
   const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc'>('default');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchQuery ?? '');
+  useEffect(() => { setSearch(searchQuery ?? ''); }, [searchQuery]);
   const [maxPrice, setMaxPrice] = useState('');
 
   const activeCategory = categories.find((c) => c.slug === categorySlug);
