@@ -340,8 +340,11 @@ export default function HomePage({ navigate }: HomePageProps) {
   return (
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
-      {visibleSections.filter((section) => section.section_key === 'hero').length === 0 ? null : null}
-      <FlashSaleSection products={allProducts} navigate={navigate} />\n      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
+      {visibleSections.filter((section) => section.section_key === 'trust_benefits').map(renderSection)}
+      <FlashSaleSection products={allProducts} navigate={navigate} />
+      {visibleSections
+        .filter((section) => section.section_key !== 'hero' && section.section_key !== 'trust_benefits')
+        .map(renderSection)}
     </div>
   );
 }
