@@ -136,7 +136,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     };
   });
 }
-\nexport function useCategories() {
+
+export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
