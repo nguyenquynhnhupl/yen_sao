@@ -128,9 +128,17 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     let effectivePrice = product.price;
     let comparePrice = product.compare_price;
     if (applicable) {
-      const rawDiscount = applicable.promotion_type === 'percent'
-        ? product.price * Number(applicable.promotion_value) / 100
-        : Number(applicable.promotion_value);
+      const applicableSlots = Array.isArray(applicable.daily_time_slots) && applicable.daily_time_slots.length ? applicable.daily_time_slots : [];
+      const activeSlot = applicableSlots.find((slot) => {
+        const s = typeof slot === 'string' ? slot.split('-')[0] : slot.start;
+        const e = typeof slot === 'string' ? slot.split('-')[1] : slot.end;
+        const parts = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(now));
+        const time = (parts.find(part=>part.type==='hour')?.value ?? '00')+':'+(parts.find(part=>part.type==='minute')?.value ?? '00');
+        return Boolean(s && e && time >= s && time < e);
+      });
+      const discountType = activeSlot && typeof activeSlot !== 'string' ? activeSlot.promotion_type : applicable.promotion_type;
+      const discountValue = activeSlot && typeof activeSlot !== 'string' ? Number(activeSlot.promotion_value) : Number(applicable.promotion_value);
+      const rawDiscount = discountType === 'percent' ? product.price * discountValue / 100 : discountValue;
       effectivePrice = Math.max(0, Math.round(product.price - rawDiscount));
       comparePrice = product.price;
     }
