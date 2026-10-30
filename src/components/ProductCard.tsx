@@ -80,10 +80,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
             <button
               onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
               disabled={product.stock <= 0}
-              className="mt-3 flex h-11 w-full shrink-0 items-center justify-center gap-2 self-end rounded-xl bg-[#294333] text-sm font-semibold text-[#fffaf0] shadow-[0_5px_14px_rgba(41,67,51,0.18)] transition hover:bg-[#1f3528] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
+              className="mt-3 flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-xl bg-[#294333] text-white shadow-sm transition hover:bg-[#1f3528] active:scale-95 disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
               aria-label="Thêm vào giỏ hàng"
             >
-              <Plus className="h-4 w-4" /> <span>Thêm vào giỏ</span>
+              <Plus className="h-5 w-5" />
             </button>
           )}
 
