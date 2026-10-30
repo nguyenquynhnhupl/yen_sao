@@ -83,15 +83,12 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     return end >= dayStart && start <= dayEnd;
   }).sort((a, b) => (a.flash_sale_daily_start_time ?? '12:00').localeCompare(b.flash_sale_daily_start_time ?? '12:00'));
 
-  const slots = Array.from(new Map(flashProducts.flatMap((product) => {
-    const times = Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`];
-    return times.map((slot) => { const [start] = slot.split('-'); return [start, { key: start, time: start }]; });
-  })).values()).sort((a, b) => a.time.localeCompare(b.time));
+  const getProductSlots = (product: import('@/lib/types').Product) => Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`];
+  const slotStart = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[0] : slot.start;
+  const slotEnd = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[1] : slot.end;
+  const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
 
-  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => {
-    const times = Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`];
-    return times.some((slot) => slot.split('-')[0] === selectedSlot);
-  });
+  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === selectedSlot));
   const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
   const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
 
@@ -99,13 +96,11 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     const endAt = new Date(product.flash_sale_end_at!).getTime();
     const finalDay = vietnamDayStart(endAt) + 24 * 60 * 60 * 1000 - 1;
     if (now > finalDay) return { expired: true, finished: true, upcoming: false, target: now };
-    const times = Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [
-      `${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`
-    ];
+    const times = getProductSlots(product);
     const vnNow = getVietnamDateParts(now);
     const todayStart = vietnamDayStart(now);
     const currentMinutes = vnNow.hour * 60 + vnNow.minute;
-    const parsed = times.map((slot) => { const [s,e] = slot.split('-'); const [sh,sm] = (s ?? '00:00').split(':').map(Number); const [eh,em] = (e ?? '00:00').split(':').map(Number); return { start:sh*60+sm, end:eh*60+em }; }).sort((a,b)=>a.start-b.start);
+    const parsed = times.map((slot) => { const s=slotStart(slot); const e=slotEnd(slot); const [sh,sm] = (s ?? '00:00').split(':').map(Number); const [eh,em] = (e ?? '00:00').split(':').map(Number); return { start:sh*60+sm, end:eh*60+em }; }).sort((a,b)=>a.start-b.start);
     const active = parsed.find((slot) => currentMinutes >= slot.start && currentMinutes < slot.end);
     if (active) { const target = todayStart + active.end * 60 * 1000; return { expired:false, finished:false, upcoming:false, target }; }
     const next = parsed.find((slot) => currentMinutes < slot.start);
@@ -123,15 +118,10 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   };
 
   // Determine a slot from the exact schedule saved by Admin, not the legacy first-slot field.
-  const getProductSlots = (product: import('@/lib/types').Product) =>
-    Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length
-      ? product.flash_sale_daily_time_slots
-      : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0, 5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0, 5)}`];
-
   const getSlotState = (product: import('@/lib/types').Product, time: string) => {
-    const slot = getProductSlots(product).find((item) => item.split('-')[0]?.slice(0, 5) === time);
+    const slot = getProductSlots(product).find((item) => slotStart(item)?.slice(0, 5) === time);
     if (!slot) return null;
-    const [startText, endText] = slot.split('-');
+    const startText = slotStart(slot); const endText = slotEnd(slot);
     const [startHour, startMinute] = (startText ?? '00:00').split(':').map(Number);
     const [endHour, endMinute] = (endText ?? '00:00').split(':').map(Number);
     const start = startHour * 60 + startMinute;
@@ -208,7 +198,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
                     ? getDailyStatus(product)
                     : getSlotState(product, selectedSlot) ?? getDailyStatus(product);
                   return (
-                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleSlot={selectedSlot === "all" ? undefined : selectedSlot} flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
                   );
                 })}
               </div>
