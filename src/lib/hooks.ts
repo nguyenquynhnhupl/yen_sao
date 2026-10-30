@@ -32,9 +32,9 @@ function mapProduct(row: any): Product {
             ? row.image_urls.filter((url: unknown): url is string => typeof url === 'string' && Boolean(url.trim()))
             : [],
     price: Number(row.price ?? 0),
-    compare_price: row.compare_at_price == null
-      ? (row.compare_price == null ? null : Number(row.compare_price))
-      : Number(row.compare_at_price),
+    // Only show a crossed-out price when an active Admin promotion is applied.
+    // Ignore legacy compare_at_price / compare_price values from product rows.
+    compare_price: null,
     weight: row.weight ?? null,
     category_id: row.category_id ?? null,
     image_url: row.image_url ?? null,
