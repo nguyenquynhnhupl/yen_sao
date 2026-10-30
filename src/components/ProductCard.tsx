@@ -71,21 +71,22 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description}</p>}
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
-          <div className={`flex items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? 'min-h-[24px] flex-wrap' : 'min-h-[54px]'}`}>
-            <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
-            {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
-            
+          <div className={`flex ${isFlashSale ? 'min-h-[24px] flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-h-[54px] items-center gap-3'}`}>
+            {!isFlashSale && (
+              <button
+                onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
+                disabled={product.stock <= 0}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#294333] text-white shadow-sm transition hover:bg-[#1f3528] active:scale-95 disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
+                aria-label="Thêm vào giỏ hàng"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+            )}
+            <div className={`flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? '' : 'flex-1'}`}>
+              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
+              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
+            </div>
           </div>
-          {!isFlashSale && (
-            <button
-              onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
-              disabled={product.stock <= 0}
-              className="mt-3 flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-xl bg-[#294333] text-white shadow-sm transition hover:bg-[#1f3528] active:scale-95 disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
-              aria-label="Thêm vào giỏ hàng"
-            >
-              <Plus className="h-5 w-5" />
-            </button>
-          )}
 
           {isFlashSale ? (
             <div className="mt-2">
