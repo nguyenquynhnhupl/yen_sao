@@ -98,45 +98,45 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     return 'Đã hết';
   };
 
-  const categoryIcons = ['💻', '👗', '💄', '🏠', '🎁', '✨'];
+  const categoryIcons = ['🪺', '🌿', '✨', '🎁', '🤎', '🕊️'];
 
   return (
-    <section className="bg-[#0D1222] py-5 sm:py-7">
+    <section className="bg-[#FBF8F1] py-6 sm:py-9">
       <div className="container-max px-3 sm:px-5">
-        <div className="overflow-hidden rounded-[18px] border border-[#282E43] bg-[#111729] shadow-[0_12px_35px_rgba(0,0,0,0.24)]">
-          <div className="relative flex min-h-[76px] flex-wrap items-center justify-between gap-3 overflow-hidden bg-gradient-to-r from-[#E80C3B] via-[#F51B36] to-[#FF7027] px-4 py-3.5 sm:px-6">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:13px_13px]" />
+        <div className="overflow-hidden rounded-[20px] border border-[#E8DFCF] bg-[#FFFDF8] shadow-[0_12px_35px_rgba(71,49,25,0.08)]">
+          <div className="relative flex min-h-[76px] flex-wrap items-center justify-between gap-3 overflow-hidden bg-gradient-to-r from-[#123D2D] via-[#1D4B37] to-[#315B40] px-4 py-3.5 sm:px-6">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.09] [background-image:radial-gradient(#E5C58F_1px,transparent_1px)] [background-size:13px_13px]" />
             <div className="relative z-10 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/30 bg-white/20 text-2xl text-yellow-300 shadow-inner">ϟ</div>
-              <h2 className="text-[21px] font-black italic tracking-tight text-white sm:text-2xl">FLASH SALE</h2>
-              <span className="rounded-full bg-[#FFD23F] px-3 py-1.5 text-[10px] font-black uppercase text-[#211A14] shadow-sm">GIÁ SỐC</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E5C58F]/50 bg-[#E5C58F]/15 text-2xl text-[#F1D9A6] shadow-inner">ϟ</div>
+              <h2 className="text-[21px] font-black italic tracking-tight text-[#FFF8E9] sm:text-2xl">FLASH SALE</h2>
+              <span className="rounded-full border border-[#E5C58F]/50 bg-[#E5C58F] px-3 py-1.5 text-[10px] font-black uppercase text-[#183D30] shadow-sm">ƯU ĐÃI ĐẶC BIỆT</span>
             </div>
             <div className="relative z-10 flex max-w-full items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {slots.map((slot) => {
                 const active = selectedSlot === slot.key;
                 const status = getSlotStatus(slot.key);
                 return (
-                  <button key={slot.key} type="button" onClick={() => setSelectedSlot(active ? 'all' : slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-white text-[#182033] shadow-md' : 'border border-white/15 bg-black/15 text-white hover:bg-white/20'}`}>
+                  <button key={slot.key} type="button" onClick={() => setSelectedSlot(active ? 'all' : slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-[#F7E9CB] text-[#183D30] shadow-md' : 'border border-white/20 bg-white/10 text-[#FFF8E9] hover:bg-white/20'}`}>
                     <span>{slot.time}</span>
-                    {active && <span className="text-[10px] font-medium text-[#E43B3B]">{status}</span>}
+                    {active && <span className="text-[10px] font-medium text-[#9A7846]">{status}</span>}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          <div className="flex gap-1.5 overflow-x-auto border-b border-[#292F43] bg-[#12182A] px-3 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-4">
-            <button type="button" onClick={() => setSelectedCategory('all')} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === 'all' ? 'bg-[#E90D4B] text-white shadow-sm' : 'bg-[#20283B] text-[#AEB6C7] hover:bg-[#2B344A]'}`}>
-              🔥 Tất cả
+          <div className="flex gap-1.5 overflow-x-auto border-b border-[#E8DFCF] bg-[#F5EFE2] px-3 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-4">
+            <button type="button" onClick={() => setSelectedCategory('all')} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === 'all' ? 'bg-[#234B36] text-[#FFF8E9] shadow-sm' : 'bg-white text-[#6F6859] hover:bg-[#EFE4CF]'}`}>
+              🪺 Tất cả
             </button>
             {saleCategories.map((category, index) => (
-              <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === category.id ? 'bg-[#E90D4B] text-white shadow-sm' : 'bg-[#20283B] text-[#AEB6C7] hover:bg-[#2B344A]'}`}>
+              <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === category.id ? 'bg-[#234B36] text-[#FFF8E9] shadow-sm' : 'bg-white text-[#6F6859] hover:bg-[#EFE4CF]'}`}>
                 <span>{categoryIcons[index % categoryIcons.length]}</span>{category.name}
               </button>
             ))}
           </div>
 
-          <div className="bg-[#0F1526] p-3 sm:p-4">
+          <div className="bg-[#FBF8F1] p-3 sm:p-4">
             {visibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
                 {visibleProducts.map((product) => {
@@ -149,8 +149,8 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
               </div>
             ) : (
               <div className="px-4 py-12 text-center">
-                <p className="text-sm font-semibold text-[#D4D9E4]">Chưa có sản phẩm trong khung giờ này</p>
-                <p className="mt-1 text-xs text-[#8993A8]">Hãy chọn khung giờ hoặc danh mục khác để xem ưu đãi.</p>
+                <p className="text-sm font-semibold text-[#31523D]">Chưa có sản phẩm trong khung giờ này</p>
+                <p className="mt-1 text-xs text-[#817968]">Hãy chọn khung giờ hoặc danh mục khác để xem ưu đãi.</p>
               </div>
             )}
           </div>
