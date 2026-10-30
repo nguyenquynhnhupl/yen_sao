@@ -89,7 +89,7 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
