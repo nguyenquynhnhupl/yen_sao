@@ -88,10 +88,6 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   const slotEnd = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[1] : slot.end;
   const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
 
-  const slotProducts = effectiveSelectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === effectiveSelectedSlot));
-  const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
-  const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
-
   const getDailyStatus = (product: import('@/lib/types').Product) => {
     const endAt = new Date(product.flash_sale_end_at!).getTime();
     const finalDay = vietnamDayStart(endAt) + 24 * 60 * 60 * 1000 - 1;
@@ -107,7 +103,6 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     if (next) { const target = todayStart + next.start * 60 * 1000; return { expired:false, finished:false, upcoming:true, target }; }
     return { expired:true, finished:false, upcoming:false, target:now };
   };
-  const activeVisibleProducts = visibleProducts.filter((product) => !getDailyStatus(product).finished);
 
   const getCountdown = (target: number) => {
     const remaining = Math.max(0, target - now);
@@ -151,6 +146,11 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   const defaultSlot = slots.find((slot) => getSlotStatus(slot.key) === 'Đang sale')
     ?? slots.find((slot) => getSlotStatus(slot.key) === 'Sắp sale');
   const effectiveSelectedSlot = selectedSlot ?? defaultSlot?.key ?? 'all';
+  const slotProducts = effectiveSelectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === effectiveSelectedSlot));
+  const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
+  const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
+
+  const activeVisibleProducts = visibleProducts.filter((product) => !getDailyStatus(product).finished);
   const categoryIcons = ['🪺', '🌿', '✨', '🎁', '🤎', '🕊️'];
 
   return (
