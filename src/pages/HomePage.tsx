@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ComponentType } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { ArrowRight, ShieldCheck, Award, Truck, Sparkles, Heart, Star } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -49,112 +49,108 @@ function sectionButtonTarget(url: string | null | undefined): Page {
 
 function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSlot, setSelectedSlot] = useState('all');
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
 
-  const activeProducts = products.filter((product) => {
-    if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at) return false;
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date(now);
+  todayEnd.setHours(23, 59, 59, 999);
+
+  // Keep today's ended deals visible so each card can show its "HẾT DEAL" state.
+  const flashProducts = products.filter((product) => {
+    if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false) return false;
     const start = new Date(product.flash_sale_start_at).getTime();
     const end = new Date(product.flash_sale_end_at).getTime();
-    return product.is_published !== false && start <= now && now < end;
-  });
+    return end >= todayStart.getTime() && start <= todayEnd.getTime() || start > todayEnd.getTime();
+  }).sort((a, b) => new Date(a.flash_sale_start_at!).getTime() - new Date(b.flash_sale_start_at!).getTime());
 
-  const visibleProducts = selectedCategory === 'all'
-    ? activeProducts
-    : activeProducts.filter((product) => product.category_id === selectedCategory);
+  const slots = Array.from(new Map(flashProducts.map((product) => {
+    const start = new Date(product.flash_sale_start_at!);
+    const key = start.toISOString().slice(0, 13);
+    return [key, { key, time: start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }), startAt: start.getTime() }];
+  })).values()).sort((a, b) => a.startAt - b.startAt);
 
-  const saleCategories = categories.filter((category) =>
-    activeProducts.some((product) => product.category_id === category.id),
-  );
+  const selectedProducts = selectedSlot === 'all'
+    ? flashProducts
+    : flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === selectedSlot);
 
   const getCountdown = (endAt: string) => {
     const remaining = Math.max(0, new Date(endAt).getTime() - now);
-    const days = Math.floor(remaining / 86400000);
-    const hours = Math.floor((remaining % 86400000) / 3600000);
+    const hours = Math.floor(remaining / 3600000);
     const minutes = Math.floor((remaining % 3600000) / 60000);
     const seconds = Math.floor((remaining % 60000) / 1000);
-    return [
-      days > 0 ? `${String(days).padStart(2, '0')} ngày` : null,
-      `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
-    ].filter(Boolean).join(' ');
+    return [hours, minutes, seconds].map((part) => String(part).padStart(2, '0')).join(':');
+  };
+
+  const slotStatus = (slot: typeof slots[number]) => {
+    const slotProducts = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === slot.key);
+    if (slotProducts.some((product) => new Date(product.flash_sale_start_at!).getTime() <= now && new Date(product.flash_sale_end_at!).getTime() > now)) return 'Đang diễn ra';
+    if (slot.startAt > now) return 'Sắp diễn ra';
+    return 'Đã kết thúc';
+  };
+
+  const scrollSlider = (direction: 'left' | 'right') => {
+    sliderRef.current?.scrollBy({ left: direction === 'right' ? 320 : -320, behavior: 'smooth' });
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#F5F0E6] py-9 sm:py-12">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border border-[#C5A46A]/25" />
-      <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full border border-[#C5A46A]/15" />
-      <div className="container-max relative px-4 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-[22px] border border-[#D8C7A7] bg-white shadow-[0_14px_38px_rgba(48,39,25,0.10)]">
-          <div className="relative flex flex-col gap-4 overflow-hidden bg-[linear-gradient(110deg,#102F24_0%,#1D4936_58%,#315B43_100%)] px-4 py-5 text-white sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(#F4D9A6_1px,transparent_1px)] [background-size:13px_13px]" />
-            <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-20 h-52 w-52 rounded-full border border-[#E5C58F]/20" />
-            <div className="relative z-10 flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#F1D9A8]/45 bg-[#E5C58F]/15 text-[#F3D69E] shadow-inner">
-                <span className="text-2xl leading-none">✦</span>
-              </div>
+    <section className="bg-[#F7F4ED] py-6 sm:py-8">
+      <div className="container-max px-4 sm:px-6">
+        <div className="overflow-hidden rounded-2xl border border-[#E8DFD1] bg-white shadow-[0_8px_28px_rgba(55,42,25,0.07)]">
+          <div className="flex items-center justify-between gap-3 border-b border-[#EEE8DE] px-4 py-4 sm:px-5">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="text-2xl leading-none text-[#D94A36]">⚡</span>
               <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="font-serif text-2xl font-semibold tracking-wide text-[#FFF8E9] sm:text-[28px]">FLASH SALE</h2>
-                  <span className="rounded-full border border-[#F2D7A0]/50 bg-[#E5C58F] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#243729]">Ưu đãi đặc biệt</span>
-                </div>
-                <p className="mt-1 text-xs text-[#E6DCC8] sm:text-sm">Giá ưu đãi giới hạn cho những sản phẩm yến sào tuyển chọn</p>
+                <h2 className="text-lg font-extrabold tracking-wide text-[#9F3028] sm:text-xl">FLASH SALE</h2>
+                <p className="mt-0.5 text-[11px] text-[#887E72] sm:text-xs">Ưu đãi giới hạn theo từng khung giờ</p>
               </div>
             </div>
-            <div className="relative z-10 flex items-center gap-2 self-start rounded-full border border-white/15 bg-black/15 px-3 py-2 text-[11px] font-semibold tracking-wide text-[#F7E7C5] sm:self-center">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#D98B62]" />
-              {activeProducts.length} sản phẩm đang ưu đãi
+            <div className="flex shrink-0 items-center gap-1.5">
+              <button type="button" onClick={() => scrollSlider('left')} aria-label="Sản phẩm trước" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8DFD1] bg-white text-[#655B50] transition hover:border-[#C9A66B] hover:text-[#A94735]">‹</button>
+              <button type="button" onClick={() => scrollSlider('right')} aria-label="Sản phẩm tiếp theo" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8DFD1] bg-white text-[#655B50] transition hover:border-[#C9A66B] hover:text-[#A94735]">›</button>
             </div>
           </div>
 
-          <div className="border-b border-[#EAE1D3] bg-[#FCFAF5] px-3 py-3 sm:px-5">
-            <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <button
-                type="button"
-                onClick={() => setSelectedCategory('all')}
-                className={`shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${selectedCategory === 'all' ? 'bg-[#A94735] text-white shadow-sm' : 'border border-[#E8DFD1] bg-white text-[#6F6659] hover:border-[#C5A46A] hover:text-[#294B3B]'}`}
-              >
-                ✦ Tất cả
-              </button>
-              {saleCategories.map((category) => (
-                <button
-                  type="button"
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${selectedCategory === category.id ? 'bg-[#A94735] text-white shadow-sm' : 'border border-[#E8DFD1] bg-white text-[#6F6659] hover:border-[#C5A46A] hover:text-[#294B3B]'}`}
-                >
-                  {category.name}
+          <div className="flex gap-2 overflow-x-auto border-b border-[#EEE8DE] bg-[#FCFBF9] px-3 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-4">
+            <button type="button" onClick={() => setSelectedSlot('all')} className={`shrink-0 rounded-lg px-3.5 py-2 text-left transition ${selectedSlot === 'all' ? 'bg-[#B83B30] text-white shadow-sm' : 'border border-[#E9E3DA] bg-white text-[#655D54] hover:border-[#D7B6A4]'}`}>
+              <span className="block text-xs font-bold">Tất cả khung giờ</span>
+              <span className={`mt-0.5 block text-[10px] ${selectedSlot === 'all' ? 'text-white/80' : 'text-[#9A9085]'}`}>{flashProducts.length} sản phẩm</span>
+            </button>
+            {slots.map((slot) => {
+              const status = slotStatus(slot);
+              const count = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === slot.key).length;
+              const active = selectedSlot === slot.key;
+              return (
+                <button key={slot.key} type="button" onClick={() => setSelectedSlot(slot.key)} className={`shrink-0 rounded-lg px-3.5 py-2 text-left transition ${active ? 'bg-[#B83B30] text-white shadow-sm' : 'border border-[#E9E3DA] bg-white text-[#655D54] hover:border-[#D7B6A4]'}`}>
+                  <span className="block text-xs font-bold">{slot.time}</span>
+                  <span className={`mt-0.5 block text-[10px] ${active ? 'text-white/80' : 'text-[#9A9085]'}`}>{status} · {count} SP</span>
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          <div className="bg-[#FBF9F4] p-3 sm:p-5">
-            {visibleProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 2xl:grid-cols-4">
-                {visibleProducts.map((product) => (
-                  <div key={product.id} className="min-w-0">
-                    <ProductCard
-                      product={product}
-                      navigate={navigate}
-                      variant="flash-sale"
-                      flashSaleCountdown={getCountdown(product.flash_sale_end_at!)}
-                    />
-                  </div>
-                ))}
+          <div className="bg-[#FAF9F6] p-3 sm:p-4">
+            {selectedProducts.length ? (
+              <div ref={sliderRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:thin] [scrollbar-color:#D8C8B2_transparent]">
+                {selectedProducts.map((product) => {
+                  const expired = new Date(product.flash_sale_end_at!).getTime() <= now;
+                  return (
+                    <div key={product.id} className="w-[calc(50%-6px)] min-w-[calc(50%-6px)] snap-start sm:w-[calc(33.333%-8px)] sm:min-w-[calc(33.333%-8px)] lg:w-[calc(25%-9px)] lg:min-w-[calc(25%-9px)] 2xl:w-[calc(20%-10px)] 2xl:min-w-[calc(20%-10px)]">
+                      <ProductCard product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(product.flash_sale_end_at!)} flashSaleExpired={expired} />
+                    </div>
+                  );
+                })}
               </div>
             ) : (
-              <div className="px-5 py-12 text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#E5D8C2] bg-[#F4EFE5] text-xl text-[#A88A5B]">✧</div>
-                <p className="font-serif text-lg font-semibold text-[#294B3B]">
-                  {activeProducts.length ? 'Danh mục này chưa có ưu đãi' : 'Ưu đãi đặc biệt sắp quay trở lại'}
-                </p>
-                <p className="mt-1 text-xs text-[#827665]">
-                  {activeProducts.length ? 'Hãy chọn danh mục khác để xem sản phẩm Flash Sale.' : 'Sản phẩm Flash Sale sẽ xuất hiện tại đây khi đến thời gian bắt đầu.'}
-                </p>
+              <div className="px-4 py-10 text-center">
+                <p className="text-sm font-semibold text-[#51483D]">Chưa có sản phẩm trong khung giờ này</p>
+                <p className="mt-1 text-xs text-[#938779]">Hãy chọn khung giờ khác để xem ưu đãi.</p>
               </div>
             )}
           </div>
