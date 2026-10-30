@@ -100,7 +100,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
           ) : (
             <div className="mt-3">
               <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{getDemoSoldCount(product).toLocaleString('vi-VN')} sản phẩm</span></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((getDemoSoldCount(product) / 300) * 100))}%` }} /></div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((getDemoSoldCount(product) / 300) * 100)))}%` }} /></div>
             </div>
           )}
           {!isFlashSale && product.stock <= 0 && <p className="mt-2 text-xs font-semibold text-[#b33b32]">Tạm hết hàng</p>}
