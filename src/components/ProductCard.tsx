@@ -24,17 +24,21 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
   const isFlashSale = variant === 'flash-sale';
   const { addToCart } = useCart();
   const selectedDiscountSlot = isFlashSale && flashSaleSlot ? product.flash_sale_daily_time_slots?.find((slot) => (typeof slot === 'string' ? slot.split('-')[0] : slot.start) === flashSaleSlot) : undefined;
+  const flashBasePrice = product.flash_sale_compare_price ?? product.price;
   const selectedSlotPrice = selectedDiscountSlot && typeof selectedDiscountSlot !== 'string'
-    ? Math.max(0, Math.round(product.price - (selectedDiscountSlot.promotion_type === 'percent' ? product.price * Number(selectedDiscountSlot.promotion_value) / 100 : Number(selectedDiscountSlot.promotion_value))) )
+    ? Math.max(0, Math.round(flashBasePrice - (selectedDiscountSlot.promotion_type === 'percent' ? flashBasePrice * Number(selectedDiscountSlot.promotion_value) / 100 : Number(selectedDiscountSlot.promotion_value))) )
     : null;
   const salePrice = isFlashSale ? (selectedSlotPrice ?? product.flash_sale_price ?? product.price) : product.price;
-  const saleComparePrice = isFlashSale && (selectedSlotPrice != null || product.flash_sale_price != null) ? product.price : product.compare_price;
+  const saleComparePrice = isFlashSale && (selectedSlotPrice != null || product.flash_sale_price != null) ? flashBasePrice : product.compare_price;
   const discount = saleComparePrice && saleComparePrice > salePrice
     ? Math.round(((saleComparePrice - salePrice) / saleComparePrice) * 100)
     : 0;
   const demoSoldCount = getDemoSoldCount(product);
   const flashSaleSoldCount = 98;
   const flashSaleProgress = Math.round((flashSaleSoldCount / 300) * 100);
+  const discountBadgeText = selectedDiscountSlot && typeof selectedDiscountSlot !== 'string'
+    ? (selectedDiscountSlot.promotion_type === 'percent' ? `-${selectedDiscountSlot.promotion_value}%` : `-${formatVND(Number(selectedDiscountSlot.promotion_value))}`)
+    : discount > 0 ? `-${discount}%` : 'FLASH SALE';
 
   return (
     <article
@@ -49,7 +53,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         {isFlashSale ? (
           <>
             <span className={`absolute left-2 top-2 rounded-md px-2 py-1 text-xs font-extrabold text-white shadow-sm bg-[#9B3028]`}>
-              {discount > 0 ? `-${discount}%` : 'FLASH SALE'}
+              {discountBadgeText}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
               <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2 py-1.5 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
