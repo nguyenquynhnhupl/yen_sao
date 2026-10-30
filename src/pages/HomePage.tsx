@@ -338,7 +338,7 @@ export default function HomePage({ navigate }: HomePageProps) {
   };
 
   return (
-    <div className="animate-fade-in">
+    <div className="home-page animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
       {visibleSections.filter((section) => section.section_key === 'hero').length === 0 ? null : null}
       <FlashSaleSection products={allProducts} navigate={navigate} />\n      {visibleSections.filter((section) => section.section_key !== 'hero').map(renderSection)}
