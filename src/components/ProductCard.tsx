@@ -6,6 +6,7 @@ import { formatVND } from '@/lib/types';
 interface ProductCardProps {
   product: Product;
   navigate: (page: Page) => void;
+  flashSaleCountdown?: string;
 }
 
 // Mock display values only; deterministic per product and stable after refresh.
@@ -18,7 +19,7 @@ function getDemoSoldCount(product: Product): number {
   return 89 + (hash % 168);
 }
 
-export default function ProductCard({ product, navigate }: ProductCardProps) {
+export default function ProductCard({ product, navigate, flashSaleCountdown }: ProductCardProps) {
   const { addToCart } = useCart();
   const discount = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
@@ -63,6 +64,14 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
           <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#9e3028] shadow-sm">
             Tiết kiệm {formatVND(product.compare_price! - product.price)}
           </span>
+        )}
+        {flashSaleCountdown && (
+          <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border border-[#E5C58F]/45 bg-[#14291F]/90 px-2.5 py-2 text-white shadow-lg backdrop-blur-md sm:inset-x-3 sm:bottom-3">
+            <span className="inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-[#F0DDBA] sm:text-[10px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D98B62]" /> Còn lại
+            </span>
+            <span className="font-mono text-[10px] font-bold tabular-nums tracking-wide text-[#FFE5B2] sm:text-xs">{flashSaleCountdown}</span>
+          </div>
         )}
 
         <div className="absolute inset-x-0 bottom-0 flex translate-y-full justify-center bg-gradient-to-t from-black/45 to-transparent pb-4 pt-8 transition-transform duration-300 group-hover:translate-y-0">
