@@ -74,7 +74,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
           <div className={`flex items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? 'min-h-[24px] flex-wrap' : 'min-h-[54px]'}`}>
             <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
             {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
-            {discount === 0 && !isFlashSale && <p className="mt-1 font-sans text-[10px] font-medium uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
+            
           </div>
           {!isFlashSale && (
             <button
