@@ -63,6 +63,7 @@ type PromotionRow = {
   flash_end_at?: string | null;
   daily_start_time?: string | null;
   daily_end_time?: string | null;
+  daily_time_slots?: string[] | null;
   is_active: boolean;
 };
 
@@ -112,10 +113,9 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     const applicable = candidates.find((p) => {
       const campaignActive = new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now;
       if (!campaignActive) return false;
-      const startTime = (p.daily_start_time ?? '00:00').slice(0,5);
-      const endTime = (p.daily_end_time ?? '23:59').slice(0,5);
       const currentTime = new Date(now).toTimeString().slice(0,5);
-      return currentTime >= startTime && currentTime < endTime;
+      const slots = Array.isArray(p.daily_time_slots) && p.daily_time_slots.length ? p.daily_time_slots : [`${(p.daily_start_time ?? '00:00').slice(0,5)}-${(p.daily_end_time ?? '23:59').slice(0,5)}`];
+      return slots.some((slot) => { const [startTime,endTime] = slot.split('-'); return Boolean(startTime && endTime && currentTime >= startTime && currentTime < endTime); });
     });
 
     let effectivePrice = product.price;
@@ -137,6 +137,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       flash_sale_end_at: flashEnd,
       flash_sale_daily_start_time: flash?.daily_start_time ?? null,
       flash_sale_daily_end_time: flash?.daily_end_time ?? null,
+      flash_sale_daily_time_slots: flash?.daily_time_slots ?? null,
       flash_sale_price: flash ? Math.max(0, Math.round(product.price - (flash.promotion_type === 'percent' ? product.price * Number(flash.promotion_value) / 100 : Number(flash.promotion_value)))) : null,
       flash_sale_compare_price: flash ? product.price : null,
     };
