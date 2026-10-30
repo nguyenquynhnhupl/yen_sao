@@ -63,7 +63,7 @@ type PromotionRow = {
   flash_end_at?: string | null;
   daily_start_time?: string | null;
   daily_end_time?: string | null;
-  daily_time_slots?: string[] | null;
+  daily_time_slots?: Array<string | {start:string;end:string;promotion_type:'percent'|'amount';promotion_value:number}> | null;
   is_active: boolean;
 };
 
@@ -98,6 +98,12 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       return bFlash - aFlash;
     });
     const flash = candidates.find((p) => p.is_flash_deal && new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
+    const flashSlots = flash && Array.isArray(flash.daily_time_slots) && flash.daily_time_slots.length ? flash.daily_time_slots : flash ? [(flash.daily_start_time ?? '12:00').slice(0,5)+'-'+(flash.daily_end_time ?? '13:00').slice(0,5)] : [];
+    const vnParts = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(now));
+    const vnTime = (vnParts.find(part=>part.type==='hour')?.value ?? '00')+':'+(vnParts.find(part=>part.type==='minute')?.value ?? '00');
+    const currentFlashSlot = flashSlots.find(slot => { const s=typeof slot==='string'?slot.split('-')[0]:slot.start; const e=typeof slot==='string'?slot.split('-')[1]:slot.end; return Boolean(s&&e&&vnTime>=s&&vnTime<e); });
+    const flashDiscountType = currentFlashSlot && typeof currentFlashSlot !== 'string' ? currentFlashSlot.promotion_type : flash?.promotion_type;
+    const flashDiscountValue = currentFlashSlot && typeof currentFlashSlot !== 'string' ? Number(currentFlashSlot.promotion_value) : Number(flash?.promotion_value ?? 0);
     const flashStart = flash?.start_at ?? null;
     const flashEnd = flash?.end_at ?? null;
     const dayStart = new Date(now);
@@ -115,8 +121,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       if (!campaignActive) return false;
       const timeParts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(now));
       const currentTime = `${timeParts.find((part) => part.type === 'hour')?.value ?? '00'}:${timeParts.find((part) => part.type === 'minute')?.value ?? '00'}`;
-      const slots = Array.isArray(p.daily_time_slots) && p.daily_time_slots.length ? p.daily_time_slots : [`${(p.daily_start_time ?? '00:00').slice(0,5)}-${(p.daily_end_time ?? '23:59').slice(0,5)}`];
-      return slots.some((slot) => { const [startTime,endTime] = slot.split('-'); return Boolean(startTime && endTime && currentTime >= startTime && currentTime < endTime); });
+      const slots = Array.isArray(p.daily_time_slots) && p.daily_time_slots.length ? p.daily_time_slots : [(p.daily_start_time ?? '00:00').slice(0,5)+'-'+(p.daily_end_time ?? '23:59').slice(0,5)];
+      return slots.some((slot) => { const startTime = typeof slot === 'string' ? slot.split('-')[0] : slot.start; const endTime = typeof slot === 'string' ? slot.split('-')[1] : slot.end; return Boolean(startTime && endTime && currentTime >= startTime && currentTime < endTime); });
     });
 
     let effectivePrice = product.price;
@@ -139,8 +145,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       flash_sale_daily_start_time: flash?.daily_start_time ?? null,
       flash_sale_daily_end_time: flash?.daily_end_time ?? null,
       flash_sale_daily_time_slots: flash?.daily_time_slots ?? null,
-      flash_sale_price: flash ? Math.max(0, Math.round(product.price - (flash.promotion_type === 'percent' ? product.price * Number(flash.promotion_value) / 100 : Number(flash.promotion_value)))) : null,
-      flash_sale_compare_price: flash ? product.price : null,
+      flash_sale_price: flash && currentFlashSlot ? Math.max(0, Math.round(product.price - (flashDiscountType === 'percent' ? product.price * flashDiscountValue / 100 : flashDiscountValue))) : null,
+      flash_sale_compare_price: flash && currentFlashSlot ? product.price : null,
     };
   });
 }
