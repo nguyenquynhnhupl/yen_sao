@@ -45,9 +45,9 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
               {flashSaleExpired ? 'HẾT DEAL' : discount > 0 ? `-${discount}%` : 'FLASH SALE'}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
-              <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-md bg-[#183D30]/92 px-2 py-1.5 text-white shadow-sm backdrop-blur-sm">
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#F7EEDB]"><Clock className="h-3 w-3 text-[#E5C58F]" />{flashSaleUpcoming ? 'Sắp mở' : 'Còn'}</span>
-                <span className="font-mono text-[10px] font-bold tabular-nums tracking-wide text-[#F1D9A6]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
+              <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2.5 py-2 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#FFF8E9]"><Clock className="h-3.5 w-3.5 text-[#F0D28E]" />{flashSaleUpcoming ? 'Sắp mở' : 'Còn'}</span>
+                <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wider text-[#FFE09A]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
               </div>
             )}
             {flashSaleExpired && <div className="absolute inset-x-2 bottom-2 rounded-md bg-[#7A302A]/90 px-2 py-1.5 text-center text-[10px] font-bold tracking-wide text-white">◉ HẾT HẠN</div>}
