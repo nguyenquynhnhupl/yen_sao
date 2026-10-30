@@ -158,221 +158,153 @@ img {
   loading: lazy;
 }
 
-/* Site-wide design normalization: one sans-serif family and consistent rhythm. */
-html, body, #root { min-height: 100%; font-family: var(--font-sans) !important; }
-*, *::before, *::after { font-family: inherit; }
-.font-serif, .font-sans, h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans) !important; }
-.font-serif { font-weight: 650; }
-p, li, label, th, td { letter-spacing: -0.01em; }
-button, [role="button"] { line-height: 1.35; letter-spacing: 0; }
-input, select, textarea { min-height: 2.75rem; border-radius: 0.75rem; font-size: 0.9375rem; line-height: 1.5; }
-input::placeholder, textarea::placeholder { color: #92877B; opacity: 1; }
-.btn-primary, .btn-outline, .btn-ghost { min-height: 2.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 650; letter-spacing: 0; }
-.card { border-radius: var(--radius-card); }
-.section-padding { padding-top: var(--space-section); padding-bottom: var(--space-section); }
-.container-max { width: 100%; }
-@media (max-width: 639px) {
-  body { font-size: 0.9375rem; }
-  .section-padding { padding-left: 1rem; padding-right: 1rem; }
-}
 
-
-/* Homepage-only typography and spacing system. */
-.home-page {
-  --home-section-y: clamp(3.5rem, 6vw, 5rem);
-  --home-section-gap: clamp(1.25rem, 2.4vw, 1.75rem);
-  --home-heading: clamp(1.875rem, 3vw, 2.125rem);
-  --home-body: 0.9375rem;
-}
-.home-page > section:not(:first-child) { scroll-margin-top: 5rem; }
-.home-page .section-padding { padding-top: var(--home-section-y); padding-bottom: var(--home-section-y); }
-.home-page h1, .home-page h2, .home-page h3 { letter-spacing: -0.035em; }
-.home-page p { line-height: 1.7; }
-.home-page .container-max > div > h2,
-.home-page section h2 { text-wrap: balance; }
-.home-page section:not(:first-child) h2 { font-size: var(--home-heading); line-height: 1.2; font-weight: 650; }
-.home-page section:not(:first-child) h2 + p,
-.home-page section:not(:first-child) h2 ~ p { margin-top: 0.75rem; font-size: var(--home-body); color: var(--brand-text-muted); }
-.home-page section h3 { line-height: 1.35; }
-.home-page section button { font-size: 0.875rem; }
-.home-page section article p { font-size: 0.8125rem; line-height: 1.55; }
-.home-page section article h3 { font-size: 0.9375rem; font-weight: 600; }
-.home-page section.bg-white.py-4,
-.home-page section.bg-white.py-5 { padding-top: clamp(2.5rem, 4vw, 3.5rem); padding-bottom: clamp(2.5rem, 4vw, 3.5rem); }
-.home-page section.bg-white.py-4 h3,
-.home-page section.bg-white.py-5 h3 { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; }
-.home-page .bg-\\[\\#fff8f0\\] h2 { font-size: var(--home-heading); }
-.home-page .bg-\\[\\#fff8f0\\] p { font-size: 0.875rem; }
-.home-page .bg-\\[\\#fff8f0\\] .font-mono { font-size: 1.25rem; }
-.home-page .bg-\\[\\#F4F0E6\\] h2 { font-size: var(--home-heading); }
-.home-page .bg-\\[\\#F4F0E6\\] h3 { font-size: 1rem; }
-.home-page .bg-\\[\\#F4F0E6\\] article { padding: 1.125rem; }
-.home-page .bg-\\[\\#F4F0E6\\] article p { font-size: 0.875rem; }
-.home-page .bg-\\[\\#EDE5D6\\] h2 { font-size: var(--home-heading); }
-.home-page .bg-\\[\\#EDE5D6\\] p { font-size: 0.875rem; }
-.home-page .bg-\\[\\#EDE5D6\\] .container-max > div:first-child { margin-bottom: 1.75rem; }
-@media (max-width: 639px) {
-  .home-page { --home-section-y: 2.75rem; --home-heading: 1.625rem; }
-  .home-page section h1 { font-size: clamp(2.25rem, 10vw, 3rem); line-height: 1.12; }
-  .home-page section:not(:first-child) h2 { font-size: var(--home-heading); }
-  .home-page section.bg-white.py-4,
-  .home-page section.bg-white.py-5 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
-  .home-page .bg-\\[\\#EDE5D6\\] .container-max > div:first-child { margin-bottom: 1.25rem; }
-}
-
-
-/* Unified Manrope typography and responsive rhythm across the storefront. */
-:root {
-  --type-page-title: clamp(1.8rem, 3.2vw, 2.4rem);
-  --type-section-title: clamp(1.45rem, 2.6vw, 2rem);
-  --type-card-title: clamp(0.98rem, 1.25vw, 1.08rem);
-  --type-body: 0.9375rem;
-  --type-caption: 0.8125rem;
-  --control-height: 2.875rem;
-}
-html, body, #root {
-  font-family: var(--font-sans) !important;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-*, *::before, *::after { font-family: inherit; }
-.font-serif, .font-sans { font-family: var(--font-sans) !important; }
-h1 {
-  font-family: var(--font-sans) !important;
-  font-size: var(--type-page-title) !important;
-  font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.04em;
-}
-h2 {
-  font-family: var(--font-sans) !important;
-  font-size: var(--type-section-title) !important;
-  font-weight: 750;
-  line-height: 1.25;
-  letter-spacing: -0.035em;
-}
-h3 {
-  font-family: var(--font-sans) !important;
-  font-size: var(--type-card-title) !important;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-}
-h4, h5, h6 {
-  font-family: var(--font-sans) !important;
-  font-weight: 700;
-  line-height: 1.4;
-}
-p, li { line-height: 1.65; }
-button, [role="button"], input, select, textarea {
-  font-family: var(--font-sans) !important;
-  letter-spacing: 0;
-}
-button, [role="button"] { font-weight: 650; }
-input, select, textarea {
-  min-height: var(--control-height);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-textarea { min-height: 7rem; }
-.card, article.card {
-  border-radius: var(--radius-card);
-}
-@media (max-width: 639px) {
-  :root {
-    --type-page-title: clamp(1.7rem, 7.5vw, 2rem);
-    --type-section-title: clamp(1.35rem, 6vw, 1.6rem);
-    --type-card-title: 0.98rem;
-    --type-body: 0.9rem;
-    --control-height: 2.75rem;
-  }
-  body { font-size: var(--type-body); }
-  p, li { line-height: 1.6; }
-}
-
-
-/* Premium typography system: Playfair Display for H1/H2, Be Vietnam Pro everywhere else. */
+/* Refined storefront typography: restrained, readable, consistent on every page. */
 :root {
   --font-display: 'Playfair Display', Georgia, serif;
   --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --type-h1: clamp(2.5rem, 3.5vw, 3rem);
-  --type-h2: clamp(2rem, 2.8vw, 2.25rem);
-  --type-h3: clamp(1.25rem, 1.8vw, 1.5rem);
-  --type-h4: clamp(1rem, 1.2vw, 1.125rem);
-  --type-subtitle: 1rem;
+  --type-page-title: clamp(1.875rem, 3vw, 2.25rem);
+  --type-section-title: clamp(1.5rem, 2.4vw, 1.875rem);
+  --type-subsection-title: 1.1875rem;
   --type-body: 0.9375rem;
   --type-description: 0.875rem;
-  --type-product-name: 1rem;
-  --type-product-price: clamp(1.125rem, 1.6vw, 1.375rem);
-  --type-button: 0.9375rem;
-  --type-caption: 0.8125rem;
+  --type-card-title: 0.96875rem;
+  --type-price: clamp(1.125rem, 1.4vw, 1.25rem);
+  --type-caption: 0.75rem;
+  --type-button: 0.875rem;
   --type-navigation: 0.875rem;
   --color-heading: #493729;
   --color-body: #65594E;
   --color-description: #82776B;
 }
-html, body, #root { font-family: var(--font-sans) !important; }
+html, body, #root { min-height: 100%; font-family: var(--font-sans) !important; }
 *, *::before, *::after { font-family: inherit; }
-body { font-size: var(--type-body); line-height: 1.65; color: var(--color-body); }
+body {
+  font-size: var(--type-body);
+  line-height: 1.65;
+  letter-spacing: 0;
+  color: var(--color-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
 h1, h2 {
   font-family: var(--font-display) !important;
   color: var(--color-heading);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
   text-wrap: balance;
 }
-h1 { font-size: var(--type-h1) !important; }
-h2 { font-size: var(--type-h2) !important; }
-h3, h4, h5, h6 {
+h1 { font-size: var(--type-page-title) !important; }
+h2 { font-size: var(--type-section-title) !important; }
+h3 {
   font-family: var(--font-sans) !important;
   color: var(--color-heading);
-  letter-spacing: -0.015em;
-  line-height: 1.35;
+  font-size: var(--type-subsection-title) !important;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.38;
 }
-h3 { font-size: var(--type-h3) !important; font-weight: 600; }
-h4, h5, h6 { font-size: var(--type-h4) !important; font-weight: 600; }
+h4, h5, h6 {
+  font-family: var(--font-sans) !important;
+  color: var(--color-heading);
+  font-size: 1rem !important;
+  font-weight: 600;
+  line-height: 1.4;
+}
 p, li { line-height: 1.65; }
+small, label, th, td { font-family: var(--font-sans) !important; }
+nav, nav a { font-family: var(--font-sans) !important; }
+nav a { font-size: var(--type-navigation); font-weight: 500; }
 button, [role="button"], input, select, textarea {
   font-family: var(--font-sans) !important;
   letter-spacing: 0;
 }
-button, [role="button"] { font-size: var(--type-button); font-weight: 600; line-height: 1.4; }
+button, [role="button"] {
+  font-size: var(--type-button);
+  font-weight: 600;
+  line-height: 1.4;
+}
 input, select, textarea {
-  min-height: 2.875rem;
+  min-height: 2.75rem;
   font-size: var(--type-body);
   line-height: 1.5;
 }
 textarea { min-height: 7rem; }
-nav, nav a { font-family: var(--font-sans) !important; }
-nav a { font-size: var(--type-navigation); font-weight: 500; }
-small, .caption, label { font-family: var(--font-sans) !important; }
 .font-serif { font-family: var(--font-sans) !important; }
 .font-sans { font-family: var(--font-sans) !important; }
-.home-page h1, .home-page h2,
+.btn-primary, .btn-outline, .btn-ghost {
+  min-height: 2.625rem;
+  font-size: var(--type-button);
+  font-weight: 600;
+}
+.card, article.card { border-radius: var(--radius-card); }
+.section-padding {
+  padding-top: clamp(2.75rem, 5vw, 4rem);
+  padding-bottom: clamp(2.75rem, 5vw, 4rem);
+}
+.container-max { width: 100%; }
+
+/* Hero and section headings */
+.home-page h1 {
+  font-size: clamp(2rem, 3.2vw, 2.5rem) !important;
+  line-height: 1.2;
+}
 .home-page section:not(:first-child) h2 {
-  font-family: var(--font-display) !important;
-  font-weight: 600;
+  font-size: var(--type-section-title) !important;
+  line-height: 1.25;
 }
-.home-page h1 { font-size: var(--type-h1) !important; }
-.home-page section:not(:first-child) h2 { font-size: var(--type-h2) !important; }
-.home-page h3, .home-page section article h3 {
-  font-family: var(--font-sans) !important;
-  font-size: var(--type-product-name) !important;
-  font-weight: 600;
+.home-page section:not(:first-child) h2 + p,
+.home-page section:not(:first-child) h2 ~ p {
+  font-size: var(--type-description);
+  line-height: 1.65;
+  color: var(--color-description);
 }
-.home-page section article p { font-size: var(--type-description); color: var(--color-description); }
+.home-page h3 { font-size: 1rem !important; }
+.home-page section article h3 { font-size: var(--type-card-title) !important; }
+.home-page section article p { font-size: var(--type-description); line-height: 1.6; }
+
+/* Product cards */
+article.group h3 {
+  font-size: var(--type-card-title) !important;
+  line-height: 1.45;
+}
+.product-card-price {
+  font-size: var(--type-price) !important;
+  line-height: 1.3;
+}
+
+/* Product detail */
+.product-detail-page h1 { font-size: clamp(1.75rem, 2.8vw, 2.125rem) !important; }
+.product-detail-price {
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem) !important;
+  line-height: 1.2 !important;
+}
+.product-detail-page .product-description {
+  font-size: var(--type-body);
+  line-height: 1.75;
+}
+.product-detail-page .product-description h3 { font-size: 1.125rem !important; }
+
+/* Keep supporting pages calm and consistent */
+main > .animate-fade-in h1 { font-size: var(--type-page-title) !important; }
+main > .animate-fade-in h2 { font-size: var(--type-section-title) !important; }
+
 @media (max-width: 639px) {
   :root {
-    --type-h1: clamp(1.875rem, 8vw, 2.125rem);
-    --type-h2: clamp(1.625rem, 7vw, 1.875rem);
-    --type-h3: 1.1875rem;
+    --type-page-title: 1.75rem;
+    --type-section-title: 1.5rem;
+    --type-subsection-title: 1.0625rem;
     --type-body: 0.875rem;
-    --type-product-name: 0.9375rem;
-    --type-product-price: 1.125rem;
+    --type-card-title: 0.9375rem;
+    --type-price: 1.0625rem;
     --type-button: 0.875rem;
+    --type-navigation: 0.875rem;
   }
   body { font-size: var(--type-body); }
-  .home-page section h1 { font-size: var(--type-h1) !important; line-height: 1.2; }
-  .home-page section:not(:first-child) h2 { font-size: var(--type-h2) !important; }
+  .section-padding { padding-left: 1rem; padding-right: 1rem; }
+  .home-page h1 { font-size: clamp(1.875rem, 8vw, 2.125rem) !important; }
+  .home-page section:not(:first-child) h2 { font-size: var(--type-section-title) !important; }
+  .product-detail-page h1 { font-size: 1.625rem !important; }
+  .product-detail-price { font-size: 1.5rem !important; }
 }
