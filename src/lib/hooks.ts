@@ -61,6 +61,8 @@ type PromotionRow = {
   is_flash_deal?: boolean;
   flash_start_at?: string | null;
   flash_end_at?: string | null;
+  daily_start_time?: string | null;
+  daily_end_time?: string | null;
   is_active: boolean;
 };
 
@@ -71,7 +73,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
   const client = supabase;
   const [{ data: links, error: linksError }, { data: promotionRows, error: promotionsError }] = await Promise.all([
     client.from('promotion_products').select('product_id,promotion_id'),
-    client.from('promotions').select('id,promotion_type,promotion_value,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,is_active'),
+    client.from('promotions').select('id,promotion_type,promotion_value,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,daily_start_time,daily_end_time,is_active'),
   ]);
 
   if (linksError || promotionsError) {
@@ -110,7 +112,10 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     const applicable = candidates.find((p) => {
       const campaignActive = new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now;
       if (!campaignActive) return false;
-      return true;
+      const startTime = (p.daily_start_time ?? '00:00').slice(0,5);
+      const endTime = (p.daily_end_time ?? '23:59').slice(0,5);
+      const currentTime = new Date(now).toTimeString().slice(0,5);
+      return currentTime >= startTime && currentTime < endTime;
     });
 
     let effectivePrice = product.price;
@@ -130,6 +135,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       is_flash_sale: flashSaleVisibleToday,
       flash_sale_start_at: flashStart,
       flash_sale_end_at: flashEnd,
+      flash_sale_daily_start_time: flash?.daily_start_time ?? null,
+      flash_sale_daily_end_time: flash?.daily_end_time ?? null,
     };
   });
 }
