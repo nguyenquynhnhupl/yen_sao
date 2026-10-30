@@ -86,11 +86,14 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     const startToday = new Date(now); startToday.setHours(sh, sm, 0, 0);
     const endToday = new Date(now); endToday.setHours(eh, em, 0, 0);
     const finalDay = new Date(endAt); finalDay.setHours(23,59,59,999);
-    if (now > finalDay.getTime()) return { expired: true, upcoming: false, target: now };
-    if (now < startToday.getTime()) return { expired: false, upcoming: true, target: startToday.getTime() };
-    if (now < endToday.getTime()) return { expired: false, upcoming: false, target: endToday.getTime() };
-    return { expired: true, upcoming: false, target: now };
+    if (now > finalDay.getTime()) return { expired: true, finished: true, upcoming: false, target: now };
+    if (now < startToday.getTime()) return { expired: false, finished: false, upcoming: true, target: startToday.getTime() };
+    if (now < endToday.getTime()) return { expired: false, finished: false, upcoming: false, target: endToday.getTime() };
+    const isFinalDate = new Date(now).toDateString() === endAt.toDateString();
+    return { expired: true, finished: isFinalDate, upcoming: false, target: now };
   };
+  const activeVisibleProducts = visibleProducts.filter((product) => !getDailyStatus(product).finished);
+
   const getCountdown = (target: number) => {
     const remaining = Math.max(0, target - now);
     const hours = Math.floor(remaining / 3600000);
@@ -144,12 +147,12 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
           </div>
 
           <div className="bg-[#FBF8F1] p-3 sm:p-4">
-            {visibleProducts.length > 0 ? (
+            {activeVisibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
-                {visibleProducts.map((product) => {
+                {activeVisibleProducts.map((product) => {
                   const state = getDailyStatus(product);
                   return (
-                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
                   );
                 })}
               </div>
