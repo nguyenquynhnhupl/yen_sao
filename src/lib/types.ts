@@ -32,6 +32,8 @@ export interface Product {
   flash_sale_end_at?: string | null;
   flash_sale_daily_start_time?: string | null;
   flash_sale_daily_end_time?: string | null;
+  flash_sale_daily_start_time?: string | null;
+  flash_sale_daily_end_time?: string | null;
 }
 
 export interface CartItem {
