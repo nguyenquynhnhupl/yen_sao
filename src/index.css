@@ -175,3 +175,47 @@ input::placeholder, textarea::placeholder { color: #92877B; opacity: 1; }
   body { font-size: 0.9375rem; }
   .section-padding { padding-left: 1rem; padding-right: 1rem; }
 }
+
+
+/* Homepage-only typography and spacing system. */
+.home-page {
+  --home-section-y: clamp(3.5rem, 6vw, 5rem);
+  --home-section-gap: clamp(1.25rem, 2.4vw, 1.75rem);
+  --home-heading: clamp(1.875rem, 3vw, 2.125rem);
+  --home-body: 0.9375rem;
+}
+.home-page > section:not(:first-child) { scroll-margin-top: 5rem; }
+.home-page .section-padding { padding-top: var(--home-section-y); padding-bottom: var(--home-section-y); }
+.home-page h1, .home-page h2, .home-page h3 { letter-spacing: -0.035em; }
+.home-page p { line-height: 1.7; }
+.home-page .container-max > div > h2,
+.home-page section h2 { text-wrap: balance; }
+.home-page section:not(:first-child) h2 { font-size: var(--home-heading); line-height: 1.2; font-weight: 650; }
+.home-page section:not(:first-child) h2 + p,
+.home-page section:not(:first-child) h2 ~ p { margin-top: 0.75rem; font-size: var(--home-body); color: var(--brand-text-muted); }
+.home-page section h3 { line-height: 1.35; }
+.home-page section button { font-size: 0.875rem; }
+.home-page section article p { font-size: 0.8125rem; line-height: 1.55; }
+.home-page section article h3 { font-size: 0.9375rem; font-weight: 600; }
+.home-page section.bg-white.py-4,
+.home-page section.bg-white.py-5 { padding-top: clamp(2.5rem, 4vw, 3.5rem); padding-bottom: clamp(2.5rem, 4vw, 3.5rem); }
+.home-page section.bg-white.py-4 h3,
+.home-page section.bg-white.py-5 h3 { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; }
+.home-page .bg-\\[\\#fff8f0\\] h2 { font-size: var(--home-heading); }
+.home-page .bg-\\[\\#fff8f0\\] p { font-size: 0.875rem; }
+.home-page .bg-\\[\\#fff8f0\\] .font-mono { font-size: 1.25rem; }
+.home-page .bg-\\[\\#F4F0E6\\] h2 { font-size: var(--home-heading); }
+.home-page .bg-\\[\\#F4F0E6\\] h3 { font-size: 1rem; }
+.home-page .bg-\\[\\#F4F0E6\\] article { padding: 1.125rem; }
+.home-page .bg-\\[\\#F4F0E6\\] article p { font-size: 0.875rem; }
+.home-page .bg-\\[\\#EDE5D6\\] h2 { font-size: var(--home-heading); }
+.home-page .bg-\\[\\#EDE5D6\\] p { font-size: 0.875rem; }
+.home-page .bg-\\[\\#EDE5D6\\] .container-max > div:first-child { margin-bottom: 1.75rem; }
+@media (max-width: 639px) {
+  .home-page { --home-section-y: 2.75rem; --home-heading: 1.625rem; }
+  .home-page section h1 { font-size: clamp(2.25rem, 10vw, 3rem); line-height: 1.12; }
+  .home-page section:not(:first-child) h2 { font-size: var(--home-heading); }
+  .home-page section.bg-white.py-4,
+  .home-page section.bg-white.py-5 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
+  .home-page .bg-\\[\\#EDE5D6\\] .container-max > div:first-child { margin-bottom: 1.25rem; }
+}
