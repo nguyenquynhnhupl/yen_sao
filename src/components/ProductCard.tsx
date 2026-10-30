@@ -45,22 +45,22 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
 
         <div className="absolute left-3 top-3 flex max-w-[75%] flex-col items-start gap-2">
           {discount > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#a82e24] to-[#d94a36] px-2.5 py-1.5 text-xs font-extrabold tracking-wide text-white shadow-lg ring-1 ring-white/30">
+            <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#a82e24] to-[#d94a36] px-2.5 py-1.5 text-xs font-extrabold tracking-wide text-white product-badge shadow-lg ring-1 ring-white/30">
               <Flame className="h-3.5 w-3.5" /> GIẢM {discount}%
             </span>
           )}
           {product.is_bestseller && (
-            <span className="inline-flex items-center gap-1 rounded-md border border-[#e7cf9b] bg-[#fff8e8] px-2.5 py-1.5 text-[10px] font-extrabold tracking-wider text-[#815b1b] shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-md border border-[#e7cf9b] bg-[#fff8e8] px-2.5 py-1.5 text-[10px] font-extrabold tracking-wider text-[#815b1b] product-badge shadow-sm">
               <Star className="h-3 w-3 fill-current" /> BÁN CHẠY
             </span>
           )}
           {product.is_featured && !product.is_bestseller && (
-            <span className="rounded-md bg-[#273f30] px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-white shadow-sm">NỔI BẬT</span>
+            <span className="rounded-md bg-[#273f30] px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-white shadow-sm product-badge">NỔI BẬT</span>
           )}
         </div>
 
         {discount > 0 && (
-          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#9e3028] shadow-sm">
+          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#9e3028] shadow-sm product-badge">
             Tiết kiệm {formatVND(product.compare_price! - product.price)}
           </span>
         )}
@@ -73,16 +73,16 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        {product.weight && <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#a18a68]">{product.weight}</p>}
-        <h3 className="mb-2.5 line-clamp-2 min-h-[3.25rem] font-serif text-base font-semibold leading-[1.55] tracking-[-0.01em] text-[#30271f] transition-colors group-hover:text-[#8a6738] sm:text-[17px]">
+        {product.weight && <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#a18a68] product-category-label">{product.weight}</p>}
+        <h3 className="mb-2.5 line-clamp-2 min-h-[3.25rem] font-sans text-base font-semibold leading-[1.4] text-[#30271f] transition-colors group-hover:text-[#8a6738] sm:text-[17px]">
           {product.name}
         </h3>
-        {product.short_description && <p className="mb-3 line-clamp-2 text-[13px] leading-6 text-[#827568] sm:text-sm">{product.short_description}</p>}
+        {product.short_description && <p className="mb-3 line-clamp-2 text-[13px] leading-6 text-[#827568] sm:text-sm description">{product.short_description}</p>}
 
         <div className="mt-auto border-t border-[#f0e9df] pt-3">
           <div className="flex min-h-[54px] items-center justify-between gap-2">
             <div className="min-w-0">
-              <p className="product-card-price font-sans text-xl font-bold leading-tight tracking-[-0.025em] text-[#654321] sm:text-[1.35rem]">{formatVND(product.price)}</p>
+              <p className="product-card-price font-sans font-bold leading-tight text-[#654321] sm:text-[1.35rem]">{formatVND(product.price)}</p>
               {discount > 0 && <p className="mt-1 font-sans text-[13px] font-medium text-[#8b8176] line-through">{formatVND(product.compare_price!)}</p>}
               {discount === 0 && <p className="mt-1 font-sans text-[11px] font-semibold uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
             </div>
@@ -97,7 +97,7 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
           </div>
 
           <div className="mt-3">
-            <div className="mb-1.5 flex items-center justify-between gap-2 text-xs font-medium text-[#857665]">
+            <div className="mb-1.5 flex items-center justify-between gap-2 text-xs font-medium text-[#857665] product-meta">
               <span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span>
               <span className="font-bold text-[#6e5131]">{soldCount.toLocaleString('vi-VN')} sản phẩm</span>
             </div>
