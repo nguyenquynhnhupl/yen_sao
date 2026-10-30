@@ -238,7 +238,8 @@ export function useProduct(slug: string | null) {
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error) console.error('Failed to load product:', error.message);
-        if (data) void attachPromotions([data]).then((items) => { if (!cancelled) setProduct(items[0] ?? null); });\n        else setProduct(null);
+        if (data) void attachPromotions([data]).then((items) => { if (!cancelled) setProduct(items[0] ?? null); });
+        else setProduct(null);
         setLoading(false);
       });
 
