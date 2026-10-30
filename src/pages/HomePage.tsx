@@ -89,8 +89,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     if (now > finalDay.getTime()) return { expired: true, finished: true, upcoming: false, target: now };
     if (now < startToday.getTime()) return { expired: false, finished: false, upcoming: true, target: startToday.getTime() };
     if (now < endToday.getTime()) return { expired: false, finished: false, upcoming: false, target: endToday.getTime() };
-    const isFinalDate = new Date(now).toDateString() === endAt.toDateString();
-    return { expired: true, finished: isFinalDate, upcoming: false, target: now };
+    return { expired: true, finished: false, upcoming: false, target: now };
   };
   const activeVisibleProducts = visibleProducts.filter((product) => !getDailyStatus(product).finished);
 
