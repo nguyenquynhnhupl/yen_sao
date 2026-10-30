@@ -47,6 +47,23 @@ function sectionButtonTarget(url: string | null | undefined): Page {
   return { name: 'products' };
 }
 
+function getVietnamDateParts(timestamp: number) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(timestamp));
+  return Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, Number(part.value)])) as {
+    year: number; month: number; day: number; hour: number; minute: number; second: number;
+  };
+}
+
+function vietnamDayStart(timestamp: number) {
+  const { year, month, day } = getVietnamDateParts(timestamp);
+  return Date.UTC(year, month - 1, day) - 7 * 60 * 60 * 1000;
+}
+
 function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
   const [selectedSlot, setSelectedSlot] = useState('all');
@@ -61,9 +78,9 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false) return false;
     const end = new Date(product.flash_sale_end_at).getTime();
     const start = new Date(product.flash_sale_start_at).getTime();
-    const dayStart = new Date(now); dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(now); dayEnd.setHours(23, 59, 59, 999);
-    return end >= dayStart.getTime() && start <= dayEnd.getTime();
+    const dayStart = vietnamDayStart(now);
+    const dayEnd = dayStart + 24 * 60 * 60 * 1000 - 1;
+    return end >= dayStart && start <= dayEnd;
   }).sort((a, b) => (a.flash_sale_daily_start_time ?? '12:00').localeCompare(b.flash_sale_daily_start_time ?? '12:00'));
 
   const slots = Array.from(new Map(flashProducts.flatMap((product) => {
@@ -79,19 +96,20 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
 
   const getDailyStatus = (product: import('@/lib/types').Product) => {
-    const endAt = new Date(product.flash_sale_end_at!);
-    const finalDay = new Date(endAt); finalDay.setHours(23,59,59,999);
-    if (now > finalDay.getTime()) return { expired: true, finished: true, upcoming: false, target: now };
+    const endAt = new Date(product.flash_sale_end_at!).getTime();
+    const finalDay = vietnamDayStart(endAt) + 24 * 60 * 60 * 1000 - 1;
+    if (now > finalDay) return { expired: true, finished: true, upcoming: false, target: now };
     const times = Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [
       `${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`
     ];
-    const today = new Date(now);
-    const currentMinutes = today.getHours() * 60 + today.getMinutes();
+    const vnNow = getVietnamDateParts(now);
+    const todayStart = vietnamDayStart(now);
+    const currentMinutes = vnNow.hour * 60 + vnNow.minute;
     const parsed = times.map((slot) => { const [s,e] = slot.split('-'); const [sh,sm] = (s ?? '00:00').split(':').map(Number); const [eh,em] = (e ?? '00:00').split(':').map(Number); return { start:sh*60+sm, end:eh*60+em }; }).sort((a,b)=>a.start-b.start);
     const active = parsed.find((slot) => currentMinutes >= slot.start && currentMinutes < slot.end);
-    if (active) { const target = new Date(today); target.setHours(Math.floor(active.end/60), active.end%60, 0, 0); return { expired:false, finished:false, upcoming:false, target:target.getTime() }; }
+    if (active) { const target = todayStart + active.end * 60 * 1000; return { expired:false, finished:false, upcoming:false, target }; }
     const next = parsed.find((slot) => currentMinutes < slot.start);
-    if (next) { const target = new Date(today); target.setHours(Math.floor(next.start/60), next.start%60, 0, 0); return { expired:false, finished:false, upcoming:true, target:target.getTime() }; }
+    if (next) { const target = todayStart + next.start * 60 * 1000; return { expired:false, finished:false, upcoming:true, target }; }
     return { expired:true, finished:false, upcoming:false, target:now };
   };
   const activeVisibleProducts = visibleProducts.filter((product) => !getDailyStatus(product).finished);
