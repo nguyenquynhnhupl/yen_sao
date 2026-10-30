@@ -107,11 +107,11 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
   };
 
   return (
-    <div className="animate-fade-in min-h-screen bg-[#fbf8f2]">
+    <div className="animate-fade-in min-h-screen bg-[#fbf8f2] font-sans text-[15px] leading-relaxed text-[#493d30] antialiased">
       {/* Breadcrumb */}
       <div className="bg-cream-100 border-b border-cream-200">
         <div className="container-max px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-1.5 text-xs text-secondary-500">
+          <div className="flex items-center gap-2 text-[13px] font-medium text-[#857765] sm:text-sm">
             <button onClick={() => navigate({ name: 'home' })} className="hover:text-primary-600 transition-colors">
               Trang Chủ
             </button>
@@ -171,7 +171,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           </div>
 
           {/* Info */}
-          <div className="space-y-5">
+          <div className="space-y-6">
             {product.is_bestseller && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f7f0e4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#8a6b3f]">
                 <Check className="w-3 h-3" />
@@ -179,32 +179,32 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               </span>
             )}
 
-            <h1 className="font-sans text-2xl font-bold leading-snug tracking-normal text-[#332719] sm:text-3xl lg:text-[2.1rem]">
+            <h1 className="font-serif text-[1.75rem] font-semibold leading-[1.25] tracking-[-0.02em] text-[#332719] sm:text-3xl lg:text-[2.35rem]">
               {product.name}
             </h1>
 
 
-            <div className="flex flex-wrap items-center gap-2 text-sm text-[#85745e]">
+            <div className="flex flex-wrap items-center gap-2.5 text-sm text-[#85745e]">
               <span className="flex items-center gap-0.5 text-[#c2933d]">{[1,2,3,4,5].map(n => <Star key={n} className="h-4 w-4" fill="currentColor" />)}</span>
-              <span className="text-xs">Đánh giá khách hàng</span>
+              <span className="text-[13px] font-medium sm:text-sm">Đánh giá khách hàng</span>
               {typeof product.sold_count === 'number' && <><span className="text-[#d8cbb8]">|</span><span className="text-xs">Đã bán: {product.sold_count}</span></>}
               {product.weight && <><span className="text-[#d8cbb8]">|</span><span className="text-xs">Khối lượng: {product.weight}</span></>}
             </div>
 
             {/* Price */}
             <div className="flex flex-wrap items-end gap-x-3 gap-y-1 border-y border-[#eee4d6] py-4">
-              <p className="font-sans text-3xl font-extrabold leading-none tracking-tight text-[#28543f] sm:text-4xl">
+              <p className="font-sans text-[2rem] font-bold leading-none tracking-[-0.035em] text-[#28543f] sm:text-[2.5rem]">
                 {formatVND(product.price)}
               </p>
               {product.compare_price && (
-                <p className="mb-1 text-base text-[#a69a88] line-through">
+                <p className="mb-1 text-[15px] font-medium text-[#a69a88] line-through sm:text-base">
                   {formatVND(product.compare_price)}
                 </p>
               )}
             </div>
 
             {/* Stock */}
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-[15px]">
               {product.stock > 0 ? (
                 <>
                   <span className="flex items-center gap-1.5 rounded-full bg-[#edf5ed] px-3 py-1.5 text-xs font-semibold text-[#3f7548]">
@@ -219,7 +219,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
 
             {/* Quantity selector */}
             <div className="flex items-center justify-between gap-4">
-              <span className="text-sm font-medium text-secondary-700">Số lượng:</span>
+              <span className="text-[15px] font-semibold text-[#594b3a]">Số lượng:</span>
               <div className="flex items-center gap-1 rounded-full border border-[#e9dfd0] bg-[#fcfaf6] p-1">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -241,14 +241,14 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               </div>
             </div>
 
-            <div className="flex items-start gap-3 rounded-xl border border-[#eadcc4] bg-[#fffaf1] p-3.5 text-sm text-[#765b35]"><Gift className="mt-0.5 h-5 w-5 shrink-0 text-[#b48a45]" /><div><p className="font-semibold">Ưu đãi dành riêng cho bạn</p><p className="mt-0.5 text-xs leading-relaxed">Liên hệ cửa hàng để biết quà tặng và chương trình áp dụng cho sản phẩm này.</p></div></div>
+            <div className="flex items-start gap-3 rounded-xl border border-[#eadcc4] bg-[#fffaf1] p-3.5 text-sm text-[#765b35]"><Gift className="mt-0.5 h-5 w-5 shrink-0 text-[#b48a45]" /><div><p className="text-[15px] font-semibold tracking-[0.005em]">Ưu đãi dành riêng cho bạn</p><p className="mt-1 text-[13px] leading-6 sm:text-sm">Liên hệ cửa hàng để biết quà tặng và chương trình áp dụng cho sản phẩm này.</p></div></div>
 
             {/* Actions */}
             <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock <= 0}
-                className="btn-outline flex-1 !rounded-full !py-3.5"
+                className="btn-outline flex-1 !rounded-full !py-3.5 !text-sm !font-semibold tracking-wide sm:!text-[15px]"
               >
                 {added ? (
                   <>
@@ -265,7 +265,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               <button
                 onClick={handleBuyNow}
                 disabled={product.stock <= 0}
-                className="btn-primary flex-1 !rounded-full !py-3.5"
+                className="btn-primary flex-1 !rounded-full !py-3.5 !text-sm !font-semibold tracking-wide sm:!text-[15px]"
               >
                 Mua Ngay
               </button>
@@ -280,7 +280,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               ].map((badge, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 rounded-xl bg-[#fbf7ef] px-2 py-3 text-center">
                   <badge.icon className="h-5 w-5 text-[#a1814e]" />
-                  <span className="text-[10px] font-semibold leading-snug text-[#6b5a43] sm:text-xs">{badge.label}</span>
+                  <span className="text-xs font-semibold leading-snug text-[#6b5a43] sm:text-[13px]">{badge.label}</span>
                 </div>
               ))}
             </div>
@@ -290,12 +290,12 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
         {/* Product information tabs */}
         <div className="mt-12">
           <nav aria-label="Thông tin sản phẩm" className="flex w-full flex-nowrap gap-2 overflow-x-auto border-b border-[#e8ddca] pb-1">
-            {([{id:'description',label:'Mô tả chi tiết'},{id:'specs',label:'Thông số kỹ thuật'},{id:'usage',label:'Hướng dẫn sử dụng'},{id:'reviews',label:'Đánh giá'}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} aria-current={activeTab===tab.id?'page':undefined} className={`shrink-0 rounded-t-xl border border-b-0 px-4 py-3 text-sm font-semibold transition sm:px-6 ${activeTab===tab.id?'border-[#e8ddca] bg-[#f8f3e9] text-[#795b30]':'border-transparent bg-transparent text-[#92836d] hover:bg-[#fbf7ef] hover:text-[#795b30]'}`}>{tab.label}</button>)}
+            {([{id:'description',label:'Mô tả chi tiết'},{id:'specs',label:'Thông số kỹ thuật'},{id:'usage',label:'Hướng dẫn sử dụng'},{id:'reviews',label:'Đánh giá'}] as const).map(tab => <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} aria-current={activeTab===tab.id?'page':undefined} className={`shrink-0 rounded-t-xl border border-b-0 px-4 py-3 text-[13px] font-semibold transition sm:px-6 sm:text-sm ${activeTab===tab.id?'border-[#e8ddca] bg-[#f8f3e9] text-[#795b30]':'border-transparent bg-transparent text-[#92836d] hover:bg-[#fbf7ef] hover:text-[#795b30]'}`}>{tab.label}</button>)}
           </nav>
-          <section className="mt-5 min-h-[220px] px-0 py-6 sm:py-8">
-            {activeTab === 'description' && <div className="w-full space-y-5 text-[#5f5548] [&_p]:my-3 [&_h3]:my-4 [&_h3]:text-lg [&_h3]:font-bold [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_strong]:font-bold [&_blockquote]:border-l-4 [&_blockquote]:border-[#c9ad7b] [&_blockquote]:pl-4 [&_blockquote]:italic">{product.detail_content?.length ? product.detail_content.map((block,index)=>block.type==='image'?<img key={index} src={block.content} alt={`${product.name} - nội dung ${index + 1}`} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain"/>:<div key={index} className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(block.content)}}/>) : product.description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.description)}}/> : product.short_description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.short_description)}}/> : <p className="text-sm text-[#8b7b65]">Thông tin mô tả đang được cập nhật.</p>}</div>}
-            {activeTab === 'specs' && <div className="w-full overflow-hidden rounded-xl border border-[#e8ddca] bg-transparent"><table className="w-full table-fixed border-collapse text-left"><tbody>{[...(product.quick_info??[]),...(product.weight?[{label:'Khối lượng',value:product.weight}]:[]),{label:'Tên sản phẩm',value:product.name},{label:'Tình trạng',value:product.stock>0?'Còn hàng':'Tạm hết hàng'}].filter((item,index,all)=>item.label?.trim()&&item.value?.trim()&&all.findIndex(other=>other.label===item.label)===index).map((item,index)=><tr key={index} className="border-b border-[#eee5d8] last:border-b-0"><th scope="row" className="w-[34%] border-r border-[#eee5d8] bg-[#f8f3e9] px-2.5 py-2.5 text-xs font-semibold leading-snug text-[#856640] sm:px-4 sm:py-3 sm:text-sm">{item.label}</th><td className="whitespace-pre-line break-words [overflow-wrap:anywhere] px-2.5 py-2.5 text-xs leading-snug text-[#514638] sm:px-4 sm:py-3 sm:text-sm">{item.value}</td></tr>)}</tbody></table></div>}
-            {activeTab === 'usage' && <div className="w-full"><div className="grid gap-4 sm:grid-cols-3">{[{step:'01',title:'Ngâm yến',text:'Ngâm yến trong nước sạch khoảng 30–45 phút hoặc đến khi sợi yến mềm.'},{step:'02',title:'Làm sạch',text:'Kiểm tra và loại bỏ lông hoặc tạp chất còn sót lại nếu có.'},{step:'03',title:'Chưng cách thủy',text:'Chưng khoảng 20–25 phút; có thể thêm đường phèn, táo đỏ tùy khẩu vị.'}].map(item=><div key={item.step} className="rounded-2xl border border-[#eee4d6] bg-[#fdfaf5] p-5"><span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#efe4d1] font-serif text-sm font-bold text-[#8b6b3f]">{item.step}</span><h3 className="mb-2 font-semibold text-[#493a28]">{item.title}</h3><p className="text-sm leading-6 text-[#766957]">{item.text}</p></div>)}</div><p className="mt-4 text-xs leading-5 text-[#8b7b65]">Thời gian ngâm và chưng có thể thay đổi tùy loại yến và hướng dẫn trên bao bì.</p></div>}
+          <section className="mt-5 min-h-[220px] px-0 py-6 text-[15px] leading-8 sm:py-8 sm:text-base">
+            {activeTab === 'description' && <div className="w-full space-y-5 text-[15px] leading-8 text-[#554a3d] sm:text-base [&_p]:my-4 [&_h3]:my-5 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:leading-snug [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_strong]:font-bold [&_ul]:space-y-1 [&_ol]:space-y-1 [&_blockquote]:border-l-4 [&_blockquote]:border-[#c9ad7b] [&_blockquote]:pl-4 [&_blockquote]:italic">{product.detail_content?.length ? product.detail_content.map((block,index)=>block.type==='image'?<img key={index} src={block.content} alt={`${product.name} - nội dung ${index + 1}`} loading="lazy" className="mx-auto max-h-[680px] w-full rounded-xl object-contain"/>:<div key={index} className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(block.content)}}/>) : product.description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.description)}}/> : product.short_description ? <div className="whitespace-pre-line leading-8" dangerouslySetInnerHTML={{__html:sanitizeDescriptionHtml(product.short_description)}}/> : <p className="text-sm text-[#8b7b65]">Thông tin mô tả đang được cập nhật.</p>}</div>}
+            {activeTab === 'specs' && <div className="w-full overflow-hidden rounded-2xl border border-[#e8ddca] bg-white/60"><table className="w-full table-fixed border-collapse text-left"><tbody>{[...(product.quick_info??[]),...(product.weight?[{label:'Khối lượng',value:product.weight}]:[]),{label:'Tên sản phẩm',value:product.name},{label:'Tình trạng',value:product.stock>0?'Còn hàng':'Tạm hết hàng'}].filter((item,index,all)=>item.label?.trim()&&item.value?.trim()&&all.findIndex(other=>other.label===item.label)===index).map((item,index)=><tr key={index} className="border-b border-[#eee5d8] last:border-b-0"><th scope="row" className="w-[36%] border-r border-[#eee5d8] bg-[#f8f3e9] px-3 py-3 text-[13px] font-semibold leading-relaxed text-[#856640] sm:px-4 sm:py-3.5 sm:text-sm">{item.label}</th><td className="whitespace-pre-line break-words [overflow-wrap:anywhere] px-3 py-3 text-[13px] leading-6 text-[#514638] sm:px-4 sm:py-3.5 sm:text-[15px] sm:leading-7">{item.value}</td></tr>)}</tbody></table></div>}
+            {activeTab === 'usage' && <div className="w-full"><div className="grid gap-4 sm:grid-cols-3">{[{step:'01',title:'Ngâm yến',text:'Ngâm yến trong nước sạch khoảng 30–45 phút hoặc đến khi sợi yến mềm.'},{step:'02',title:'Làm sạch',text:'Kiểm tra và loại bỏ lông hoặc tạp chất còn sót lại nếu có.'},{step:'03',title:'Chưng cách thủy',text:'Chưng khoảng 20–25 phút; có thể thêm đường phèn, táo đỏ tùy khẩu vị.'}].map(item=><div key={item.step} className="rounded-2xl border border-[#eee4d6] bg-[#fdfaf5] p-5"><span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#efe4d1] font-serif text-sm font-bold text-[#8b6b3f]">{item.step}</span><h3 className="mb-2 font-serif text-lg font-semibold leading-snug text-[#493a28]">{item.title}</h3><p className="text-[14px] leading-7 text-[#766957] sm:text-[15px]">{item.text}</p></div>)}</div><p className="mt-4 text-xs leading-5 text-[#8b7b65]">Thời gian ngâm và chưng có thể thay đổi tùy loại yến và hướng dẫn trên bao bì.</p></div>}
             {activeTab === 'reviews' && <div className="w-full"><p className="text-sm leading-7 text-[#766957]">Chưa có đánh giá được hiển thị cho sản phẩm này.</p></div>}
           </section>
         </div>
@@ -303,7 +303,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
         {/* Related products */}
         {related.length > 0 && (
           <div className="mt-14">
-            <h2 className="font-serif text-2xl font-bold text-secondary-900 mb-6">
+            <h2 className="mb-6 font-serif text-[1.65rem] font-semibold leading-tight tracking-[-0.015em] text-[#332719] sm:text-3xl">
               Sản Phẩm Liên Quan
             </h2>
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
