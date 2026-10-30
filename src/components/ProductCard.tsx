@@ -73,18 +73,18 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        {product.weight && <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#a18a68]">{product.weight}</p>}
-        <h3 className="mb-2.5 line-clamp-2 min-h-[3.25rem] font-serif text-base font-semibold leading-[1.55] tracking-[-0.01em] text-[#30271f] transition-colors group-hover:text-[#8a6738] sm:text-[17px]">
+        {product.weight && <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#a18a68]">{product.weight}</p>}
+        <h3 className="mb-2 line-clamp-2 min-h-[2.8rem] font-sans text-[15px] font-semibold leading-6 text-[#30271f] transition-colors group-hover:text-[#8a6738] sm:text-base">
           {product.name}
         </h3>
-        {product.short_description && <p className="mb-3 line-clamp-2 text-[13px] leading-6 text-[#827568] sm:text-sm">{product.short_description}</p>}
+        {product.short_description && <p className="mb-3 line-clamp-2 text-xs leading-5 text-[#827568]">{product.short_description}</p>}
 
         <div className="mt-auto border-t border-[#f0e9df] pt-3">
           <div className="flex min-h-[54px] items-center justify-between gap-2">
             <div className="min-w-0">
-              <p className="product-card-price font-sans text-xl font-bold leading-tight tracking-[-0.025em] text-[#654321] sm:text-[1.35rem]">{formatVND(product.price)}</p>
-              {discount > 0 && <p className="mt-1 font-sans text-[13px] font-medium text-[#8b8176] line-through">{formatVND(product.compare_price!)}</p>}
-              {discount === 0 && <p className="mt-1 font-sans text-[11px] font-semibold uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
+              <p className="font-sans text-lg font-bold leading-tight tracking-tight text-[#654321] sm:text-xl">{formatVND(product.price)}</p>
+              {discount > 0 && <p className="mt-1 font-sans text-xs font-medium text-[#8b8176] line-through">{formatVND(product.compare_price!)}</p>}
+              {discount === 0 && <p className="mt-1 font-sans text-[10px] font-medium uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
@@ -97,7 +97,7 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
           </div>
 
           <div className="mt-3">
-            <div className="mb-1.5 flex items-center justify-between gap-2 text-xs font-medium text-[#857665]">
+            <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]">
               <span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span>
               <span className="font-bold text-[#6e5131]">{soldCount.toLocaleString('vi-VN')} sản phẩm</span>
             </div>
