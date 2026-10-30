@@ -31,26 +31,26 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
   return (
     <article
-      className={`group flex h-full cursor-pointer flex-col overflow-hidden transition-all duration-200 ${isFlashSale ? 'min-w-0 rounded-[14px] border border-[#293147] bg-[#171E30] shadow-sm hover:-translate-y-0.5 hover:border-[#3B4762] hover:shadow-lg' : 'rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)]'}`}
+      className={`group flex h-full cursor-pointer flex-col overflow-hidden transition-all duration-200 ${isFlashSale ? 'min-w-0 rounded-[14px] border border-[#E8DFCF] bg-[#FFFDF8] shadow-sm hover:-translate-y-0.5 hover:border-[#C5A46A] hover:shadow-[0_10px_24px_rgba(71,49,25,0.12)]' : 'rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)]'}`}
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
-      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-square bg-[#222A3B]' : 'aspect-[4/3] bg-[#f8f5ed]'} ${flashSaleExpired ? 'bg-gray-100' : ''}`}>
+      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-square bg-[#F2E9D7]' : 'aspect-[4/3] bg-[#f8f5ed]'} ${flashSaleExpired ? 'bg-gray-100' : ''}`}>
         {product.image_url ? (
           <img src={product.image_url} alt={product.name} loading="lazy" className={`absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] ${flashSaleExpired ? 'opacity-50 grayscale' : ''}`} />
         ) : <div className="flex h-full w-full items-center justify-center text-sm text-[#9b8a72]">Chưa có hình ảnh</div>}
 
         {isFlashSale ? (
           <>
-            <span className={`absolute left-2 top-2 rounded-md px-2 py-1 text-[11px] font-extrabold text-white shadow-sm ${flashSaleExpired ? 'bg-gray-500' : 'bg-[#EC0750]'}`}>
+            <span className={`absolute left-2 top-2 rounded-md px-2 py-1 text-[11px] font-extrabold text-white shadow-sm ${flashSaleExpired ? 'bg-gray-500' : 'bg-[#9B3028]'}`}>
               {flashSaleExpired ? 'HẾT DEAL' : discount > 0 ? `-${discount}%` : 'FLASH SALE'}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
-              <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-md bg-[#080D19]/90 px-2 py-1.5 text-white shadow-sm backdrop-blur-sm">
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#D7DCE7]"><Clock className="h-3 w-3 text-[#FF6979]" />{flashSaleUpcoming ? 'Sắp mở' : 'Còn'}</span>
-                <span className="font-mono text-[10px] font-bold tabular-nums tracking-wide text-[#FFD45B]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
+              <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-md bg-[#183D30]/92 px-2 py-1.5 text-white shadow-sm backdrop-blur-sm">
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#F7EEDB]"><Clock className="h-3 w-3 text-[#E5C58F]" />{flashSaleUpcoming ? 'Sắp mở' : 'Còn'}</span>
+                <span className="font-mono text-[10px] font-bold tabular-nums tracking-wide text-[#F1D9A6]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
               </div>
             )}
-            {flashSaleExpired && <div className="absolute inset-x-2 bottom-2 rounded-md bg-[#7E2439]/90 px-2 py-1.5 text-center text-[10px] font-bold tracking-wide text-white">◉ HẾT HẠN</div>}
+            {flashSaleExpired && <div className="absolute inset-x-2 bottom-2 rounded-md bg-[#7A302A]/90 px-2 py-1.5 text-center text-[10px] font-bold tracking-wide text-white">◉ HẾT HẠN</div>}
           </>
         ) : (
           <>
@@ -66,14 +66,14 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
       </div>
 
       <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2.5 sm:p-3' : 'p-4 sm:p-5'}`}>
-        {product.weight && <p className={`mb-1 text-[9px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#A9B3C7]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
-        <h3 className={`mb-2 line-clamp-2 min-h-[2.5rem] font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'text-[13px] text-[#F2F4F8] sm:text-sm group-hover:text-white' : 'text-[15px] text-[#333] group-hover:text-[#8a6738] sm:text-base'}`}>{product.name}</h3>
+        {product.weight && <p className={`mb-1 text-[9px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#9A7846]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
+        <h3 className={`mb-2 line-clamp-2 min-h-[2.5rem] font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'text-[13px] text-[#243D30] sm:text-sm group-hover:text-white' : 'text-[15px] text-[#333] group-hover:text-[#8a6738] sm:text-base'}`}>{product.name}</h3>
         {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 text-xs leading-5 text-[#827568]">{product.short_description}</p>}
 
-        <div className={`mt-auto ${isFlashSale ? 'border-t border-[#293147] pt-2' : 'border-t border-[#f0e9df] pt-3'}`}>
+        <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#f0e9df] pt-3'}`}>
           <div className={`flex items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? 'min-h-[30px] flex-wrap' : 'min-h-[54px]'}`}>
-            <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#FF3C68] sm:text-base' : 'text-lg text-[#654321] sm:text-xl'}`}>{formatVND(product.price)}</p>
-            {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[#8B94A7]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
+            <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#9B3028] sm:text-base' : 'text-lg text-[#654321] sm:text-xl'}`}>{formatVND(product.price)}</p>
+            {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
             {discount === 0 && !isFlashSale && <p className="mt-1 font-sans text-[10px] font-medium uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
           </div>
           {!isFlashSale && (
@@ -89,14 +89,14 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
           {isFlashSale ? (
             <div className="mt-2">
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#343D52]">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#F21A51] to-[#FF5A36] transition-all duration-500" style={{ width: `${flashSaleProgress}%` }} />
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#E8DFCF]">
+                <div className="h-full rounded-full bg-gradient-to-r from-[#9B3028] to-[#C5A46A] transition-all duration-500" style={{ width: `${flashSaleProgress}%` }} />
               </div>
-              <p className="mt-1 text-left text-[10px] font-medium text-[#AAB3C4]">Đã bán {flashSaleSoldCount}</p>
+              <p className="mt-1 text-left text-[10px] font-medium text-[#817968]">Đã bán {flashSaleSoldCount}</p>
               <button
                 onClick={(e) => { e.stopPropagation(); if (!flashSaleExpired && !flashSaleUpcoming && product.stock > 0) addToCart(product); }}
                 disabled={product.stock <= 0 || flashSaleExpired || flashSaleUpcoming}
-                className="mt-2 flex h-8 w-full items-center justify-center gap-1 rounded-lg bg-[#E90D4B] px-3 text-[11px] font-bold text-white shadow-sm transition hover:bg-[#C90B40] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#252D40] disabled:text-[#657087]"
+                className="mt-2 flex h-8 w-full items-center justify-center gap-1 rounded-lg bg-[#E90D4B] px-3 text-[11px] font-bold text-white shadow-sm transition hover:bg-[#C90B40] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#E9E0D0] disabled:text-[#817968]"
                 aria-label={flashSaleExpired ? 'Hết giờ' : flashSaleUpcoming ? 'Sắp mở bán' : 'Mua ngay'}
               >
                 {flashSaleExpired ? 'Hết Giờ' : flashSaleUpcoming ? 'Sắp mở' : '🛒 Mua'}
