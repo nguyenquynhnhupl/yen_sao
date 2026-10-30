@@ -47,38 +47,41 @@ function sectionButtonTarget(url: string | null | undefined): Page {
   return { name: 'products' };
 }
 
-function FlashSaleSection({ products, navigate }: { products: import('@/lib/types').Product[]; navigate: (page: Page) => void }) {
+function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
   const [selectedSlot, setSelectedSlot] = useState('all');
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
 
-  const todayStart = new Date(now);
-  todayStart.setHours(0, 0, 0, 0);
-  const todayEnd = new Date(now);
-  todayEnd.setHours(23, 59, 59, 999);
-
-  // Keep today's ended deals visible so each card can show its "HẾT DEAL" state.
   const flashProducts = products.filter((product) => {
     if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false) return false;
-    const start = new Date(product.flash_sale_start_at).getTime();
     const end = new Date(product.flash_sale_end_at).getTime();
-    return end >= todayStart.getTime() && start <= todayEnd.getTime() || start > todayEnd.getTime();
+    const start = new Date(product.flash_sale_start_at).getTime();
+    const dayStart = new Date(now);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(now);
+    dayEnd.setHours(23, 59, 59, 999);
+    return end >= dayStart.getTime() && start <= dayEnd.getTime();
   }).sort((a, b) => new Date(a.flash_sale_start_at!).getTime() - new Date(b.flash_sale_start_at!).getTime());
 
   const slots = Array.from(new Map(flashProducts.map((product) => {
     const start = new Date(product.flash_sale_start_at!);
-    const key = start.toISOString().slice(0, 13);
-    return [key, { key, time: start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }), startAt: start.getTime() }];
-  })).values()).sort((a, b) => a.startAt - b.startAt);
+    const time = start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return [time, { key: time, time }];
+  })).values()).sort((a, b) => a.time.localeCompare(b.time));
 
-  const selectedProducts = selectedSlot === 'all'
-    ? flashProducts
-    : flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === selectedSlot);
+  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => {
+    const start = new Date(product.flash_sale_start_at!);
+    return start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) === selectedSlot;
+  });
+  const visibleProducts = selectedCategory === 'all'
+    ? slotProducts
+    : slotProducts.filter((product) => product.category_id === selectedCategory);
+  const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
 
   const getCountdown = (endAt: string) => {
     const remaining = Math.max(0, new Date(endAt).getTime() - now);
@@ -88,69 +91,66 @@ function FlashSaleSection({ products, navigate }: { products: import('@/lib/type
     return [hours, minutes, seconds].map((part) => String(part).padStart(2, '0')).join(':');
   };
 
-  const slotStatus = (slot: typeof slots[number]) => {
-    const slotProducts = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === slot.key);
-    if (slotProducts.some((product) => new Date(product.flash_sale_start_at!).getTime() <= now && new Date(product.flash_sale_end_at!).getTime() > now)) return 'Đang diễn ra';
-    if (slot.startAt > now) return 'Sắp diễn ra';
-    return 'Đã kết thúc';
+  const getSlotStatus = (time: string) => {
+    const items = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) === time);
+    if (items.some((product) => new Date(product.flash_sale_start_at!).getTime() <= now && new Date(product.flash_sale_end_at!).getTime() > now)) return 'Đang sale';
+    if (items.some((product) => new Date(product.flash_sale_start_at!).getTime() > now)) return 'Sắp sale';
+    return 'Đã hết';
   };
 
-  const scrollSlider = (direction: 'left' | 'right') => {
-    sliderRef.current?.scrollBy({ left: direction === 'right' ? 320 : -320, behavior: 'smooth' });
-  };
+  const categoryIcons = ['💻', '👗', '💄', '🏠', '🎁', '✨'];
 
   return (
-    <section className="bg-[#F7F4ED] py-6 sm:py-8">
-      <div className="container-max px-4 sm:px-6">
-        <div className="overflow-hidden rounded-2xl border border-[#E8DFD1] bg-white shadow-[0_8px_28px_rgba(55,42,25,0.07)]">
-          <div className="flex items-center justify-between gap-3 border-b border-[#EEE8DE] px-4 py-4 sm:px-5">
-            <div className="flex min-w-0 items-center gap-2.5">
-              <span className="text-2xl leading-none text-[#D94A36]">⚡</span>
-              <div>
-                <h2 className="text-lg font-extrabold tracking-wide text-[#9F3028] sm:text-xl">FLASH SALE</h2>
-                <p className="mt-0.5 text-[11px] text-[#887E72] sm:text-xs">Ưu đãi giới hạn theo từng khung giờ</p>
-              </div>
+    <section className="bg-[#0D1222] py-5 sm:py-7">
+      <div className="container-max px-3 sm:px-5">
+        <div className="overflow-hidden rounded-[18px] border border-[#282E43] bg-[#111729] shadow-[0_12px_35px_rgba(0,0,0,0.24)]">
+          <div className="relative flex min-h-[76px] flex-wrap items-center justify-between gap-3 overflow-hidden bg-gradient-to-r from-[#E80C3B] via-[#F51B36] to-[#FF7027] px-4 py-3.5 sm:px-6">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:13px_13px]" />
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/30 bg-white/20 text-2xl text-yellow-300 shadow-inner">ϟ</div>
+              <h2 className="text-[21px] font-black italic tracking-tight text-white sm:text-2xl">FLASH SALE</h2>
+              <span className="rounded-full bg-[#FFD23F] px-3 py-1.5 text-[10px] font-black uppercase text-[#211A14] shadow-sm">GIÁ SỐC</span>
             </div>
-            <div className="flex shrink-0 items-center gap-1.5">
-              <button type="button" onClick={() => scrollSlider('left')} aria-label="Sản phẩm trước" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8DFD1] bg-white text-[#655B50] transition hover:border-[#C9A66B] hover:text-[#A94735]">‹</button>
-              <button type="button" onClick={() => scrollSlider('right')} aria-label="Sản phẩm tiếp theo" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8DFD1] bg-white text-[#655B50] transition hover:border-[#C9A66B] hover:text-[#A94735]">›</button>
+            <div className="relative z-10 flex max-w-full items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {slots.map((slot) => {
+                const active = selectedSlot === slot.key;
+                const status = getSlotStatus(slot.key);
+                return (
+                  <button key={slot.key} type="button" onClick={() => setSelectedSlot(active ? 'all' : slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-white text-[#182033] shadow-md' : 'border border-white/15 bg-black/15 text-white hover:bg-white/20'}`}>
+                    <span>{slot.time}</span>
+                    {active && <span className="text-[10px] font-medium text-[#E43B3B]">{status}</span>}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-b border-[#EEE8DE] bg-[#FCFBF9] px-3 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-4">
-            <button type="button" onClick={() => setSelectedSlot('all')} className={`shrink-0 rounded-lg px-3.5 py-2 text-left transition ${selectedSlot === 'all' ? 'bg-[#B83B30] text-white shadow-sm' : 'border border-[#E9E3DA] bg-white text-[#655D54] hover:border-[#D7B6A4]'}`}>
-              <span className="block text-xs font-bold">Tất cả khung giờ</span>
-              <span className={`mt-0.5 block text-[10px] ${selectedSlot === 'all' ? 'text-white/80' : 'text-[#9A9085]'}`}>{flashProducts.length} sản phẩm</span>
+          <div className="flex gap-1.5 overflow-x-auto border-b border-[#292F43] bg-[#12182A] px-3 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-4">
+            <button type="button" onClick={() => setSelectedCategory('all')} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === 'all' ? 'bg-[#E90D4B] text-white shadow-sm' : 'bg-[#20283B] text-[#AEB6C7] hover:bg-[#2B344A]'}`}>
+              🔥 Tất cả
             </button>
-            {slots.map((slot) => {
-              const status = slotStatus(slot);
-              const count = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toISOString().slice(0, 13) === slot.key).length;
-              const active = selectedSlot === slot.key;
-              return (
-                <button key={slot.key} type="button" onClick={() => setSelectedSlot(slot.key)} className={`shrink-0 rounded-lg px-3.5 py-2 text-left transition ${active ? 'bg-[#B83B30] text-white shadow-sm' : 'border border-[#E9E3DA] bg-white text-[#655D54] hover:border-[#D7B6A4]'}`}>
-                  <span className="block text-xs font-bold">{slot.time}</span>
-                  <span className={`mt-0.5 block text-[10px] ${active ? 'text-white/80' : 'text-[#9A9085]'}`}>{status} · {count} SP</span>
-                </button>
-              );
-            })}
+            {saleCategories.map((category, index) => (
+              <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${selectedCategory === category.id ? 'bg-[#E90D4B] text-white shadow-sm' : 'bg-[#20283B] text-[#AEB6C7] hover:bg-[#2B344A]'}`}>
+                <span>{categoryIcons[index % categoryIcons.length]}</span>{category.name}
+              </button>
+            ))}
           </div>
 
-          <div className="bg-[#FAF9F6] p-3 sm:p-4">
-            {selectedProducts.length ? (
-              <div ref={sliderRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:thin] [scrollbar-color:#D8C8B2_transparent]">
-                {selectedProducts.map((product) => {
+          <div className="bg-[#0F1526] p-3 sm:p-4">
+            {visibleProducts.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
+                {visibleProducts.map((product) => {
                   const expired = new Date(product.flash_sale_end_at!).getTime() <= now;
+                  const upcoming = new Date(product.flash_sale_start_at!).getTime() > now;
                   return (
-                    <div key={product.id} className="w-[calc(50%-6px)] min-w-[calc(50%-6px)] snap-start sm:w-[calc(33.333%-8px)] sm:min-w-[calc(33.333%-8px)] lg:w-[calc(25%-9px)] lg:min-w-[calc(25%-9px)] 2xl:w-[calc(20%-10px)] 2xl:min-w-[calc(20%-10px)]">
-                      <ProductCard product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(product.flash_sale_end_at!)} flashSaleExpired={expired} />
-                    </div>
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(product.flash_sale_end_at!)} flashSaleExpired={expired} flashSaleUpcoming={upcoming} />
                   );
                 })}
               </div>
             ) : (
-              <div className="px-4 py-10 text-center">
-                <p className="text-sm font-semibold text-[#51483D]">Chưa có sản phẩm trong khung giờ này</p>
-                <p className="mt-1 text-xs text-[#938779]">Hãy chọn khung giờ khác để xem ưu đãi.</p>
+              <div className="px-4 py-12 text-center">
+                <p className="text-sm font-semibold text-[#D4D9E4]">Chưa có sản phẩm trong khung giờ này</p>
+                <p className="mt-1 text-xs text-[#8993A8]">Hãy chọn khung giờ hoặc danh mục khác để xem ưu đãi.</p>
               </div>
             )}
           </div>
