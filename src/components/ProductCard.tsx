@@ -31,10 +31,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
   return (
     <article
-      className={`group flex h-full cursor-pointer flex-col overflow-hidden transition-all duration-200 ${isFlashSale ? 'min-w-0 rounded-[14px] border border-[#E8DFCF] bg-[#FFFDF8] shadow-sm hover:-translate-y-0.5 hover:border-[#C5A46A] hover:shadow-[0_10px_24px_rgba(71,49,25,0.12)]' : 'rounded-2xl border border-[#e9dfd0] bg-white shadow-[0_4px_18px_rgba(71,49,25,0.06)] hover:-translate-y-1 hover:border-[#c6a66b] hover:shadow-[0_14px_32px_rgba(71,49,25,0.14)]'}`}
+      className={`group flex h-full cursor-pointer flex-col overflow-hidden transition-all duration-200 ${isFlashSale ? 'min-w-0 rounded-[14px] border border-[#E8DFCF] bg-[#FFFDF8] shadow-sm hover:-translate-y-0.5 hover:border-[#C5A46A] hover:shadow-[0_10px_24px_rgba(71,49,25,0.12)]' : 'rounded-[20px] border border-[#eee5d7] bg-[#fffefa] shadow-[0_5px_20px_rgba(64,48,29,0.055)] hover:-translate-y-1.5 hover:border-[#c7a66b] hover:shadow-[0_18px_38px_rgba(64,48,29,0.13)]'}`}
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
-      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-[5/4] bg-[#F2E9D7]' : 'aspect-[4/3] bg-[#f8f5ed]'} ${flashSaleExpired ? 'bg-gray-100' : ''}`}>
+      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-[5/4] bg-[#F2E9D7]' : 'aspect-[4/3] bg-[#f4efe5]'} ${flashSaleExpired ? 'bg-gray-100' : ''}`}>
         {product.image_url ? (
           <img src={product.image_url} alt={product.name} loading="lazy" className={`absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] ${flashSaleExpired ? 'opacity-50 grayscale' : ''}`} />
         ) : <div className="flex h-full w-full items-center justify-center text-sm text-[#9b8a72]">Chưa có hình ảnh</div>}
@@ -55,24 +55,24 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         ) : (
           <>
             <div className="absolute left-3 top-3 flex max-w-[75%] flex-col items-start gap-2">
-              {discount > 0 && <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#a82e24] to-[#d94a36] px-2.5 py-1.5 text-xs font-extrabold tracking-wide text-white shadow-lg ring-1 ring-white/30"><Flame className="h-3.5 w-3.5" /> GIẢM {discount}%</span>}
-              {product.is_bestseller && <span className="inline-flex items-center gap-1 rounded-md border border-[#e7cf9b] bg-[#fff8e8] px-2.5 py-1.5 text-[10px] font-extrabold tracking-wider text-[#815b1b] shadow-sm"><Star className="h-3 w-3 fill-current" /> BÁN CHẠY</span>}
-              {product.is_featured && !product.is_bestseller && <span className="rounded-md bg-[#273f30] px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-white shadow-sm">NỔI BẬT</span>}
+              {discount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[#9d342b] px-3 py-1.5 text-[10px] font-extrabold tracking-[0.08em] text-white shadow-md ring-1 ring-white/50"><Flame className="h-3.5 w-3.5" /> GIẢM {discount}%</span>}
+              {product.is_bestseller && <span className="inline-flex items-center gap-1 rounded-full border border-[#e7cf9b] bg-[#fff9ed] px-3 py-1.5 text-[10px] font-extrabold tracking-[0.08em] text-[#815b1b] shadow-sm"><Star className="h-3 w-3 fill-current" /> BÁN CHẠY</span>}
+              {product.is_featured && !product.is_bestseller && <span className="rounded-full bg-[#294333] px-3 py-1.5 text-[10px] font-bold tracking-[0.08em] text-white shadow-sm">NỔI BẬT</span>}
             </div>
-            {discount > 0 && <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#9e3028] shadow-sm">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
-            <div className="absolute inset-x-0 bottom-0 flex translate-y-full justify-center bg-gradient-to-t from-black/45 to-transparent pb-4 pt-8 transition-transform duration-300 group-hover:translate-y-0"><span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#654a2d] shadow-lg"><Eye className="h-3.5 w-3.5" /> Xem chi tiết</span></div>
+            {discount > 0 && <span className="absolute right-3 top-3 rounded-full border border-[#f0d8d0] bg-white/95 px-3 py-1.5 text-[10px] font-bold text-[#9e3028] shadow-md">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
+            <div className="absolute inset-x-0 bottom-0 flex translate-y-full justify-center bg-gradient-to-t from-[#1c2c22]/55 via-[#1c2c22]/20 to-transparent pb-4 pt-10 transition-transform duration-300 group-hover:translate-y-0"><span className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-[#fffdf7] px-5 py-2.5 text-xs font-bold text-[#294333] shadow-lg"><Eye className="h-3.5 w-3.5" /> Xem chi tiết</span></div>
           </>
         )}
       </div>
 
       <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-4 sm:p-5'}`}>
         {product.weight && <p className={`mb-0.5 text-[9px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#9A7846]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
-        <h3 className={`mb-2 line-clamp-2 min-h-[2.5rem] font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2rem] text-[12px] leading-4 text-[#243D30] sm:text-[13px] group-hover:text-[#9A7846]' : 'text-[15px] text-[#333] group-hover:text-[#8a6738] sm:text-base'}`}>{product.name}</h3>
-        {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 text-xs leading-5 text-[#827568]">{product.short_description}</p>}
+        <h3 className={`mb-2 line-clamp-2 min-h-[2.5rem] font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2rem] text-[12px] leading-4 text-[#243D30] sm:text-[13px] group-hover:text-[#9A7846]' : 'text-[15px] font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
+        {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description}</p>}
 
-        <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#f0e9df] pt-3'}`}>
+        <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
           <div className={`flex items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? 'min-h-[24px] flex-wrap' : 'min-h-[54px]'}`}>
-            <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#654321] sm:text-xl'}`}>{formatVND(product.price)}</p>
+            <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
             {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
             {discount === 0 && !isFlashSale && <p className="mt-1 font-sans text-[10px] font-medium uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
           </div>
@@ -80,10 +80,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
             <button
               onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
               disabled={product.stock <= 0}
-              className="mt-3 flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-xl bg-[#344b38] text-white shadow-sm transition hover:bg-[#263a2a] active:scale-95 disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
+              className="mt-3 flex h-11 w-full shrink-0 items-center justify-center gap-2 self-end rounded-xl bg-[#294333] text-sm font-semibold text-[#fffaf0] shadow-[0_5px_14px_rgba(41,67,51,0.18)] transition hover:bg-[#1f3528] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#c9c5bd]"
               aria-label="Thêm vào giỏ hàng"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4" /> <span>Thêm vào giỏ</span>
             </button>
           )}
 
@@ -103,8 +103,8 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
               </button>
             </div>
           ) : (
-            <div className="mt-3">
-              <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{demoSoldCount.toLocaleString('vi-VN')} sản phẩm</span></div>
+            <div className="mt-3 rounded-xl bg-[#f7f3eb] px-3 py-2.5">
+              <div className="mb-2 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{demoSoldCount.toLocaleString('vi-VN')} sản phẩm</span></div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((demoSoldCount / 300) * 100)))}%` }} /></div>
             </div>
           )}
