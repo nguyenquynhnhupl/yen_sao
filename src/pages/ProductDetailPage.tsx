@@ -63,12 +63,13 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
     );
   }
 
-  const galleryImages = Array.from(new Set([
-    product.image_url,
-    ...(product.detail_content ?? []).filter((block) => block.type === 'image').map((block) => block.content),
-    ...((product as any).gallery_images ?? (product as any).images ?? (product as any).image_urls ?? []),
-  ].filter((url): url is string => Boolean(url?.trim()))));
-  const activeImage = selectedImage && galleryImages.includes(selectedImage) ? selectedImage : (galleryImages[0] ?? '');
+  // Thumbnail gallery chỉ lấy ảnh phụ được khai báo trong CMS.
+  const galleryImages = Array.from(new Set(
+    ((product as any).gallery_images ?? (product as any).images ?? (product as any).image_urls ?? [])
+      .filter((url: unknown): url is string => typeof url === 'string' && Boolean(url.trim()))
+  ));
+  const mainImage = product.image_url ?? '';
+  const zoomImage = selectedImage || mainImage;
 
   const discount = product.compare_price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
@@ -111,13 +112,13 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
             <div className="relative">
               <button
                 type="button"
-                onClick={() => activeImage && setZoomOpen(true)}
+                onClick={() => mainImage && setZoomOpen(true)}
                 aria-label="Phóng to ảnh sản phẩm"
                 className="group relative block w-full cursor-zoom-in text-left"
               >
-                {activeImage ? (
+                {mainImage ? (
                   <img
-                    src={activeImage}
+                    src={mainImage}
                     alt={product.name}
                     className="mx-auto block max-h-[560px] w-full object-contain transition-transform duration-300 group-hover:scale-[1.015]"
                   />
@@ -139,7 +140,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                     type="button"
                     onClick={() => { setSelectedImage(image); setZoomOpen(true); }}
                     aria-label={`Xem ảnh sản phẩm ${index + 1}`}
-                    aria-pressed={activeImage === image}
+                    aria-pressed={selectedImage === image}
                     className={`aspect-square w-full min-w-0 overflow-hidden rounded-lg transition ${activeImage === image ? 'ring-2 ring-inset ring-[#a1814e]' : 'opacity-75 hover:opacity-100'}`}
                   >
                     <img src={image} alt={`${product.name} - ảnh ${index + 1}`} loading="lazy" className="h-full w-full object-cover" />
@@ -296,7 +297,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
           </div>
         )}
       </div>
-      {zoomOpen && activeImage && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4" role="dialog" aria-modal="true" aria-label="Ảnh sản phẩm phóng to" onClick={() => setZoomOpen(false)}><button type="button" onClick={() => setZoomOpen(false)} aria-label="Đóng ảnh" className="absolute right-5 top-5 rounded-full bg-white/15 p-3 text-white hover:bg-white/25"><X className="h-6 w-6" /></button><img src={activeImage} alt={product.name} className="max-h-[90vh] max-w-[92vw] object-contain" onClick={(event) => event.stopPropagation()} /></div>}
+      {zoomOpen && zoomImage && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4" role="dialog" aria-modal="true" aria-label="Ảnh sản phẩm phóng to" onClick={() => setZoomOpen(false)}><button type="button" onClick={() => setZoomOpen(false)} aria-label="Đóng ảnh" className="absolute right-5 top-5 rounded-full bg-white/15 p-3 text-white hover:bg-white/25"><X className="h-6 w-6" /></button><img src={zoomImage} alt={product.name} className="max-h-[90vh] max-w-[92vw] object-contain" onClick={(event) => event.stopPropagation()} /></div>}
     </div>
   );
 }
