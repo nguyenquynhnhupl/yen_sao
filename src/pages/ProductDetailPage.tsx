@@ -159,7 +159,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
               </span>
             )}
 
-            <h1 className="font-serif text-2xl font-bold leading-tight text-[#332719] sm:text-3xl lg:text-[2.15rem]">
+            <h1 className="font-sans text-2xl font-bold leading-snug tracking-normal text-[#332719] sm:text-3xl lg:text-[2.1rem]">
               {product.name}
             </h1>
 
@@ -173,7 +173,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
 
             {/* Price */}
             <div className="flex flex-wrap items-end gap-x-3 gap-y-1 border-y border-[#eee4d6] py-4">
-              <p className="font-serif text-3xl font-bold tracking-tight text-[#315c46] sm:text-4xl">
+              <p className="font-sans text-3xl font-extrabold leading-none tracking-tight text-[#28543f] sm:text-4xl">
                 {formatVND(product.price)}
               </p>
               {product.compare_price && (
