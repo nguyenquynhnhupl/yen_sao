@@ -47,7 +47,7 @@ function sectionButtonTarget(url: string | null | undefined): Page {
   return { name: 'products' };
 }
 
-function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
+function FlashSaleSection({ products, navigate }: { products: import('@/lib/types').Product[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
   const [selectedSlot, setSelectedSlot] = useState('all');
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -420,7 +420,7 @@ export default function HomePage({ navigate }: HomePageProps) {
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
       {visibleSections.filter((section) => section.section_key === 'trust_benefits').map(renderSection)}
-      <FlashSaleSection products={allProducts} categories={categories} navigate={navigate} />
+      <FlashSaleSection products={allProducts} navigate={navigate} />
       {visibleSections
         .filter((section) => section.section_key !== 'hero' && section.section_key !== 'trust_benefits')
         .map(renderSection)}
