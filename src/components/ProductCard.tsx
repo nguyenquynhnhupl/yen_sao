@@ -7,6 +7,7 @@ interface ProductCardProps {
   product: Product;
   navigate: (page: Page) => void;
   flashSaleCountdown?: string;
+  flashSaleSlot?: string;
   flashSaleExpired?: boolean;
   flashSaleUpcoming?: boolean;
   variant?: 'default' | 'flash-sale';
@@ -19,11 +20,15 @@ function getDemoSoldCount(product: Product): number {
   return 89 + (hash % 168);
 }
 
-export default function ProductCard({ product, navigate, flashSaleCountdown, flashSaleExpired = false, flashSaleUpcoming = false, variant = 'default' }: ProductCardProps) {
+export default function ProductCard({ product, navigate, flashSaleCountdown, flashSaleSlot, flashSaleExpired = false, flashSaleUpcoming = false, variant = 'default' }: ProductCardProps) {
   const isFlashSale = variant === 'flash-sale';
   const { addToCart } = useCart();
-  const salePrice = isFlashSale && product.flash_sale_price != null ? product.flash_sale_price : product.price;
-  const saleComparePrice = isFlashSale && product.flash_sale_compare_price != null ? product.flash_sale_compare_price : product.compare_price;
+  const selectedDiscountSlot = isFlashSale && flashSaleSlot ? product.flash_sale_daily_time_slots?.find((slot) => (typeof slot === 'string' ? slot.split('-')[0] : slot.start) === flashSaleSlot) : undefined;
+  const selectedSlotPrice = selectedDiscountSlot && typeof selectedDiscountSlot !== 'string'
+    ? Math.max(0, Math.round(product.price - (selectedDiscountSlot.promotion_type === 'percent' ? product.price * Number(selectedDiscountSlot.promotion_value) / 100 : Number(selectedDiscountSlot.promotion_value))) )
+    : null;
+  const salePrice = isFlashSale ? (selectedSlotPrice ?? product.flash_sale_price ?? product.price) : product.price;
+  const saleComparePrice = isFlashSale && (selectedSlotPrice != null || product.flash_sale_price != null) ? product.price : product.compare_price;
   const discount = saleComparePrice && saleComparePrice > salePrice
     ? Math.round(((saleComparePrice - salePrice) / saleComparePrice) * 100)
     : 0;
