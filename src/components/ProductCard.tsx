@@ -72,9 +72,9 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#293147] pt-2' : 'border-t border-[#f0e9df] pt-3'}`}>
           <div className={`flex items-end justify-between gap-1.5 ${isFlashSale ? 'min-h-[42px]' : 'min-h-[54px]'}`}>
-            <div className="min-w-0">
+            <div className={isFlashSale ? 'flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-w-0'}>
               <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#FF3C68] sm:text-base' : 'text-lg text-[#654321] sm:text-xl'}`}>{formatVND(product.price)}</p>
-              {discount > 0 && <p className={`mt-0.5 text-[11px] font-medium line-through ${isFlashSale ? 'text-[#8B94A7]' : 'text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
+              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[#8B94A7]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
               {discount === 0 && !isFlashSale && <p className="mt-1 font-sans text-[10px] font-medium uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
             </div>
             <button
