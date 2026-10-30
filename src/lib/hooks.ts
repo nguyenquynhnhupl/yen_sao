@@ -154,7 +154,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       flash_sale_daily_end_time: flash?.daily_end_time ?? null,
       flash_sale_daily_time_slots: flash?.daily_time_slots ?? null,
       flash_sale_price: flash && currentFlashSlot ? Math.max(0, Math.round(product.price - (flashDiscountType === 'percent' ? product.price * flashDiscountValue / 100 : flashDiscountValue))) : null,
-      flash_sale_compare_price: flash && currentFlashSlot ? product.price : null,
+      flash_sale_compare_price: flash ? product.price : null,
     };
   });
 }
