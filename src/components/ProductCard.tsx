@@ -36,8 +36,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
   const demoSoldCount = getDemoSoldCount(product);
   const flashSaleSoldCount = 98;
   const flashSaleProgress = Math.round((flashSaleSoldCount / 300) * 100);
-  const discountBadgeText = selectedDiscountSlot && typeof selectedDiscountSlot !== 'string'
-    ? (selectedDiscountSlot.promotion_type === 'percent' ? `-${selectedDiscountSlot.promotion_value}%` : `-${formatVND(Number(selectedDiscountSlot.promotion_value))}`)
+  const vnClock = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date());
+  const badgeSlot = selectedDiscountSlot ?? product.flash_sale_daily_time_slots?.find((slot) => { if (typeof slot === 'string') return false; return vnClock >= slot.start && vnClock < slot.end; });
+  const discountBadgeText = badgeSlot && typeof badgeSlot !== 'string'
+    ? (badgeSlot.promotion_type === 'percent' ? `-${badgeSlot.promotion_value}%` : `-${formatVND(Number(badgeSlot.promotion_value))}`)
     : discount > 0 ? `-${discount}%` : 'FLASH SALE';
 
   return (
