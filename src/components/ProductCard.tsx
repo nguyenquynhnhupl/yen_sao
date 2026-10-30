@@ -82,7 +82,7 @@ export default function ProductCard({ product, navigate }: ProductCardProps) {
         <div className="mt-auto border-t border-[#f0e9df] pt-3">
           <div className="flex min-h-[54px] items-center justify-between gap-2">
             <div className="min-w-0">
-              <p className="font-sans text-xl font-bold leading-tight tracking-[-0.025em] text-[#654321] sm:text-[1.35rem]">{formatVND(product.price)}</p>
+              <p className="product-card-price font-sans text-xl font-bold leading-tight tracking-[-0.025em] text-[#654321] sm:text-[1.35rem]">{formatVND(product.price)}</p>
               {discount > 0 && <p className="mt-1 font-sans text-[13px] font-medium text-[#8b8176] line-through">{formatVND(product.compare_price!)}</p>}
               {discount === 0 && <p className="mt-1 font-sans text-[11px] font-semibold uppercase tracking-wider text-[#8b8176]">Giá bán</p>}
             </div>
