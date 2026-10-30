@@ -22,8 +22,10 @@ function getDemoSoldCount(product: Product): number {
 export default function ProductCard({ product, navigate, flashSaleCountdown, flashSaleExpired = false, flashSaleUpcoming = false, variant = 'default' }: ProductCardProps) {
   const isFlashSale = variant === 'flash-sale';
   const { addToCart } = useCart();
-  const discount = product.compare_price && product.compare_price > product.price
-    ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
+  const salePrice = isFlashSale && product.flash_sale_price != null ? product.flash_sale_price : product.price;
+  const saleComparePrice = isFlashSale && product.flash_sale_compare_price != null ? product.flash_sale_compare_price : product.compare_price;
+  const discount = saleComparePrice && saleComparePrice > salePrice
+    ? Math.round(((saleComparePrice - salePrice) / saleComparePrice) * 100)
     : 0;
   const demoSoldCount = getDemoSoldCount(product);
   const flashSaleSoldCount = 98;
@@ -34,15 +36,15 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
       className={`group flex h-full cursor-pointer flex-col overflow-hidden transition-all duration-200 ${isFlashSale ? 'min-w-0 rounded-[14px] border border-[#E8DFCF] bg-[#FFFDF8] shadow-sm hover:-translate-y-0.5 hover:border-[#C5A46A] hover:shadow-[0_10px_24px_rgba(71,49,25,0.12)]' : 'rounded-[20px] border border-[#eee5d7] bg-[#fffefa] shadow-[0_5px_20px_rgba(64,48,29,0.055)] hover:-translate-y-1.5 hover:border-[#c7a66b] hover:shadow-[0_18px_38px_rgba(64,48,29,0.13)]'}`}
       onClick={() => navigate({ name: 'product', slug: product.slug })}
     >
-      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-[5/4] bg-[#F2E9D7]' : 'aspect-[4/3] bg-[#f4efe5]'} ${flashSaleExpired ? 'bg-gray-100' : ''}`}>
+      <div className={`relative w-full overflow-hidden ${isFlashSale ? 'aspect-[5/4] bg-[#F2E9D7]' : 'aspect-[4/3] bg-[#f4efe5]'} ${flashSaleExpired ? 'bg-[#F2E9D7]' : ''}`}>
         {product.image_url ? (
-          <img src={product.image_url} alt={product.name} loading="lazy" className={`absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] ${flashSaleExpired ? 'opacity-50 grayscale' : ''}`} />
+          <img src={product.image_url} alt={product.name} loading="lazy" className={`absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] `} />
         ) : <div className="flex h-full w-full items-center justify-center text-sm text-[#9b8a72]">Chưa có hình ảnh</div>}
 
         {isFlashSale ? (
           <>
-            <span className={`absolute left-2 top-2 rounded-md px-2 py-1 text-xs font-extrabold text-white shadow-sm ${flashSaleExpired ? 'bg-gray-500' : 'bg-[#9B3028]'}`}>
-              {flashSaleExpired ? 'HẾT DEAL' : discount > 0 ? `-${discount}%` : 'FLASH SALE'}
+            <span className={`absolute left-2 top-2 rounded-md px-2 py-1 text-xs font-extrabold text-white shadow-sm bg-[#9B3028]`}>
+              {discount > 0 ? `-${discount}%` : 'FLASH SALE'}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
               <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2 py-1.5 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
@@ -50,7 +52,6 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
                 <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wide text-[#FFE09A]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
               </div>
             )}
-            {flashSaleExpired && <div className="absolute inset-x-2 bottom-2 rounded-md bg-[#7A302A]/90 px-2 py-1.5 text-center text-[10px] font-bold tracking-wide text-white">◉ HẾT HẠN</div>}
           </>
         ) : (
           <>
@@ -73,8 +74,8 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
           <div className={`flex ${isFlashSale ? 'min-h-[24px] flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-h-[54px] items-center gap-3'}`}>
             <div className={`flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? '' : 'flex-1'}`}>
-              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#9B3028] sm:text-base' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
-              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[11px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
+              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#9B3028] sm:text-base' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(isFlashSale ? salePrice : product.price)}</p>
+              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[11px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(isFlashSale ? saleComparePrice! : product.compare_price!)}</p>}
             </div>
             {!isFlashSale && (
               <button
@@ -98,9 +99,9 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
                 onClick={(e) => { e.stopPropagation(); if (!flashSaleExpired && !flashSaleUpcoming && product.stock > 0) addToCart(product); }}
                 disabled={product.stock <= 0 || flashSaleExpired || flashSaleUpcoming}
                 className="mt-1.5 flex h-7 w-full items-center justify-center gap-1 rounded-md bg-[#E90D4B] px-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#C90B40] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#E9E0D0] disabled:text-[#817968]"
-                aria-label={flashSaleExpired ? 'Hết giờ' : flashSaleUpcoming ? 'Sắp mở bán' : 'Mua ngay'}
+                aria-label={flashSaleExpired ? 'Kết thúc' : flashSaleUpcoming ? 'Sắp diễn ra' : 'Mua ngay'}
               >
-                {flashSaleExpired ? 'Hết Giờ' : flashSaleUpcoming ? 'Sắp mở' : '🛒 Mua'}
+                {flashSaleExpired ? 'Kết thúc' : flashSaleUpcoming ? 'Sắp diễn ra' : '🛒 Mua ngay'}
               </button>
             </div>
           ) : (
