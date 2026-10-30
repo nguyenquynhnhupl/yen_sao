@@ -137,7 +137,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                   <button
                     key={image}
                     type="button"
-                    onClick={() => setSelectedImage(image)}
+                    onClick={() => { setSelectedImage(image); setZoomOpen(true); }}
                     aria-label={`Xem ảnh sản phẩm ${index + 1}`}
                     aria-pressed={activeImage === image}
                     className={`aspect-square w-full min-w-0 overflow-hidden rounded-lg transition ${activeImage === image ? 'ring-2 ring-inset ring-[#a1814e]' : 'opacity-75 hover:opacity-100'}`}
