@@ -89,8 +89,6 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     if (now > finalDay.getTime()) return { expired: true, upcoming: false, target: now };
     if (now < startToday.getTime()) return { expired: false, upcoming: true, target: startToday.getTime() };
     if (now < endToday.getTime()) return { expired: false, upcoming: false, target: endToday.getTime() };
-    const nextStart = new Date(now); nextStart.setDate(nextStart.getDate()+1); nextStart.setHours(sh, sm, 0, 0);
-    if (nextStart.getTime() <= finalDay.getTime()) return { expired: false, upcoming: true, target: nextStart.getTime() };
     return { expired: true, upcoming: false, target: now };
   };
   const getCountdown = (target: number) => {
