@@ -72,6 +72,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
           <div className={`flex ${isFlashSale ? 'min-h-[24px] flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-h-[54px] items-center gap-3'}`}>
+            <div className={`flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? '' : 'flex-1'}`}>
+              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
+              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
+            </div>
             {!isFlashSale && (
               <button
                 onClick={(e) => { e.stopPropagation(); if (product.stock > 0) addToCart(product); }}
@@ -82,10 +86,6 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
                 <Plus className="h-5 w-5" />
               </button>
             )}
-            <div className={`flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? '' : 'flex-1'}`}>
-              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[13px] text-[#9B3028] sm:text-sm' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(product.price)}</p>
-              {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[10px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(product.compare_price!)}</p>}
-            </div>
           </div>
 
           {isFlashSale ? (
