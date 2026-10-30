@@ -7,6 +7,8 @@ export interface Category {
   image_url?: string | null;
 }
 
+export type FlashSaleTimeSlot = { start: string; end: string; promotion_type: 'percent' | 'amount'; promotion_value: number };
+
 export interface Product {
   id: string;
   name: string;
@@ -32,7 +34,7 @@ export interface Product {
   flash_sale_end_at?: string | null;
   flash_sale_daily_start_time?: string | null;
   flash_sale_daily_end_time?: string | null;
-  flash_sale_daily_time_slots?: string[] | null;
+  flash_sale_daily_time_slots?: Array<string | FlashSaleTimeSlot> | null;
   flash_sale_price?: number | null;
   flash_sale_compare_price?: number | null;
 }
