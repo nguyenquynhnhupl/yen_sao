@@ -15,6 +15,7 @@ export interface Product {
   short_description: string | null;
   quick_info?: { label: string; value: string }[];
   detail_content?: { type: 'text' | 'image'; content: string }[];
+  gallery_images?: string[];
   price: number;
   compare_price: number | null;
   weight: string | null;
