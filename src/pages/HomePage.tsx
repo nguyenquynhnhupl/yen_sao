@@ -49,37 +49,82 @@ function sectionButtonTarget(url: string | null | undefined): Page {
 
 function FlashSaleSection({ products, navigate }: { products: import('@/lib/types').Product[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
+
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
   const activeProducts = products.filter((product) => {
     if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at) return false;
     const start = new Date(product.flash_sale_start_at).getTime();
     const end = new Date(product.flash_sale_end_at).getTime();
     return product.is_published !== false && start <= now && now < end;
   });
-  
-  const endAt = Math.min(...activeProducts.map((product) => new Date(product.flash_sale_end_at!).getTime()));
-  const remaining = Math.max(0, endAt - now);
-  const days = Math.floor(remaining / 86400000);
-  const hours = Math.floor((remaining % 86400000) / 3600000);
-  const minutes = Math.floor((remaining % 3600000) / 60000);
-  const seconds = Math.floor((remaining % 60000) / 1000);
-  const time = [days > 0 ? String(days).padStart(2, '0') : null, String(hours).padStart(2, '0'), String(minutes).padStart(2, '0'), String(seconds).padStart(2, '0')].filter(Boolean).join(':');
+
+  const getCountdown = (endAt: string) => {
+    const remaining = Math.max(0, new Date(endAt).getTime() - now);
+    const days = Math.floor(remaining / 86400000);
+    const hours = Math.floor((remaining % 86400000) / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+    return [
+      days > 0 ? `${String(days).padStart(2, '0')} ngày` : null,
+      `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
+    ].filter(Boolean).join(' ');
+  };
+
   return (
-    <section className="section-padding bg-[#fff8f0]">
-      <div className="container-max">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="mb-2 inline-flex items-center rounded-full bg-[#a82e24] px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">Ưu đãi có thời hạn</p><h2 className="font-serif text-3xl font-bold text-[#183D30] sm:text-4xl">Flash Sale</h2><p className="mt-2 text-secondary-600">Nhanh tay chọn sản phẩm trước khi chương trình kết thúc.</p></div>
-          <div className="rounded-xl bg-[#183D30] px-4 py-3 text-center text-white"><p className="text-xs uppercase tracking-wider text-[#f4d9a6]">Kết thúc sau</p><p className="font-mono text-xl font-bold tabular-nums">{time}</p></div>
+    <section className="relative overflow-hidden bg-[#F4EFE5] py-12 sm:py-16">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-[#C5A46A]/20" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full border border-[#C5A46A]/15" />
+      <div className="container-max relative px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-4 border-b border-[#DCCFB9] pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#B88B52]/35 bg-white/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#946B37]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#B33B32]" />
+              Ưu đãi giới hạn
+            </p>
+            <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#183D30] sm:text-4xl">Flash Sale</h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#746B5B] sm:text-base">Ưu đãi đặc biệt dành cho những sản phẩm được tuyển chọn. Mỗi sản phẩm có thời gian kết thúc riêng.</p>
+          </div>
+          {activeProducts.length > 0 && (
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7D6240]">
+              <span className="h-px w-8 bg-[#B88B52]" />
+              {activeProducts.length} ưu đãi đang diễn ra
+            </div>
+          )}
         </div>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{activeProducts.length > 0 ? activeProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />) : <div className="col-span-full rounded-2xl border border-[#eadbc7] bg-white/80 px-6 py-10 text-center"><p className="font-semibold text-[#183D30]">Chương trình Flash Sale sắp diễn ra</p><p className="mt-2 text-sm text-secondary-600">Sản phẩm ưu đãi sẽ hiển thị tại đây khi đến thời gian bắt đầu.</p></div>}</div>
+
+        {activeProducts.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+            {activeProducts.map((product) => (
+              <div key={product.id} className="group flex min-w-0 flex-col">
+                <div className="overflow-hidden rounded-t-2xl">
+                  <ProductCard product={product} navigate={navigate} />
+                </div>
+                <div className="flex items-center justify-between gap-2 rounded-b-xl border border-t-0 border-[#294B3B] bg-[#183D30] px-3 py-3 text-white shadow-[0_8px_18px_rgba(24,61,48,0.12)] sm:px-4">
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#E5C58F] sm:text-[10px]">Kết thúc sau</p>
+                    <p className="mt-1 truncate font-mono text-sm font-bold tabular-nums tracking-wide text-[#FFF8E9] sm:text-base">{getCountdown(product.flash_sale_end_at!)}</p>
+                  </div>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E5C58F]/35 bg-white/5 text-[#E5C58F] transition-colors group-hover:bg-[#E5C58F] group-hover:text-[#183D30]">
+                    <span className="text-sm leading-none">%</span>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-[#D8C8AD] bg-white/65 px-6 py-12 text-center">
+            <p className="font-serif text-xl font-semibold text-[#183D30]">Ưu đãi đặc biệt sắp quay trở lại</p>
+            <p className="mt-2 text-sm text-[#746B5B]">Các sản phẩm Flash Sale sẽ xuất hiện tại đây khi đến thời gian bắt đầu.</p>
+          </div>
+        )}
       </div>
     </section>
   );
 }
-
 export default function HomePage({ navigate }: HomePageProps) {
   const { products: allProducts, loading: productsLoading } = useProducts({ limit: 100 });
   const { categories } = useCategories();
