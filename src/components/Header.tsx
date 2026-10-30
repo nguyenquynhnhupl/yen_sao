@@ -100,7 +100,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
             <div className="flex items-center gap-2">
               <button
                 onClick={openCart}
-                className="relative p-2.5 rounded-lg text-[#493729] hover:bg-[#F3EAD7] hover:text-[#A37944] transition-colors"
+                className="relative p-2.5 rounded-lg text-white hover:bg-white/10 hover:text-[#E8C18F] transition-colors"
                 aria-label="Giỏ hàng"
               >
                 <ShoppingCart className="w-5 h-5" />
