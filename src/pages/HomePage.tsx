@@ -134,7 +134,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
 
           <div className="bg-[#FBF9F4] p-3 sm:p-5">
             {visibleProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 2xl:grid-cols-4">
                 {visibleProducts.map((product) => (
                   <div key={product.id} className="min-w-0">
                     <ProductCard
