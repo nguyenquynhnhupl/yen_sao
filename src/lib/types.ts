@@ -72,7 +72,7 @@ export interface Order {
 
 export type Page =
   | { name: 'home' }
-  | { name: 'products'; categorySlug?: string }
+  | { name: 'products'; categorySlug?: string; searchQuery?: string }
   | { name: 'product'; slug: string }
   | { name: 'cart' }
   | { name: 'checkout' }
