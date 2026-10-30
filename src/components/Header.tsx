@@ -1,5 +1,6 @@
 import { Menu, Search, ShoppingCart, X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useCategories } from '@/lib/hooks';
 import type { Page } from '@/lib/types';
@@ -14,6 +15,7 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
   const { categories } = useCategories();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const featuredCategories = categories.slice(0, 3);
   const moreCategories = categories.slice(3);
@@ -36,6 +38,11 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
     navigate(p);
     setMobileOpen(false);
     setCategoryOpen(false);
+  };
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleNav({ name: 'products', searchQuery: searchText.trim() });
   };
 
   return (
@@ -78,65 +85,23 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
               </div>
             </button>
 
-            {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <div
-                  key={link.label}
-                  className="relative"
-                  onMouseEnter={() => link.label === 'Sản Phẩm' && setCategoryOpen(true)}
-                  onMouseLeave={() => setCategoryOpen(false)}
-                >
-                  <button
-                    onClick={() => handleNav(link.page)}
-                    className={`px-4 py-2 text-[13px] font-medium uppercase tracking-[0.04em] rounded-lg transition-colors flex items-center gap-1 ${
-                      isActive(link.page)
-                        ? 'text-white bg-white/15'
-                         : 'text-white/90 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    {link.label}
-                    {link.label === 'Sản Phẩm' && (
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-
-                  {/* Category dropdown */}
-                  {link.label === 'Sản Phẩm' && categoryOpen && (
-                    <div className="absolute top-full left-0 pt-2 w-64 animate-fade-in">
-                      <div className="bg-white rounded-xl shadow-xl ring-1 ring-cream-200 overflow-hidden">
-                        <button
-                          onClick={() => handleNav({ name: 'products' })}
-                          className="block w-full text-left px-4 py-3 text-[13px] font-semibold text-primary-700 hover:bg-cream-100 border-b border-cream-100"
-                        >
-                          Tất Cả Sản Phẩm
-                        </button>
-                        {moreCategories.map((cat) => (
-                          <button
-                            key={cat.id}
-                            onClick={() => handleNav({ name: 'products', categorySlug: cat.slug })}
-                            className="block w-full text-left px-4 py-3 text-[13px] text-secondary-700 hover:bg-cream-100 hover:text-primary-600 transition-colors border-b border-cream-50 last:border-0"
-                          >
-                            {cat.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
+            {/* Search */}
+            <form onSubmit={handleSearch} role="search" className="mx-4 hidden max-w-2xl flex-1 md:flex">
+              <div className="flex w-full items-center rounded-full border border-white/25 bg-white px-4 py-2.5 text-[#493729] shadow-inner transition focus-within:border-[#D4AA76] focus-within:ring-2 focus-within:ring-[#D4AA76]/25">
+                <Search className="mr-2 h-5 w-5 shrink-0 text-[#8A765D]" />
+                <input
+                  value={searchText}
+                  onChange={(event) => setSearchText(event.target.value)}
+                  placeholder="Tìm kiếm sản phẩm yến sào..."
+                  aria-label="Tìm kiếm sản phẩm"
+                  className="min-w-0 flex-1 border-0 bg-transparent text-sm text-[#493729] outline-none placeholder:text-[#9B9082] focus:ring-0"
+                />
+                <button type="submit" className="ml-2 rounded-full bg-[#D4AA76] px-5 py-2 text-xs font-semibold text-[#17382D] transition hover:bg-[#E4BE8E]">Tìm kiếm</button>
+              </div>
+            </form>
 
             {/* Actions */}
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleNav({ name: 'products' })}
-                className="hidden md:flex p-2.5 rounded-lg text-white hover:bg-white/10 hover:text-[#D4AA76] transition-colors"
-                aria-label="Tìm kiếm"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-
               <button
                 onClick={openCart}
                 className="relative p-2.5 rounded-lg text-[#493729] hover:bg-[#F3EAD7] hover:text-[#A37944] transition-colors"
@@ -164,6 +129,13 @@ export default function Header({ navigate, currentPage }: HeaderProps) {
         {/* Mobile menu */}
         {mobileOpen && (
           <div className="lg:hidden border-t border-white/15 bg-[#0A3125] text-white animate-fade-in">
+            <div className="container-max px-4 pt-4 md:hidden">
+              <form onSubmit={handleSearch} role="search" className="flex items-center rounded-full bg-white px-3 py-2 text-[#493729]">
+                <Search className="mr-2 h-4 w-4 text-[#8A765D]" />
+                <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm kiếm sản phẩm..." aria-label="Tìm kiếm sản phẩm" className="min-w-0 flex-1 border-0 bg-transparent text-sm outline-none focus:ring-0" />
+                <button type="submit" className="ml-2 text-sm font-semibold text-[#8A673E]">Tìm</button>
+              </form>
+            </div>
             <nav className="container-max px-4 py-4 space-y-1">
               {navLinks.map((link) => (
                 <div key={link.label}>
