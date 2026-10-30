@@ -51,7 +51,92 @@ function mapProduct(row: any): Product {
   };
 }
 
-export function useCategories() {
+
+type PromotionRow = {
+  id: string;
+  promotion_type: 'percent' | 'amount';
+  promotion_value: number;
+  start_at: string;
+  end_at: string;
+  is_flash_deal: boolean;
+  flash_start_at: string | null;
+  flash_end_at: string | null;
+  is_active: boolean;
+};
+
+async function attachPromotions(rows: any[]): Promise<Product[]> {
+  const products = rows.map(mapProduct);
+  if (!products.length) return products;
+
+  const client = supabase;
+  const [{ data: links, error: linksError }, { data: promotionRows, error: promotionsError }] = await Promise.all([
+    client.from('promotion_products').select('product_id,promotion_id'),
+    client.from('promotions').select('id,promotion_type,promotion_value,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,is_active'),
+  ]);
+
+  if (linksError || promotionsError) {
+    console.error('Failed to load product promotions:', linksError?.message ?? promotionsError?.message);
+    return products;
+  }
+
+  const promotions = (promotionRows ?? []) as PromotionRow[];
+  const linked = new Map<string, PromotionRow[]>();
+  for (const link of links ?? []) {
+    const promotion = promotions.find((item) => item.id === link.promotion_id);
+    if (!promotion || !promotion.is_active) continue;
+    linked.set(link.product_id, [...(linked.get(link.product_id) ?? []), promotion]);
+  }
+
+  const now = Date.now();
+  return products.map((product) => {
+    const candidates = (linked.get(product.id) ?? []).sort((a, b) => {
+      const aFlash = a.is_flash_deal ? 1 : 0;
+      const bFlash = b.is_flash_deal ? 1 : 0;
+      return bFlash - aFlash;
+    });
+    const flash = candidates.find((p) => p.is_flash_deal && p.flash_start_at && p.flash_end_at);
+    const flashStart = flash?.flash_start_at ?? null;
+    const flashEnd = flash?.flash_end_at ?? null;
+    const dayStart = new Date(now);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(now);
+    dayEnd.setHours(23, 59, 59, 999);
+    const flashSaleVisibleToday = Boolean(
+      flash && flashStart && flashEnd &&
+      new Date(flashEnd).getTime() >= dayStart.getTime() &&
+      new Date(flashStart).getTime() <= dayEnd.getTime()
+    );
+
+    const applicable = candidates.find((p) => {
+      const campaignActive = new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now;
+      if (!campaignActive) return false;
+      if (!p.is_flash_deal) return true;
+      return Boolean(p.flash_start_at && p.flash_end_at &&
+        new Date(p.flash_start_at).getTime() <= now &&
+        new Date(p.flash_end_at).getTime() >= now);
+    });
+
+    let effectivePrice = product.price;
+    let comparePrice = product.compare_price;
+    if (applicable) {
+      const rawDiscount = applicable.promotion_type === 'percent'
+        ? product.price * Number(applicable.promotion_value) / 100
+        : Number(applicable.promotion_value);
+      effectivePrice = Math.max(0, Math.round(product.price - rawDiscount));
+      comparePrice = product.price;
+    }
+
+    return {
+      ...product,
+      price: effectivePrice,
+      compare_price: comparePrice,
+      is_flash_sale: flashSaleVisibleToday,
+      flash_sale_start_at: flashStart,
+      flash_sale_end_at: flashEnd,
+    };
+  });
+}
+\nexport function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -113,7 +198,7 @@ export function useProducts(options?: {
           console.error('Failed to load products:', error.message);
           setProducts([]);
         } else {
-          setProducts((data ?? []).map(mapProduct));
+          void attachPromotions(data ?? []).then((items) => { if (!cancelled) setProducts(items); });
         }
         setLoading(false);
       }
@@ -152,7 +237,7 @@ export function useProduct(slug: string | null) {
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error) console.error('Failed to load product:', error.message);
-        setProduct(data ? mapProduct(data) : null);
+        if (data) void attachPromotions([data]).then((items) => { if (!cancelled) setProduct(items[0] ?? null); });\n        else setProduct(null);
         setLoading(false);
       });
 
