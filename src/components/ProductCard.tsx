@@ -25,9 +25,8 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
   const discount = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
     : 0;
-  const soldCount = product.sold_count;
-  const totalUnits = soldCount == null ? 0 : soldCount + product.stock;
-  const salesProgress = totalUnits > 0 ? Math.min(100, Math.round((soldCount! / totalUnits) * 100)) : 0;
+  const demoSoldCount = getDemoSoldCount(product);
+  const flashSaleProgress = Math.min(92, Math.max(25, Math.round((demoSoldCount / 300) * 100)));
 
   return (
     <article
@@ -88,19 +87,16 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
           </div>
 
           {isFlashSale ? (
-            soldCount != null && totalUnits > 0 ? (
-              <div className="mt-2">
-                <div className="mb-1 flex items-center justify-between gap-1 text-[10px] text-[#AAB3C4]">
-                  <span>Đã bán {soldCount}</span>
-                  <span>{salesProgress}%</span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-[#343D52]"><div className="h-full rounded-full bg-gradient-to-r from-[#F21A51] to-[#FF5A36]" style={{ width: `${salesProgress}%` }} /></div>
+            <div className="mt-2">
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#343D52]">
+                <div className="h-full rounded-full bg-gradient-to-r from-[#F21A51] to-[#FF5A36] transition-all duration-500" style={{ width: `${flashSaleProgress}%` }} />
               </div>
-            ) : <p className="mt-2 text-[10px] text-[#AAB3C4]">Ưu đãi có thời hạn</p>
+              <p className="mt-1 text-right text-[10px] font-medium text-[#AAB3C4]">Đã bán {demoSoldCount} sản phẩm</p>
+            </div>
           ) : (
             <div className="mt-3">
-              <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{getDemoSoldCount(product).toLocaleString('vi-VN')} sản phẩm</span></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((getDemoSoldCount(product) / 300) * 100)))}%` }} /></div>
+              <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{demoSoldCount.toLocaleString('vi-VN')} sản phẩm</span></div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((demoSoldCount / 300) * 100)))}%` }} /></div>
             </div>
           )}
           {!isFlashSale && product.stock <= 0 && <p className="mt-2 text-xs font-semibold text-[#b33b32]">Tạm hết hàng</p>}
