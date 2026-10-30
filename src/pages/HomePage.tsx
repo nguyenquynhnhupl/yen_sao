@@ -47,8 +47,9 @@ function sectionButtonTarget(url: string | null | undefined): Page {
   return { name: 'products' };
 }
 
-function FlashSaleSection({ products, navigate }: { products: import('@/lib/types').Product[]; navigate: (page: Page) => void }) {
+function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
@@ -61,6 +62,14 @@ function FlashSaleSection({ products, navigate }: { products: import('@/lib/type
     const end = new Date(product.flash_sale_end_at).getTime();
     return product.is_published !== false && start <= now && now < end;
   });
+
+  const visibleProducts = selectedCategory === 'all'
+    ? activeProducts
+    : activeProducts.filter((product) => product.category_id === selectedCategory);
+
+  const saleCategories = categories.filter((category) =>
+    activeProducts.some((product) => product.category_id === category.id),
+  );
 
   const getCountdown = (endAt: string) => {
     const remaining = Math.max(0, new Date(endAt).getTime() - now);
@@ -75,52 +84,80 @@ function FlashSaleSection({ products, navigate }: { products: import('@/lib/type
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#F4EFE5] py-12 sm:py-16">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-[#C5A46A]/20" />
-      <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full border border-[#C5A46A]/15" />
+    <section className="relative overflow-hidden bg-[#F5F0E6] py-9 sm:py-12">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border border-[#C5A46A]/25" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full border border-[#C5A46A]/15" />
       <div className="container-max relative px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col gap-4 border-b border-[#DCCFB9] pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#B88B52]/35 bg-white/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#946B37]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#B33B32]" />
-              Ưu đãi giới hạn
-            </p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#183D30] sm:text-4xl">Flash Sale</h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#746B5B] sm:text-base">Ưu đãi đặc biệt dành cho những sản phẩm được tuyển chọn. Mỗi sản phẩm có thời gian kết thúc riêng.</p>
-          </div>
-          {activeProducts.length > 0 && (
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7D6240]">
-              <span className="h-px w-8 bg-[#B88B52]" />
-              {activeProducts.length} ưu đãi đang diễn ra
-            </div>
-          )}
-        </div>
-
-        {activeProducts.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-            {activeProducts.map((product) => (
-              <div key={product.id} className="group flex min-w-0 flex-col">
-                <div className="overflow-hidden rounded-t-2xl">
-                  <ProductCard product={product} navigate={navigate} />
-                </div>
-                <div className="flex items-center justify-between gap-2 rounded-b-xl border border-t-0 border-[#294B3B] bg-[#183D30] px-3 py-3 text-white shadow-[0_8px_18px_rgba(24,61,48,0.12)] sm:px-4">
-                  <div className="min-w-0">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#E5C58F] sm:text-[10px]">Kết thúc sau</p>
-                    <p className="mt-1 truncate font-mono text-sm font-bold tabular-nums tracking-wide text-[#FFF8E9] sm:text-base">{getCountdown(product.flash_sale_end_at!)}</p>
-                  </div>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E5C58F]/35 bg-white/5 text-[#E5C58F] transition-colors group-hover:bg-[#E5C58F] group-hover:text-[#183D30]">
-                    <span className="text-sm leading-none">%</span>
-                  </span>
-                </div>
+        <div className="overflow-hidden rounded-[22px] border border-[#D8C7A7] bg-white shadow-[0_14px_38px_rgba(48,39,25,0.10)]">
+          <div className="relative flex flex-col gap-4 overflow-hidden bg-[linear-gradient(110deg,#102F24_0%,#1D4936_58%,#315B43_100%)] px-4 py-5 text-white sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(#F4D9A6_1px,transparent_1px)] [background-size:13px_13px]" />
+            <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-20 h-52 w-52 rounded-full border border-[#E5C58F]/20" />
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#F1D9A8]/45 bg-[#E5C58F]/15 text-[#F3D69E] shadow-inner">
+                <span className="text-2xl leading-none">✦</span>
               </div>
-            ))}
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="font-serif text-2xl font-semibold tracking-wide text-[#FFF8E9] sm:text-[28px]">FLASH SALE</h2>
+                  <span className="rounded-full border border-[#F2D7A0]/50 bg-[#E5C58F] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#243729]">Ưu đãi đặc biệt</span>
+                </div>
+                <p className="mt-1 text-xs text-[#E6DCC8] sm:text-sm">Giá ưu đãi giới hạn cho những sản phẩm yến sào tuyển chọn</p>
+              </div>
+            </div>
+            <div className="relative z-10 flex items-center gap-2 self-start rounded-full border border-white/15 bg-black/15 px-3 py-2 text-[11px] font-semibold tracking-wide text-[#F7E7C5] sm:self-center">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#D98B62]" />
+              {activeProducts.length} sản phẩm đang ưu đãi
+            </div>
           </div>
-        ) : (
-          <div className="rounded-2xl border border-dashed border-[#D8C8AD] bg-white/65 px-6 py-12 text-center">
-            <p className="font-serif text-xl font-semibold text-[#183D30]">Ưu đãi đặc biệt sắp quay trở lại</p>
-            <p className="mt-2 text-sm text-[#746B5B]">Các sản phẩm Flash Sale sẽ xuất hiện tại đây khi đến thời gian bắt đầu.</p>
+
+          <div className="border-b border-[#EAE1D3] bg-[#FCFAF5] px-3 py-3 sm:px-5">
+            <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('all')}
+                className={`shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${selectedCategory === 'all' ? 'bg-[#A94735] text-white shadow-sm' : 'border border-[#E8DFD1] bg-white text-[#6F6659] hover:border-[#C5A46A] hover:text-[#294B3B]'}`}
+              >
+                ✦ Tất cả
+              </button>
+              {saleCategories.map((category) => (
+                <button
+                  type="button"
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${selectedCategory === category.id ? 'bg-[#A94735] text-white shadow-sm' : 'border border-[#E8DFD1] bg-white text-[#6F6659] hover:border-[#C5A46A] hover:text-[#294B3B]'}`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
           </div>
-        )}
+
+          <div className="bg-[#FBF9F4] p-3 sm:p-5">
+            {visibleProducts.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+                {visibleProducts.map((product) => (
+                  <div key={product.id} className="min-w-0">
+                    <ProductCard
+                      product={product}
+                      navigate={navigate}
+                      flashSaleCountdown={getCountdown(product.flash_sale_end_at!)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="px-5 py-12 text-center">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#E5D8C2] bg-[#F4EFE5] text-xl text-[#A88A5B]">✧</div>
+                <p className="font-serif text-lg font-semibold text-[#294B3B]">
+                  {activeProducts.length ? 'Danh mục này chưa có ưu đãi' : 'Ưu đãi đặc biệt sắp quay trở lại'}
+                </p>
+                <p className="mt-1 text-xs text-[#827665]">
+                  {activeProducts.length ? 'Hãy chọn danh mục khác để xem sản phẩm Flash Sale.' : 'Sản phẩm Flash Sale sẽ xuất hiện tại đây khi đến thời gian bắt đầu.'}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -386,7 +423,7 @@ export default function HomePage({ navigate }: HomePageProps) {
     <div className="animate-fade-in">
       {visibleSections.filter((section) => section.section_key === 'hero').map(renderSection)}
       {visibleSections.filter((section) => section.section_key === 'trust_benefits').map(renderSection)}
-      <FlashSaleSection products={allProducts} navigate={navigate} />
+      <FlashSaleSection products={allProducts} categories={categories} navigate={navigate} />
       {visibleSections
         .filter((section) => section.section_key !== 'hero' && section.section_key !== 'trust_benefits')
         .map(renderSection)}
