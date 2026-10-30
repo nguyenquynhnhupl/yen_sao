@@ -61,30 +61,40 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false) return false;
     const end = new Date(product.flash_sale_end_at).getTime();
     const start = new Date(product.flash_sale_start_at).getTime();
-    const dayStart = new Date(now);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(now);
-    dayEnd.setHours(23, 59, 59, 999);
+    const dayStart = new Date(now); dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(now); dayEnd.setHours(23, 59, 59, 999);
     return end >= dayStart.getTime() && start <= dayEnd.getTime();
-  }).sort((a, b) => new Date(a.flash_sale_start_at!).getTime() - new Date(b.flash_sale_start_at!).getTime());
+  }).sort((a, b) => (a.flash_sale_daily_start_time ?? '12:00').localeCompare(b.flash_sale_daily_start_time ?? '12:00'));
 
   const slots = Array.from(new Map(flashProducts.map((product) => {
-    const start = new Date(product.flash_sale_start_at!);
-    const time = start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const time = (product.flash_sale_daily_start_time ?? '12:00').slice(0,5);
     return [time, { key: time, time }];
   })).values()).sort((a, b) => a.time.localeCompare(b.time));
 
-  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => {
-    const start = new Date(product.flash_sale_start_at!);
-    return start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) === selectedSlot;
-  });
-  const visibleProducts = selectedCategory === 'all'
-    ? slotProducts
-    : slotProducts.filter((product) => product.category_id === selectedCategory);
+  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) =>
+    (product.flash_sale_daily_start_time ?? '12:00').slice(0,5) === selectedSlot
+  );
+  const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
   const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
 
-  const getCountdown = (endAt: string) => {
-    const remaining = Math.max(0, new Date(endAt).getTime() - now);
+  const getDailyStatus = (product: import('@/lib/types').Product) => {
+    const endAt = new Date(product.flash_sale_end_at!);
+    const startTime = (product.flash_sale_daily_start_time ?? '12:00').slice(0,5);
+    const endTime = (product.flash_sale_daily_end_time ?? '13:00').slice(0,5);
+    const [sh, sm] = startTime.split(':').map(Number);
+    const [eh, em] = endTime.split(':').map(Number);
+    const startToday = new Date(now); startToday.setHours(sh, sm, 0, 0);
+    const endToday = new Date(now); endToday.setHours(eh, em, 0, 0);
+    const finalDay = new Date(endAt); finalDay.setHours(23,59,59,999);
+    if (now > finalDay.getTime()) return { expired: true, upcoming: false, target: now };
+    if (now < startToday.getTime()) return { expired: false, upcoming: true, target: startToday.getTime() };
+    if (now < endToday.getTime()) return { expired: false, upcoming: false, target: endToday.getTime() };
+    const nextStart = new Date(now); nextStart.setDate(nextStart.getDate()+1); nextStart.setHours(sh, sm, 0, 0);
+    if (nextStart.getTime() <= finalDay.getTime()) return { expired: false, upcoming: true, target: nextStart.getTime() };
+    return { expired: true, upcoming: false, target: now };
+  };
+  const getCountdown = (target: number) => {
+    const remaining = Math.max(0, target - now);
     const hours = Math.floor(remaining / 3600000);
     const minutes = Math.floor((remaining % 3600000) / 60000);
     const seconds = Math.floor((remaining % 60000) / 1000);
@@ -92,10 +102,9 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   };
 
   const getSlotStatus = (time: string) => {
-    const items = flashProducts.filter((product) => new Date(product.flash_sale_start_at!).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) === time);
-    if (items.some((product) => new Date(product.flash_sale_start_at!).getTime() <= now && new Date(product.flash_sale_end_at!).getTime() > now)) return 'Đang sale';
-    if (items.some((product) => new Date(product.flash_sale_start_at!).getTime() > now)) return 'Sắp sale';
-    return 'Đã hết';
+    const items = flashProducts.filter((product) => (product.flash_sale_daily_start_time ?? '12:00').slice(0,5) === time);
+    return items.some((product) => { const state = getDailyStatus(product); return !state.upcoming && !state.expired; })
+      ? 'Đang sale' : items.some((product) => getDailyStatus(product).upcoming) ? 'Sắp sale' : 'Đã hết';
   };
 
   const categoryIcons = ['🪺', '🌿', '✨', '🎁', '🤎', '🕊️'];
@@ -140,10 +149,9 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
             {visibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
                 {visibleProducts.map((product) => {
-                  const expired = new Date(product.flash_sale_end_at!).getTime() <= now;
-                  const upcoming = new Date(product.flash_sale_start_at!).getTime() > now;
+                  const state = getDailyStatus(product);
                   return (
-                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(product.flash_sale_end_at!)} flashSaleExpired={expired} flashSaleUpcoming={upcoming} />
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleCountdown={getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
                   );
                 })}
               </div>
