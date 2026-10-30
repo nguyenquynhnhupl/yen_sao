@@ -63,8 +63,6 @@ type PromotionRow = {
   flash_end_at?: string | null;
   daily_start_time?: string | null;
   daily_end_time?: string | null;
-  daily_start_time?: string | null;
-  daily_end_time?: string | null;
   is_active: boolean;
 };
 
@@ -137,8 +135,6 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       is_flash_sale: flashSaleVisibleToday,
       flash_sale_start_at: flashStart,
       flash_sale_end_at: flashEnd,
-      flash_sale_daily_start_time: flash?.daily_start_time ?? null,
-      flash_sale_daily_end_time: flash?.daily_end_time ?? null,
       flash_sale_daily_start_time: flash?.daily_start_time ?? null,
       flash_sale_daily_end_time: flash?.daily_end_time ?? null,
     };
