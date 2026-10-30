@@ -132,7 +132,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                 </span>
               )}
             </div>
-            {galleryImages.length > 1 && (
+            {galleryImages.length > 0 && (
               <div className="mt-4 grid grid-cols-5 gap-2" aria-label="Ảnh sản phẩm">
                 {galleryImages.map((image, index) => (
                   <button
@@ -141,7 +141,7 @@ export default function ProductDetailPage({ slug, navigate }: ProductDetailPageP
                     onClick={() => { setSelectedImage(image); setZoomOpen(true); }}
                     aria-label={`Xem ảnh sản phẩm ${index + 1}`}
                     aria-pressed={selectedImage === image}
-                    className={`aspect-square w-full min-w-0 overflow-hidden rounded-lg transition ${activeImage === image ? 'ring-2 ring-inset ring-[#a1814e]' : 'opacity-75 hover:opacity-100'}`}
+                    className={`aspect-square w-full min-w-0 overflow-hidden rounded-lg transition ${selectedImage === image ? 'ring-2 ring-inset ring-[#a1814e]' : 'opacity-75 hover:opacity-100'}`}
                   >
                     <img src={image} alt={`${product.name} - ảnh ${index + 1}`} loading="lazy" className="h-full w-full object-cover" />
                   </button>
