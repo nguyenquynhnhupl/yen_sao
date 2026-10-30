@@ -58,9 +58,9 @@ type PromotionRow = {
   promotion_value: number;
   start_at: string;
   end_at: string;
-  is_flash_deal: boolean;
-  flash_start_at: string | null;
-  flash_end_at: string | null;
+  is_flash_deal?: boolean;
+  flash_start_at?: string | null;
+  flash_end_at?: string | null;
   is_active: boolean;
 };
 
@@ -94,9 +94,9 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       const bFlash = b.is_flash_deal ? 1 : 0;
       return bFlash - aFlash;
     });
-    const flash = candidates.find((p) => p.is_flash_deal && p.flash_start_at && p.flash_end_at);
-    const flashStart = flash?.flash_start_at ?? null;
-    const flashEnd = flash?.flash_end_at ?? null;
+    const flash = candidates.find((p) => new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
+    const flashStart = flash?.start_at ?? null;
+    const flashEnd = flash?.end_at ?? null;
     const dayStart = new Date(now);
     dayStart.setHours(0, 0, 0, 0);
     const dayEnd = new Date(now);
@@ -110,10 +110,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     const applicable = candidates.find((p) => {
       const campaignActive = new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now;
       if (!campaignActive) return false;
-      if (!p.is_flash_deal) return true;
-      return Boolean(p.flash_start_at && p.flash_end_at &&
-        new Date(p.flash_start_at).getTime() <= now &&
-        new Date(p.flash_end_at).getTime() >= now);
+      return true;
     });
 
     let effectivePrice = product.price;
