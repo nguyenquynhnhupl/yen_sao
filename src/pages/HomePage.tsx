@@ -66,7 +66,7 @@ function vietnamDayStart(timestamp: number) {
 
 function FlashSaleSection({ products, categories, navigate }: { products: import('@/lib/types').Product[]; categories: import('@/lib/types').Category[]; navigate: (page: Page) => void }) {
   const [now, setNow] = useState(Date.now());
-  const [selectedSlot, setSelectedSlot] = useState('all');
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   const slotEnd = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[1] : slot.end;
   const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
 
-  const slotProducts = selectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === selectedSlot));
+  const slotProducts = effectiveSelectedSlot === 'all' ? flashProducts : flashProducts.filter((product) => getProductSlots(product).some((slot) => slotStart(slot) === effectiveSelectedSlot));
   const visibleProducts = selectedCategory === 'all' ? slotProducts : slotProducts.filter((product) => product.category_id === selectedCategory);
   const saleCategories = categories.filter((category) => flashProducts.some((product) => product.category_id === category.id));
 
@@ -147,6 +147,10 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     return 'Đã hết';
   };
 
+  // On first entry, prioritize a slot currently running; otherwise select the next upcoming slot.
+  const defaultSlot = slots.find((slot) => getSlotStatus(slot.key) === 'Đang sale')
+    ?? slots.find((slot) => getSlotStatus(slot.key) === 'Sắp sale');
+  const effectiveSelectedSlot = selectedSlot ?? defaultSlot?.key ?? 'all';
   const categoryIcons = ['🪺', '🌿', '✨', '🎁', '🤎', '🕊️'];
 
   return (
@@ -162,10 +166,10 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
             </div>
             <div className="relative z-10 flex max-w-full items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {slots.map((slot) => {
-                const active = selectedSlot === slot.key;
+                const active = effectiveSelectedSlot === slot.key;
                 const status = getSlotStatus(slot.key);
                 return (
-                  <button key={slot.key} type="button" onClick={() => setSelectedSlot(active ? 'all' : slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-[#F7E9CB] text-[#183D30] shadow-md' : 'border border-white/20 bg-white/10 text-[#FFF8E9] hover:bg-white/20'}`}>
+                  <button key={slot.key} type="button" onClick={() => setSelectedSlot(slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-[#F7E9CB] text-[#183D30] shadow-md' : 'border border-white/20 bg-white/10 text-[#FFF8E9] hover:bg-white/20'}`}>
                     <span>{slot.time}</span>
                     {active && <span className="text-[10px] font-medium text-[#9A7846]">{status}</span>}
                   </button>
@@ -186,7 +190,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
           </div>
 
           <div className="bg-[#FBF8F1] p-3 sm:p-4">
-            {selectedSlot !== 'all' && getSlotStatus(selectedSlot) === 'Đã hết' ? (
+            {effectiveSelectedSlot !== 'all' && getSlotStatus(effectiveSelectedSlot) === 'Đã hết' ? (
               <div className="px-4 py-12 text-center">
                 <p className="text-sm font-semibold text-[#817968]">Khung giờ này đã kết thúc</p>
                 <p className="mt-1 text-xs text-[#A09887]">Vui lòng chọn khung giờ khác để xem ưu đãi.</p>
@@ -194,11 +198,11 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
             ) : activeVisibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
                 {activeVisibleProducts.map((product) => {
-                  const state = selectedSlot === 'all'
+                  const state = effectiveSelectedSlot === 'all'
                     ? getDailyStatus(product)
-                    : getSlotState(product, selectedSlot) ?? getDailyStatus(product);
+                    : getSlotState(product, effectiveSelectedSlot) ?? getDailyStatus(product);
                   return (
-                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleSlot={selectedSlot === "all" ? undefined : selectedSlot} flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleSlot={effectiveSelectedSlot === "all" ? undefined : effectiveSelectedSlot} flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
                   );
                 })}
               </div>
