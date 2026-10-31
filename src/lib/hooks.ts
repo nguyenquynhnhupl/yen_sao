@@ -55,6 +55,7 @@ function mapProduct(row: any): Product {
 type PromotionRow = {
   id: string;
   promotion_type: 'percent' | 'amount';
+  campaign_type?: 'regular' | 'special';
   promotion_value: number;
   start_at: string;
   end_at: string;
@@ -74,7 +75,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
   const client = supabase;
   const [{ data: links, error: linksError }, { data: promotionRows, error: promotionsError }] = await Promise.all([
     client.from('promotion_products').select('product_id,promotion_id'),
-    client.from('promotions').select('id,promotion_type,promotion_value,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,daily_start_time,daily_end_time,daily_time_slots,is_active'),
+    client.from('promotions').select('id,promotion_type,promotion_value,campaign_type,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,daily_start_time,daily_end_time,daily_time_slots,is_active'),
   ]);
 
   if (linksError || promotionsError) {
@@ -95,7 +96,10 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     const candidates = (linked.get(product.id) ?? []).sort((a, b) => {
       const aFlash = a.is_flash_deal ? 1 : 0;
       const bFlash = b.is_flash_deal ? 1 : 0;
-      return bFlash - aFlash;
+      if (aFlash !== bFlash) return bFlash - aFlash;
+      const aSpecial = a.campaign_type === 'special' ? 1 : 0;
+      const bSpecial = b.campaign_type === 'special' ? 1 : 0;
+      return bSpecial - aSpecial;
     });
     const flash = candidates.find((p) => p.is_flash_deal && new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
     const flashSlots = flash && Array.isArray(flash.daily_time_slots) && flash.daily_time_slots.length ? flash.daily_time_slots : flash ? [(flash.daily_start_time ?? '12:00').slice(0,5)+'-'+(flash.daily_end_time ?? '13:00').slice(0,5)] : [];
