@@ -58,8 +58,8 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
               {discountBadgeText}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
-              <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2 py-1.5 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#FFF8E9]"><Clock className="h-3.5 w-3.5 text-[#F0D28E]" />{flashSaleUpcoming ? 'Sắp mở' : 'Còn'}</span>
+              <div className="absolute inset-x-2 bottom-2 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2 py-1.5 text-center text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
+                
                 <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wide text-[#FFE09A]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
               </div>
             )}
