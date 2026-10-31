@@ -37,6 +37,8 @@ export interface Product {
   flash_sale_daily_time_slots?: Array<string | FlashSaleTimeSlot> | null;
   flash_sale_price?: number | null;
   flash_sale_compare_price?: number | null;
+  active_promotion_name?: string | null;
+  active_promotion_campaign_type?: 'regular' | 'special' | null;
 }
 
 export interface CartItem {
