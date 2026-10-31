@@ -56,6 +56,7 @@ type PromotionRow = {
   id: string;
   promotion_type: 'percent' | 'amount';
   campaign_type?: 'regular' | 'special';
+  name?: string;
   promotion_value: number;
   start_at: string;
   end_at: string;
@@ -159,6 +160,8 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       flash_sale_daily_time_slots: flash?.daily_time_slots ?? null,
       flash_sale_price: flash && currentFlashSlot ? Math.max(0, Math.round(product.price - (flashDiscountType === 'percent' ? product.price * flashDiscountValue / 100 : flashDiscountValue))) : null,
       flash_sale_compare_price: flash ? product.price : null,
+      active_promotion_name: applicable?.name ?? null,
+      active_promotion_campaign_type: applicable?.campaign_type ?? null,
     };
   });
 }
