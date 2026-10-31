@@ -76,7 +76,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
   const client = supabase;
   const [{ data: links, error: linksError }, { data: promotionRows, error: promotionsError }] = await Promise.all([
     client.from('promotion_products').select('product_id,promotion_id'),
-    client.from('promotions').select('id,promotion_type,promotion_value,campaign_type,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,daily_start_time,daily_end_time,daily_time_slots,is_active'),
+    client.from('promotions').select('id,name,promotion_type,promotion_value,campaign_type,start_at,end_at,is_flash_deal,flash_start_at,flash_end_at,daily_start_time,daily_end_time,daily_time_slots,is_active'),
   ]);
 
   if (linksError || promotionsError) {
