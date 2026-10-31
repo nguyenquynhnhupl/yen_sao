@@ -86,7 +86,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   const getProductSlots = (product: import('@/lib/types').Product) => Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`];
   const slotStart = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[0] : slot.start;
   const slotEnd = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[1] : slot.end;
-  const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
+  const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start, promotionName: product.active_promotion_campaign_type === 'special' ? product.active_promotion_name : null }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
 
   const getDailyStatus = (product: import('@/lib/types').Product) => {
     const endAt = new Date(product.flash_sale_end_at!).getTime();
@@ -170,7 +170,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
                 const status = getSlotStatus(slot.key);
                 return (
                   <button key={slot.key} type="button" onClick={() => setSelectedSlot(slot.key)} className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition ${active ? 'bg-[#F7E9CB] text-[#183D30] shadow-md' : 'border border-white/20 bg-white/10 text-[#FFF8E9] hover:bg-white/20'}`}>
-                    <span>{slot.time}</span>
+                    <span>{slot.promotionName || slot.time}</span>
                     {active && <span className="text-[10px] font-medium text-[#9A7846]">{status}</span>}
                   </button>
                 );
