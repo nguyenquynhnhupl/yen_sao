@@ -57,7 +57,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nhập tên sản phẩm..." className="mb-5 w-full rounded-lg border border-cream-300 px-3 py-3 text-[15px] sm:text-base outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
 
             <div className="mb-5">
-              <h3 className="mb-3 text-base font-semibold text-secondary-800">Danh mục</h3>
+              <h3 className="mb-3 font-sans text-[16px] leading-6 font-semibold text-secondary-800">Danh mục</h3>
               <div className="space-y-2">
                 <button onClick={() => navigate({ name: 'products' })} className={`block w-full rounded-lg px-3 py-2.5 text-left text-[15px] sm:text-base leading-snug transition ${!categorySlug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>Tất cả sản phẩm</button>
                 {categories.map((cat) => (
