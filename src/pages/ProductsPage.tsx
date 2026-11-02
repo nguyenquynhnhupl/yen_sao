@@ -88,7 +88,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="card p-4 space-y-3">
                     <div className="aspect-[4/3] rounded-xl bg-cream-200 animate-pulse" />
@@ -103,7 +103,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
                 <button onClick={() => navigate({ name: 'products' })} className="btn-primary mt-4">Xem Tất Cả Sản Phẩm</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {sortedProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}
               </div>
             )}
