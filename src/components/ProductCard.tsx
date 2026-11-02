@@ -71,7 +71,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
               {product.is_bestseller && <span className="inline-flex items-center gap-1 rounded-full border border-[#e7cf9b] bg-[#fff9ed] px-3 py-1.5 text-[10px] font-extrabold tracking-[0.08em] text-[#815b1b] shadow-sm"><Star className="h-3 w-3 fill-current" /> BÁN CHẠY</span>}
               {product.is_featured && !product.is_bestseller && <span className="rounded-full bg-[#294333] px-3 py-1.5 text-[10px] font-bold tracking-[0.08em] text-white shadow-sm">NỔI BẬT</span>}
             </div>
-            {discount > 0 && <span className="absolute right-3 top-3 rounded-full border border-[#f0d8d0] bg-white/95 px-3 py-1.5 text-[10px] font-bold text-[#9e3028] shadow-md">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
+            {discount > 0 && <span className="absolute left-3 top-12 max-w-[calc(100%-1.5rem)] truncate rounded-full border border-[#f0d8d0] bg-white/95 px-2 py-1 text-[9px] font-bold text-[#9e3028] shadow-md sm:px-2.5 sm:text-[10px]">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
             <div className="absolute inset-x-0 bottom-0 flex translate-y-full justify-center bg-gradient-to-t from-[#1c2c22]/55 via-[#1c2c22]/20 to-transparent pb-4 pt-10 transition-transform duration-300 group-hover:translate-y-0"><span className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-[#fffdf7] px-5 py-2.5 text-xs font-bold text-[#294333] shadow-lg"><Eye className="h-3.5 w-3.5" /> Xem chi tiết</span></div>
           </>
         )}
