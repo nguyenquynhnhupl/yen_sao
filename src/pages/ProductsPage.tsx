@@ -12,7 +12,7 @@ interface ProductsPageProps {
 
 export default function ProductsPage({ navigate, categorySlug, searchQuery }: ProductsPageProps) {
   const { categories } = useCategories();
-  const { products, loading } = useProducts({ categorySlug });
+  const { products, loading } = useProducts();
   const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc'>('default');
   const [search, setSearch] = useState(searchQuery ?? '');
   useEffect(() => { setSearch(searchQuery ?? ''); }, [searchQuery]);
@@ -26,7 +26,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
     if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
     if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
     return filtered;
-  }, [products, sortBy, search, maxPrice]);
+  }, [products, categories, categorySlug, sortBy, search, maxPrice]);
 
   return (
     <div className="animate-fade-in">
