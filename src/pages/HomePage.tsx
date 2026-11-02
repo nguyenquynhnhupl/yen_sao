@@ -75,7 +75,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
   }, []);
 
   const flashProducts = products.filter((product) => {
-    if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false) return false;
+    if (!product.is_flash_sale || !product.flash_sale_start_at || !product.flash_sale_end_at || product.is_published === false || getProductSlots(product).length === 0) return false;
     const end = new Date(product.flash_sale_end_at).getTime();
     const start = new Date(product.flash_sale_start_at).getTime();
     const dayStart = vietnamDayStart(now);
@@ -83,7 +83,21 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
     return end >= dayStart && start <= dayEnd;
   }).sort((a, b) => (a.flash_sale_daily_start_time ?? '12:00').localeCompare(b.flash_sale_daily_start_time ?? '12:00'));
 
-  const getProductSlots = (product: import('@/lib/types').Product) => Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length ? product.flash_sale_daily_time_slots : [`${(product.flash_sale_daily_start_time ?? '12:00').slice(0,5)}-${(product.flash_sale_daily_end_time ?? '13:00').slice(0,5)}`];
+  const getProductSlots = (product: import('@/lib/types').Product) => {
+    if (Array.isArray(product.flash_sale_daily_time_slots) && product.flash_sale_daily_time_slots.length) {
+      return product.flash_sale_daily_time_slots.filter((slot) => {
+        const start = typeof slot === 'string' ? slot.split('-')[0] : slot.start;
+        const end = typeof slot === 'string' ? slot.split('-')[1] : slot.end;
+        return Boolean(start && end && start < end);
+      });
+    }
+    if (product.flash_sale_daily_start_time && product.flash_sale_daily_end_time) {
+      const start = product.flash_sale_daily_start_time.slice(0, 5);
+      const end = product.flash_sale_daily_end_time.slice(0, 5);
+      return start < end ? [`${start}-${end}`] : [];
+    }
+    return [];
+  };
   const slotStart = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[0] : slot.start;
   const slotEnd = (slot: string | import('@/lib/types').FlashSaleTimeSlot) => typeof slot === 'string' ? slot.split('-')[1] : slot.end;
   const slots = Array.from(new Map(flashProducts.flatMap((product) => getProductSlots(product).map((slot) => { const start = slotStart(slot); return [start, { key: start, time: start }]; }))).values()).sort((a, b) => a.time.localeCompare(b.time));
