@@ -46,9 +46,8 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
         </div>
       </div>
 
-      <div className="container-max px-4 py-8 sm:px-6 lg:px-8">
-
-<div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="container-max px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
           <aside className="h-fit rounded-2xl border border-cream-200 bg-white p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-2">
               <SlidersHorizontal className="h-5 w-5 text-primary-700" />
@@ -88,7 +87,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="card p-4 space-y-3">
                     <div className="aspect-[4/3] rounded-xl bg-cream-200 animate-pulse" />
@@ -103,7 +102,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
                 <button onClick={() => navigate({ name: 'products' })} className="btn-primary mt-4">Xem Tất Cả Sản Phẩm</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
                 {sortedProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}
               </div>
             )}
