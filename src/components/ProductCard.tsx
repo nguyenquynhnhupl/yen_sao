@@ -59,7 +59,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
               {discountBadgeText}
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
-              <div className={`absolute inset-x-2 bottom-2 flex items-center rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-3 py-2 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20 ${flashSaleUpcoming ? 'justify-between gap-2' : 'justify-center'}`}>
+              <div className={`absolute inset-x-2 bottom-2 flex h-9 items-center rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-3 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20 ${flashSaleUpcoming ? 'justify-between gap-2' : 'justify-center'}`}>
                 {flashSaleUpcoming ? <><span className="text-[11px] font-extrabold tracking-wide text-[#FFE09A]">Sắp mở bán</span><span className="ml-auto text-right font-mono text-[11px] font-bold tabular-nums tracking-wide text-white">{flashSaleUpcomingTime ?? flashSaleCountdown}</span></> : <span className="w-full text-center font-mono text-[13px] font-bold tabular-nums tracking-[0.12em] text-[#FFE09A] sm:text-sm">{flashSaleCountdown}</span>}
               </div>
             )}
