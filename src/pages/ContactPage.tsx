@@ -25,7 +25,7 @@ export default function ContactPage() {
           <p className="text-sm text-accent-300 font-medium uppercase tracking-widest mb-3">
             Liên Hệ
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-4">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-4 text-white">
             Kết Nối Với Chúng Tôi
           </h1>
           <p className="text-cream-200 max-w-xl mx-auto">
