@@ -51,26 +51,26 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
           <aside className="h-fit min-w-0 rounded-2xl border border-cream-200 bg-white p-4 sm:p-5 lg:p-6 shadow-sm">
             <div className="mb-5 flex items-center gap-2">
               <SlidersHorizontal className="h-5 w-5 text-primary-700" />
-              <h2 className="font-serif text-lg sm:text-xl font-bold text-secondary-900">Bộ lọc sản phẩm</h2>
+              <h2 className="font-serif text-xl sm:text-[21px] font-bold text-secondary-900">Bộ lọc sản phẩm</h2>
             </div>
-            <label className="mb-2 block text-sm sm:text-base font-semibold text-secondary-800">Tìm sản phẩm</label>
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nhập tên sản phẩm..." className="mb-5 w-full rounded-lg border border-cream-300 px-3 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
+            <label className="mb-2 block text-base sm:text-[16px] font-semibold text-secondary-800">Tìm sản phẩm</label>
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nhập tên sản phẩm..." className="mb-5 w-full rounded-lg border border-cream-300 px-3 py-3 text-[15px] sm:text-base outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
 
             <div className="mb-5">
-              <h3 className="mb-3 text-sm font-semibold text-secondary-800">Danh mục</h3>
+              <h3 className="mb-3 text-base font-semibold text-secondary-800">Danh mục</h3>
               <div className="space-y-2">
-                <button onClick={() => navigate({ name: 'products' })} className={`block w-full rounded-lg px-3 py-2 text-left text-sm sm:text-[15px] transition ${!categorySlug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>Tất cả sản phẩm</button>
+                <button onClick={() => navigate({ name: 'products' })} className={`block w-full rounded-lg px-3 py-2.5 text-left text-[15px] sm:text-base leading-snug transition ${!categorySlug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>Tất cả sản phẩm</button>
                 {categories.map((cat) => (
-                  <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className={`block w-full rounded-lg px-3 py-2 text-left text-sm sm:text-[15px] transition ${categorySlug === cat.slug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>{cat.name}</button>
+                  <button key={cat.id} onClick={() => navigate({ name: 'products', categorySlug: cat.slug })} className={`block w-full rounded-lg px-3 py-2.5 text-left text-[15px] sm:text-base leading-snug transition ${categorySlug === cat.slug ? 'bg-primary-50 font-semibold text-primary-800' : 'text-secondary-700 hover:bg-cream-100'}`}>{cat.name}</button>
                 ))}
               </div>
             </div>
 
             <div className="mb-5">
-              <label className="mb-2 block text-sm font-semibold text-secondary-800">Khoảng giá tối đa (VNĐ)</label>
-              <input type="number" min="0" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Ví dụ: 2000000" className="w-full rounded-lg border border-cream-300 px-3 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
+              <label className="mb-2 block text-base font-semibold text-secondary-800">Khoảng giá tối đa (VNĐ)</label>
+              <input type="number" min="0" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Ví dụ: 2000000" className="w-full rounded-lg border border-cream-300 px-3 py-3 text-[15px] sm:text-base outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" />
             </div>
-            <button onClick={() => { setSearch(''); setMaxPrice(''); setSortBy('default'); navigate({ name: 'products' }); }} className="w-full rounded-lg border border-primary-700 px-4 py-2.5 text-sm font-semibold text-primary-700 transition hover:bg-primary-50">Xóa bộ lọc</button>
+            <button onClick={() => { setSearch(''); setMaxPrice(''); setSortBy('default'); navigate({ name: 'products' }); }} className="w-full rounded-lg border border-primary-700 px-4 py-3 text-[15px] sm:text-base font-semibold text-primary-700 transition hover:bg-primary-50">Xóa bộ lọc</button>
           </aside>
 
           <div className="min-w-0">
