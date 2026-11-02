@@ -103,7 +103,18 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
       return bSpecial - aSpecial;
     });
     const flash = candidates.find((p) => p.is_flash_deal && new Date(p.start_at).getTime() <= now && new Date(p.end_at).getTime() >= now);
-    const flashSlots = flash && Array.isArray(flash.daily_time_slots) && flash.daily_time_slots.length ? flash.daily_time_slots : flash ? [(flash.daily_start_time ?? '12:00').slice(0,5)+'-'+(flash.daily_end_time ?? '13:00').slice(0,5)] : [];
+    const flashSlots = flash
+      ? (Array.isArray(flash.daily_time_slots) && flash.daily_time_slots.length
+          ? flash.daily_time_slots
+          : flash.daily_start_time && flash.daily_end_time
+            ? [flash.daily_start_time.slice(0, 5) + '-' + flash.daily_end_time.slice(0, 5)]
+            : [])
+      : [];
+    const hasConfiguredFlashHours = flashSlots.some((slot) => {
+      const start = typeof slot === 'string' ? slot.split('-')[0] : slot.start;
+      const end = typeof slot === 'string' ? slot.split('-')[1] : slot.end;
+      return Boolean(start && end && start < end);
+    });
     const vnParts = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(now));
     const vnTime = (vnParts.find(part=>part.type==='hour')?.value ?? '00')+':'+(vnParts.find(part=>part.type==='minute')?.value ?? '00');
     const currentFlashSlot = flashSlots.find(slot => { const s=typeof slot==='string'?slot.split('-')[0]:slot.start; const e=typeof slot==='string'?slot.split('-')[1]:slot.end; return Boolean(s&&e&&vnTime>=s&&vnTime<e); });
@@ -116,7 +127,7 @@ async function attachPromotions(rows: any[]): Promise<Product[]> {
     const dayEnd = new Date(now);
     dayEnd.setHours(23, 59, 59, 999);
     const flashSaleVisibleToday = Boolean(
-      flash && flashStart && flashEnd &&
+      flash && hasConfiguredFlashHours && flashStart && flashEnd &&
       new Date(flashEnd).getTime() >= dayStart.getTime() &&
       new Date(flashStart).getTime() <= dayEnd.getTime()
     );
