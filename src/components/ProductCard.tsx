@@ -60,7 +60,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
             </span>
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
               <div className={`absolute inset-x-2 bottom-2 flex items-center rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-3 py-2 text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20 ${flashSaleUpcoming ? 'justify-between gap-2' : 'justify-center'}`}>
-                {flashSaleUpcoming ? <><span className="text-[11px] font-extrabold tracking-wide text-[#FFE09A]">Sắp mở bán</span><span className="ml-auto text-right font-mono text-[11px] font-bold tabular-nums tracking-wide text-white">{flashSaleUpcomingTime ?? flashSaleCountdown}</span></> : <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wide text-[#FFE09A]">{flashSaleCountdown}</span>}
+                {flashSaleUpcoming ? <><span className="text-[11px] font-extrabold tracking-wide text-[#FFE09A]">Sắp mở bán</span><span className="ml-auto text-right font-mono text-[11px] font-bold tabular-nums tracking-wide text-white">{flashSaleUpcomingTime ?? flashSaleCountdown}</span></> : <span className="flex w-full items-center justify-between font-mono text-base font-extrabold tabular-nums text-[#FFE09A] sm:text-lg">{Array.from(flashSaleCountdown ?? "").map((char, index) => <span key={index}>{char}</span>)}</span>}
               </div>
             )}
           </>
