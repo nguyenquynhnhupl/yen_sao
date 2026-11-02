@@ -208,7 +208,7 @@ export function useProducts(options?: {
 
     let query = supabase
       .from('products')
-      .select('*, categories(slug)')
+      .select('*, categories!inner(slug)')
       .eq('is_published', true)
       .order('created_at', { ascending: false });
 
