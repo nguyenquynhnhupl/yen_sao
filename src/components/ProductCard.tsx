@@ -67,25 +67,25 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         ) : (
           <>
             <div className="absolute left-3 top-3 flex max-w-[75%] flex-col items-start gap-2">
-              {discount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[#9d342b] px-3 py-1.5 text-[10px] font-extrabold tracking-[0.08em] text-white shadow-md ring-1 ring-white/50"><Flame className="h-3.5 w-3.5" /> GIẢM {discount}%</span>}
+              {discount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-[#9d342b] px-3 py-1.5 text-[10px] sm:text-[11px] font-extrabold tracking-[0.08em] text-white shadow-md ring-1 ring-white/50"><Flame className="h-3.5 w-3.5" /> GIẢM {discount}%</span>}
               {product.is_bestseller && <span className="inline-flex items-center gap-1 rounded-full border border-[#e7cf9b] bg-[#fff9ed] px-3 py-1.5 text-[10px] font-extrabold tracking-[0.08em] text-[#815b1b] shadow-sm"><Star className="h-3 w-3 fill-current" /> BÁN CHẠY</span>}
               {product.is_featured && !product.is_bestseller && <span className="rounded-full bg-[#294333] px-3 py-1.5 text-[10px] font-bold tracking-[0.08em] text-white shadow-sm">NỔI BẬT</span>}
             </div>
-            {discount > 0 && <span className="absolute left-3 top-12 max-w-[calc(100%-1.5rem)] truncate rounded-full border border-[#f0d8d0] bg-white/95 px-2 py-1 text-[9px] font-bold text-[#9e3028] shadow-md sm:px-2.5 sm:text-[10px]">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
+            {discount > 0 && <span className="absolute left-3 top-12 max-w-[calc(100%-1.5rem)] truncate rounded-full border border-[#f0d8d0] bg-white/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-bold text-[#9e3028] shadow-md sm:px-2.5 sm:text-[10px]">Tiết kiệm {formatVND(product.compare_price! - product.price)}</span>}
             <div className="absolute inset-x-0 bottom-0 flex translate-y-full justify-center bg-gradient-to-t from-[#1c2c22]/55 via-[#1c2c22]/20 to-transparent pb-4 pt-10 transition-transform duration-300 group-hover:translate-y-0"><span className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-[#fffdf7] px-5 py-2.5 text-xs font-bold text-[#294333] shadow-lg"><Eye className="h-3.5 w-3.5" /> Xem chi tiết</span></div>
           </>
         )}
       </div>
 
-      <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-3 sm:p-4'}`}>
+      <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-3.5 sm:p-4'}`}>
         {product.weight && <p className={`mb-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#9A7846]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
-        <h3 className={`mb-2 font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2.25rem] truncate whitespace-nowrap text-sm leading-5 text-[#243D30] sm:text-[15px] group-hover:text-[#9A7846]' : 'min-h-[2.9rem] line-clamp-2 text-sm font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
-        {!isFlashSale && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description || "\u00a0"}</p>}
+        <h3 className={`mb-2 font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2.25rem] truncate whitespace-nowrap text-sm leading-5 text-[#243D30] sm:text-[15px] group-hover:text-[#9A7846]' : 'min-h-[2.9rem] line-clamp-2 text-[15px] font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
+        {!isFlashSale && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-[12px] leading-5 text-[#81796d] sm:text-[13px]">{product.short_description || "\u00a0"}</p>}
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
           <div className={`flex ${isFlashSale ? 'min-h-[24px] flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-h-[54px] items-center gap-3'}`}>
             <div className={`flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 ${isFlashSale ? '' : 'flex-1'}`}>
-              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#9B3028] sm:text-base' : 'text-lg text-[#294333] sm:text-xl'}`}>{formatVND(isFlashSale ? salePrice : product.price)}</p>
+              <p className={`font-sans font-extrabold leading-tight tracking-tight ${isFlashSale ? 'text-[15px] text-[#9B3028] sm:text-base' : 'text-[18px] text-[#294333] sm:text-[21px]'}`}>{formatVND(isFlashSale ? salePrice : product.price)}</p>
               {discount > 0 && <p className={`text-[11px] font-medium line-through ${isFlashSale ? 'text-[11px] text-[#8B8176]' : 'mt-0.5 text-[#999]'}`}>{formatVND(isFlashSale ? saleComparePrice! : product.compare_price!)}</p>}
             </div>
             {!isFlashSale && (
@@ -117,7 +117,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
             </div>
           ) : (
             <div className="mt-3 rounded-xl bg-[#f7f3eb] px-3 py-2.5">
-              <div className="mb-2 flex items-center justify-between gap-2 text-[10px] font-medium text-[#857665]"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{demoSoldCount.toLocaleString('vi-VN')} sản phẩm</span></div>
+              <div className="mb-2 flex items-center justify-between gap-2 text-[11px] font-medium text-[#857665] sm:text-xs"><span className="inline-flex items-center gap-1"><ShoppingBag className="h-3 w-3" /> Đã bán</span><span className="font-bold text-[#6e5131]">{demoSoldCount.toLocaleString('vi-VN')} sản phẩm</span></div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#eee7dc]"><div className="h-full rounded-full bg-gradient-to-r from-[#b38a4a] to-[#dfbd7b] transition-all duration-500" style={{ width: `${Math.min(100, Math.max(8, Math.round((demoSoldCount / 300) * 100)))}%` }} /></div>
             </div>
           )}
