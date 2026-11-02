@@ -48,7 +48,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
 
       <div className="container-max px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <div className="grid min-w-0 grid-cols-1 items-start gap-5 sm:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)]">
-          <aside className="h-fit min-w-0 rounded-2xl border border-cream-200 bg-white p-4 sm:p-5 lg:p-6 shadow-sm">
+          <aside className="h-fit min-w-0 rounded-2xl border border-cream-200 bg-white p-4 sm:p-5 lg:p-6 shadow-sm lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             <div className="mb-5 flex items-center gap-2">
               <SlidersHorizontal className="h-5 w-5 text-primary-700" />
               <h2 className="font-serif text-xl sm:text-[21px] font-bold text-secondary-900">Bộ lọc sản phẩm</h2>
