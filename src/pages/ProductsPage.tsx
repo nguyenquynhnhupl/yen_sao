@@ -21,8 +21,28 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
   const activeCategory = categories.find((c) => c.slug === categorySlug);
 
   const sortedProducts = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase('vi');
-    const filtered = products.filter((product) => (!query || product.name.toLocaleLowerCase('vi').includes(query)) && (!maxPrice || product.price <= Number(maxPrice)));
+    const normalize = (value: string) => value
+      .normalize('NFD')
+      .replace(/[\\u0300-\\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D')
+      .toLocaleLowerCase('vi')
+      .trim();
+    const query = normalize(search);
+    const filtered = products.filter((product) => {
+      const category = categories.find((item) => item.id === product.category_id);
+      const searchableText = normalize([
+        product.name,
+        product.slug,
+        product.description ?? '',
+        product.short_description ?? '',
+        category?.name ?? '',
+      ].join(' '));
+      const matchesSearch = !query || searchableText.includes(query);
+      // Header searches are global and ignore the previously selected category.
+      const matchesCategory = Boolean(query) || !categorySlug || category?.slug === categorySlug;
+      return matchesSearch && matchesCategory && (!maxPrice || product.price <= Number(maxPrice));
+    });
     if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
     if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
     return filtered;
