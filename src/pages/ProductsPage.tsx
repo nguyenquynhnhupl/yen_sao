@@ -47,8 +47,8 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
       </div>
 
       <div className="container-max px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
-          <aside className="h-fit rounded-2xl border border-cream-200 bg-white p-5 shadow-sm">
+        <div className="grid min-w-0 grid-cols-1 items-start gap-5 sm:gap-6 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
+          <aside className="h-fit min-w-0 rounded-2xl border border-cream-200 bg-white p-4 sm:p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-2">
               <SlidersHorizontal className="h-5 w-5 text-primary-700" />
               <h2 className="font-serif text-lg font-bold text-secondary-900">Bộ lọc sản phẩm</h2>
@@ -73,8 +73,8 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
             <button onClick={() => { setSearch(''); setMaxPrice(''); setSortBy('default'); navigate({ name: 'products' }); }} className="w-full rounded-lg border border-primary-700 px-4 py-2.5 text-sm font-semibold text-primary-700 transition hover:bg-primary-50">Xóa bộ lọc</button>
           </aside>
 
-          <div>
-            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <div className="mb-4 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-secondary-500">{loading ? 'Đang tải...' : `${sortedProducts.length} sản phẩm`}</p>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-secondary-500">Sắp xếp:</span>
@@ -87,7 +87,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+              <div className="grid min-w-0 grid-cols-1 min-[520px]:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="card p-4 space-y-3">
                     <div className="aspect-[4/3] rounded-xl bg-cream-200 animate-pulse" />
@@ -102,7 +102,7 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
                 <button onClick={() => navigate({ name: 'products' })} className="btn-primary mt-4">Xem Tất Cả Sản Phẩm</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+              <div className="grid min-w-0 grid-cols-1 min-[520px]:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                 {sortedProducts.map((product) => <ProductCard key={product.id} product={product} navigate={navigate} />)}
               </div>
             )}
