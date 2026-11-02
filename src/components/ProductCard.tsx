@@ -10,6 +10,7 @@ interface ProductCardProps {
   flashSaleSlot?: string;
   flashSaleExpired?: boolean;
   flashSaleUpcoming?: boolean;
+  flashSaleUpcomingTime?: string;
   variant?: 'default' | 'flash-sale';
 }
 
@@ -20,7 +21,7 @@ function getDemoSoldCount(product: Product): number {
   return 89 + (hash % 168);
 }
 
-export default function ProductCard({ product, navigate, flashSaleCountdown, flashSaleSlot, flashSaleExpired = false, flashSaleUpcoming = false, variant = 'default' }: ProductCardProps) {
+export default function ProductCard({ product, navigate, flashSaleCountdown, flashSaleSlot, flashSaleExpired = false, flashSaleUpcoming = false, flashSaleUpcomingTime, variant = 'default' }: ProductCardProps) {
   const isFlashSale = variant === 'flash-sale';
   const { addToCart } = useCart();
   const selectedDiscountSlot = isFlashSale && flashSaleSlot ? product.flash_sale_daily_time_slots?.find((slot) => (typeof slot === 'string' ? slot.split('-')[0] : slot.start) === flashSaleSlot) : undefined;
@@ -60,7 +61,7 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
             {(flashSaleCountdown || flashSaleUpcoming) && !flashSaleExpired && (
               <div className="absolute inset-x-2 bottom-2 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-[#E5C58F]/80 bg-[#123326] px-2 py-1.5 text-center text-white shadow-[0_3px_12px_rgba(0,0,0,0.45)] ring-1 ring-black/20">
                 
-                <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wide text-[#FFE09A]">{flashSaleUpcoming ? 'CHỜ MỞ' : flashSaleCountdown}</span>
+                {flashSaleUpcoming ? <><span className="text-[11px] font-extrabold tracking-wide text-[#FFE09A]">Sắp mở bán</span><span className="font-mono text-[11px] font-bold tabular-nums tracking-wide text-white">{flashSaleUpcomingTime ?? flashSaleCountdown}</span></> : <span className="font-mono text-[11px] font-extrabold tabular-nums tracking-wide text-[#FFE09A]">{flashSaleCountdown}</span>}
               </div>
             )}
           </>
