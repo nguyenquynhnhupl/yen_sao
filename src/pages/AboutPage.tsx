@@ -21,7 +21,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
           <p className="text-sm text-accent-300 font-medium uppercase tracking-widest mb-3">
             Về Chúng Tôi
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-4">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-4 text-white">
             Câu Chuyện Của Yến Sào Khánh Hòa
           </h1>
           <p className="text-lg text-cream-200 max-w-2xl mx-auto leading-relaxed">
