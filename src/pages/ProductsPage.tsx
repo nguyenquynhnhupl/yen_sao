@@ -47,12 +47,14 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
       </div>
 
       <div className="container-max px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900 mb-2">
-            {activeCategory ? activeCategory.name : 'Tất Cả Sản Phẩm'}
-          </h1>
-          {activeCategory?.description && <p className="text-secondary-600">{activeCategory.description}</p>}
-        </div>
+        {activeCategory && (
+          <div className="mb-8">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-secondary-900 mb-2">
+              {activeCategory.name}
+            </h1>
+            {activeCategory.description && <p className="text-secondary-600">{activeCategory.description}</p>}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
           <aside className="h-fit rounded-2xl border border-cream-200 bg-white p-5 shadow-sm">
