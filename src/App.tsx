@@ -23,7 +23,7 @@ function AppContent() {
         {page.name === 'home' && <HomePage navigate={navigate} />}
 
         {page.name === 'products' && (
-          <ProductsPage navigate={navigate} categorySlug={page.categorySlug} />
+          <ProductsPage navigate={navigate} categorySlug={page.categorySlug} searchQuery={page.searchQuery} />
         )}
 
         {page.name === 'product' && (
