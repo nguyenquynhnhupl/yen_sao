@@ -197,7 +197,7 @@ function FlashSaleSection({ products, categories, navigate }: { products: import
                     ? getDailyStatus(product)
                     : getSlotState(product, effectiveSelectedSlot) ?? getDailyStatus(product);
                   return (
-                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleSlot={effectiveSelectedSlot === "all" ? undefined : effectiveSelectedSlot} flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} />
+                    <ProductCard key={product.id} product={product} navigate={navigate} variant="flash-sale" flashSaleSlot={effectiveSelectedSlot === "all" ? undefined : effectiveSelectedSlot} flashSaleCountdown={state.expired ? undefined : getCountdown(state.target)} flashSaleExpired={state.expired} flashSaleUpcoming={state.upcoming} flashSaleUpcomingTime={state.upcoming ? new Intl.DateTimeFormat('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(state.target)) : undefined} />
                   );
                 })}
               </div>
