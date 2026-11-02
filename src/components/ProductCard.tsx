@@ -77,10 +77,10 @@ export default function ProductCard({ product, navigate, flashSaleCountdown, fla
         )}
       </div>
 
-      <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-4 sm:p-5'}`}>
+      <div className={`flex flex-1 flex-col ${isFlashSale ? 'p-2 sm:p-2.5' : 'p-3 sm:p-4'}`}>
         {product.weight && <p className={`mb-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${isFlashSale ? 'text-[#9A7846]' : 'text-[#a18a68]'}`}>{product.weight}</p>}
-        <h3 className={`mb-2 font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2.25rem] truncate whitespace-nowrap text-sm leading-5 text-[#243D30] sm:text-[15px] group-hover:text-[#9A7846]' : 'text-[15px] font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
-        {!isFlashSale && product.short_description && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description}</p>}
+        <h3 className={`mb-2 font-sans font-semibold leading-5 transition-colors ${isFlashSale ? 'min-h-[2.25rem] truncate whitespace-nowrap text-sm leading-5 text-[#243D30] sm:text-[15px] group-hover:text-[#9A7846]' : 'min-h-[2.9rem] line-clamp-2 text-sm font-bold leading-[1.45] text-[#2d382f] group-hover:text-[#9a7846] sm:text-base'}`}>{product.name}</h3>
+        {!isFlashSale && <p className="mb-3 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-[#81796d]">{product.short_description || "\u00a0"}</p>}
 
         <div className={`mt-auto ${isFlashSale ? 'border-t border-[#E8DFCF] pt-2' : 'border-t border-[#eee7dc] pt-3.5'}`}>
           <div className={`flex ${isFlashSale ? 'min-h-[24px] flex-wrap items-baseline gap-x-2 gap-y-0.5' : 'min-h-[54px] items-center gap-3'}`}>
