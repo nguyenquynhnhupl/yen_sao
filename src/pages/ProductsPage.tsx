@@ -23,10 +23,10 @@ export default function ProductsPage({ navigate, categorySlug, searchQuery }: Pr
   const sortedProducts = useMemo(() => {
     const normalize = (value: string) => value
       .normalize('NFD')
-      .replace(/[\\u0300-\\u036f]/g, '')
+      .replace(/[\u0300-\u036f]/g, '')
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D')
-      .toLocaleLowerCase('vi')
+      .toLowerCase()
       .trim();
     const query = normalize(search);
     const filtered = products.filter((product) => {
